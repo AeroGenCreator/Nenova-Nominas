@@ -1,12 +1,21 @@
 # Nentria Nenova `Nominas` 🗳️
 
+![images](./assets/img/login.png)
+
 Software modulo `odoo` desarrollado por `Nentria` para contabilidad.
 
 ## Modulos
 
+![images](./assets/img/jornada.png)
+
+Breve descpripción de los modulos desarrollados en este paquete.
+
 |modulos|Descripción|
 |-------|-----------|
-|Vacio|_Por Definir_|
+|**doc**|Extiende Empleados - Permite Almacenar contratos & Documentación|
+|**geo**|Agrega registros de geolocalización para pase de asitencias|
+|**net**|Agrega portal web para pase de asitencias & carga de datos sin entrar al `backend` de odoo|
+|**nomina**|Agrega el cálculo de nomina para empleados. (Jornadas) (Derechos Vacacionales) (SDI) etc...|
 
 ## Configuración e Inicio Rápido
 

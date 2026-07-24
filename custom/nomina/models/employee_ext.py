@@ -48,7 +48,7 @@ class NominaEmployeeExt(models.Model):
     salario_integral = fields.Float(
         string="Salario Diario Integrado (SDI)",
         help=MSG_SDI,
-        compute="computar_salario_diario_integrado",
+        compute="",  # Agregar el computado cuando se termine la función
         digits=(12, 4),
         store=True
     )

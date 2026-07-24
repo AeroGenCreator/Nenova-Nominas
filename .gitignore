@@ -1,5 +1,5 @@
 # Respaldo de bases de datos
-data/
+./data
 
 # Ficheros de configuracion para odoo
 config/

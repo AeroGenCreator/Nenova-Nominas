@@ -1,0 +1,11 @@
+id,name,limite_inferior,limite_superior,dias_vacaciones,categoria_id:id,active
+res_vacation_rule_mx_year_1,Años (1 - 1) Oficial Por Ley,1,1,12,categoria_1,1
+res_vacation_rule_mx_year_2,Años (2 - 2) Oficial Por Ley,2,2,14,categoria_1,1
+res_vacation_rule_mx_year_3,Años (3 - 3) Oficial Por Ley,3,3,16,categoria_1,1
+res_vacation_rule_mx_year_4,Años (4 - 4) Oficial Por Ley,4,4,18,categoria_1,1
+res_vacation_rule_mx_year_5,Años (5 - 5) Oficial Por Ley,5,5,20,categoria_1,1
+res_vacation_rule_mx_year_6,Años (6 - 10) Oficial Por Ley,6,10,22,categoria_1,1
+res_vacation_rule_mx_year_7,Años (11 - 15) Oficial Por Ley,11,15,24,categoria_1,1
+res_vacation_rule_mx_year_8,Años (16 - 20) Oficial Por Ley,16,20,26,categoria_1,1
+res_vacation_rule_mx_year_9,Años (21 - 25) Oficial Por Ley,21,25,28,categoria_1,1
+res_vacation_rule_mx_year_10,Años (26 - 30) Oficial Por Ley,26,30,30,categoria_1,1

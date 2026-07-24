@@ -1,0 +1,12 @@
+id,name,clave,dias
+periodo_diario,Diario,01,1.00,1
+periodo_semanal,Semanal,02,7.60,1
+periodo_catorcenal,Catorcenal,03,14.00,1
+periodo_quincenal,Quincenal,04,15.20,1
+periodo_mensual,Mensual,05,30.40,1
+periodo_bimensual,Bimensual,06,15.20,1
+periodo_bimestral,Bimestral,07,60.80,1
+periodo_trimestral,Trimestral,08,91.20,1
+periodo_semestral,Semestral,09,182.40,1
+periodo_anual,Anual,10,364.80,1
+periodo_otra,Otra Periodicidad,99,0.00,1

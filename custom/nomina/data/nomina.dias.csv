@@ -1,0 +1,8 @@
+id,name,codigo,sequencia
+weekday_monday,Lunes,MON,0
+weekday_tuesday,Martes,TUE,1
+weekday_wednesday,Miércoles,WED,2
+weekday_thursday,Jueves,THU,3
+weekday_friday,Viernes,FRI,4
+weekday_saturday,Sábado,SAT,5
+weekday_sunday,Domingo,SUN,6
