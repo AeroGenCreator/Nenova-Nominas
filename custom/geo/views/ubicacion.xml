@@ -1,0 +1,83 @@
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="geo_ubicacion_form_view" model="ir.ui.view">
+        <field name="name">geo.ubicacion.form.view</field>
+        <field name="model">geo.ubicacion</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Formulario">
+                        <group string="Obligatorio">
+                            <field name="name" />
+                            <field name="categoria_id" />
+                            <field name="active" widget="boolean_toggle" />
+                            <field
+                                name="gps_button"
+                                string="Ubicación"
+                                widget="geo_location_button"
+                            />
+                        </group>
+                        <group string="Calculados">
+                            <field name="latitud" readonly="1" force_save="1" />
+                            <field
+                                name="longitud"
+                                readonly="1"
+                                force_save="1"
+                            />
+                            <field name="calle" readonly="1" force_save="1" />
+                            <field name="area" readonly="1" force_save="1" />
+                            <field
+                                name="codigo_postal"
+                                readonly="1"
+                                force_save="1"
+                            />
+                            <field
+                                name="direccion"
+                                readonly="1"
+                                force_save="1"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA DE LISTA -->
+    <record id="geo_ubicacion_list_view" model="ir.ui.view">
+        <field name="name">geo.ubicacion.list.view</field>
+        <field name="model">geo.ubicacion</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="categoria_id" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <!-- BARRA DE BUSQUEDA -->
+    <record id="geo_ubicacion_serach_view" model="ir.ui.view">
+        <field name="name">geo.ubicacion.search.view</field>
+        <field name="model">geo.ubicacion</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="solo_empresa_archivados"
+                    domain="[('active', '!=', True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCION VISTAS LOCALIZACIÓN -->
+    <record id="ubicacion_view_action" model="ir.actions.act_window">
+        <field name="name">Ubicación</field>
+        <field name="res_model">geo.ubicacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="geo_ubicacion_serach_view" />
+    </record>
+
+</odoo>

@@ -1,0 +1,673 @@
+<odoo>
+    <!-- Template del login de empleados -->
+    <template id="login_screen" name="login">
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+        </head>
+        <!-- login-page: activa el centrado flex de página completa en el body -->
+        <body class="login-page">
+            <!-- center-form: contenedor que se convierte en tarjeta centrada con sombra -->
+            <section class="center-form">
+                <!-- login-logo: imagen de cabecera centrada con bordes redondeados -->
+                <t t-if="logo_web">
+                    <img
+                        t-attf-src="data:#{mimetype};base64,#{logo_web}"
+                        class="login-logo"
+                        alt="Logo Empresarial"
+                        style="display:block;width:100%;max-height:140px;object-fit:cover;border-radius:12px;margin:0 0 24px 0;"
+                    />
+                </t>
+                <t t-else="">
+                    <h3>Sin Logo Empresarial</h3>
+                </t>
+                <!-- Título añadido para identificar el portal: fuente grande, color oscuro de paleta -->
+                <h2 class="login-title">Login Portal Empleados</h2>
+                <!-- login-form: aplica layout vertical flex para apilar label + input limpiamente -->
+                <form action="/validar" method="post" class="login-form">
+                    <!-- login-label: tipografía semibold con color oscuro de paleta -->
+                    <label
+                        class="login-label"
+                        for="email"
+                    >Correo Electronico</label>
+                    <!-- login-input: campo estilizado con borde de paleta y transición de foco -->
+                    <input
+                        class="login-input"
+                        id="email"
+                        name="email"
+                        type="email"
+                    />
+                    <label class="login-label" for="password">Contraseña</label>
+                    <input
+                        class="login-input"
+                        id="password"
+                        name="password"
+                        type="password"
+                    />
+                    <!-- login-btn: botón con color oscuro, texto blanco y animación lift en hover -->
+                    <input class="login-btn" type="submit" value="Ingresar" />
+                    <t t-if="error">
+                        <!-- login-error: fondo claro de paleta con texto rojo para mensajes de error -->
+                        <p class="login-error"><t t-out="error" /></p>
+                    </t>
+                    <t t-elif="global_msg">
+                        <p class="login-error"><t t-esc="global_msg" /></p>
+                    </t>
+                </form>
+            </section>
+        </body>
+    </template>
+
+    <!-- Template pagina inicio de empleados -->
+    <template id="my_space" name="space">
+        <!-- head añadido: carga el CSS del módulo, igual que en login_screen -->
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+            <!-- Font Awesome 6 Free via CDN: provee los iconos <i class="fas fa-..."> en toda la página -->
+            <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+            />
+        </head>
+        <!-- my-space-page: clase base que activa el layout flex columna de la página -->
+        <body class="my-space-page">
+
+            <!-- nentria-header: banner oscuro con texto blanco, fondo de paleta oscura -->
+            <header class="nentria-header">
+
+                <!-- top-bar: flex row con space-between; primer ítem a la izquierda, último a la derecha -->
+                <section class="top-bar">
+                    <!-- nav-left: Cerrar Sesión queda en el extremo izquierdo como primer ítem flex -->
+                    <a class="top-bar-link" href="/login">Cerrar Sesión</a>
+                    <!-- nav-right: Mis Datos queda en el extremo derecho como último ítem flex -->
+                    <a href="/my_data">
+                        <!-- btn-top-bar: acceso rápido a datos desde la barra superior -->
+                        <button class="btn-top-bar">Mis Datos</button>
+                    </a>
+                </section>
+
+                <!-- bienvenida: sección de marca y saludo centrado en el banner -->
+                <section class="bienvenida">
+                    <!-- nentria-brand: h1 de marca, fuente mayor que todos los <p> de la vista -->
+                    <t t-if="company">
+                        <h1 class="nentria-brand"><t t-out="company" /></h1>
+                    </t>
+                    <!-- bienvenida-texto: párrafo de saludo dinámico, fuente menor que h1 -->
+                    <p class="bienvenida-texto">Bienvenido <t
+                            t-out="employee_name"
+                        /></p>
+                </section>
+
+            </header>
+
+            <!-- main-content: área principal con la cuadrícula de lozas, crece para empujar el footer -->
+            <main class="main-content">
+
+                <!-- grid-tiles: cuadrícula responsiva de lozas estilo Odoo -->
+                <div class="grid-tiles">
+
+                    <!-- tile-horas: loza de resumen mensual con los 3 valores de tiempo -->
+                    <div class="tile tile-horas">
+                        <!-- tile-title: h3 como título de loza, fuente mayor que los <p> internos -->
+                        <h3 class="tile-title">Resumen del Mes</h3>
+                        <!-- checks-container: fila flex con los 3 items equiespaciados -->
+                        <section class="checks-container">
+                            <!-- hours-total: horas totales en verde para distinguirlas visualmente -->
+                            <p class="check-item hours-total">
+                                <span class="check-label">Horas Totales</span>
+                                <span
+                                    t-out="this_month_hours"
+                                    t-options='{"widget": "float_time"}'
+                                />
+                            </p>
+                            <t t-if="hora_entrada">
+                                <!-- check-time: hora de entrada del día registrada -->
+                                <p class="check-item check-time">
+                                    <span class="check-label">Entrada</span>
+                                    <t t-out="hora_entrada" />
+                                </p>
+                            </t>
+                            <t t-if="hora_salida">
+                                <!-- check-time: hora de salida del día registrada -->
+                                <p class="check-item check-time">
+                                    <span class="check-label">Salida</span>
+                                    <t t-out="hora_salida" />
+                                </p>
+                            </t>
+                        </section>
+                    </div>
+
+                    <!-- tile-asistencia: loza con el botón de acción de asistencia del día -->
+                    <div class="tile tile-asistencia">
+                        <h3 class="tile-title">Asistencia de Hoy</h3>
+                        <!-- attendance-actions: contenedor centrado para el botón de acción -->
+                        <section class="attendance-actions">
+                            <t t-if="puede_entrar">
+                                <!-- Contenedor simple sin directivas conflictivas -->
+                                <div class="js-form-check-in">
+                                    <!-- Este boton dispara JS y despues a la ruta /check_in -->
+                                    <button
+                                        id="js-button-check-in"
+                                        class="btn-check btn-check-in"
+                                        type="button"
+                                    >
+                                        Entrar
+                                    </button>
+                                </div>
+                            </t>
+                            <t t-elif="puede_salir">
+                                <form action="/check_out" method="post">
+                                    <!-- btn-check-out: color de paleta para salida + hover lift -->
+                                    <button
+                                        class="btn-check btn-check-out"
+                                        type="submit"
+                                    >Salir</button>
+                                </form>
+                            </t>
+                            <t t-elif="dia_completado">
+                                <!-- btn-completed: deshabilitado cuando la jornada ya fue registrada -->
+                                <button
+                                    class="btn-check btn-completed"
+                                    disabled="disabled"
+                                >Asistencia Pasada</button>
+                            </t>
+                            <t t-if="ubicacion_error">
+                                <!-- error-ip-msg: fondo claro de paleta con texto rojo para el error -->
+                                <p class="error-ip-msg"><t
+                                        t-out="ubicacion_error"
+                                    /></p>
+                            </t>
+                            <t t-if="check_out_validation">
+                                <!-- -->
+                                <p class="error-ip-msg"><t
+                                        t-out="check_out_validation"
+                                    /></p>
+                            </t>
+                        </section>
+                    </div>
+
+                    <!-- tile-mis-datos: loza de navegación a información personal -->
+                    <div class="tile tile-mis-datos">
+                        <a class="tile-link" href="/my_data">
+                            <!-- tile-icon: primer ítem del flex column, queda en la cima de la loza -->
+                            <!-- sin fa-2xl: el tamaño lo controla .tile-icon en el CSS propio -->
+                            <i class="fa-solid fa-id-card-clip tile-icon" />
+                            <!-- tile-title: segundo ítem, debajo del ícono -->
+                            <h3 class="tile-title">Mis Datos</h3>
+                            <!-- tile-desc: tercer ítem, descripción auxiliar al pie -->
+                            <p class="tile-desc">Ver y editar tu información</p>
+                        </a>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- nentria-footer: pie de página reservado para links futuros de contacto y portal admin -->
+            <footer class="nentria-footer">
+                <!-- Espacio reservado: aquí se agregarán links de contacto y portal admin -->
+            </footer>
+        <script
+                type="text/javascript"
+                src="/net/static/src/js/net_checkin.js"
+            />
+        </body>
+    </template>
+
+    <!-- Template informacion de cuenta del empleado -->
+    <template id="my_data" name="informacion_empleado">
+        <!-- head: carga del CSS del módulo, igual que en los demás templates -->
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+        </head>
+        <!-- nentria-header: mismo banner oscuro de paleta; el texto cambia a "Nentria Colaboradores" -->
+        <header class="nentria-header">
+            <!-- top-bar: flex row; primer ítem va a la izquierda, top-bar-brand (flex:1) al centro, último a la derecha -->
+            <section class="top-bar">
+                <!-- nav-left: Volver a Inicio como primer ítem flex, queda en el extremo izquierdo -->
+                <a class="top-bar-link" href="/net/home">Volver a Inicio</a>
+                <!-- top-bar-brand: flex:1 + text-align:center centra el h1 entre los dos links laterales -->
+                <section class="top-bar-brand">
+                    <!-- top-bar-h1: h1 de marca en contexto de top-bar; mayor que todo lo demás de la vista -->
+                    <h1 class="nentria-brand top-bar-h1" id="nentria-colab">
+                        <!-- No ocupo t t-else porque si no hay empresa redirige a login. -->
+                        <t t-if="company">
+                            <p><t t-esc="company" /> Colaboradores</p>
+                        </t>
+                    </h1>
+                </section>
+                <!-- nav-right: Cerrar Sesión como último ítem flex, queda en el extremo derecho -->
+                <a class="top-bar-link" href="/login">Cerrar Sesión</a>
+            </section>
+        </header>
+        <!-- my-space-page: reutiliza el layout flex columna de my_space (fondo, fuente, footer) -->
+        <body class="my-space-page">
+            <main class="main-content">
+
+                <!-- my-data-form: tarjeta principal de datos del empleado (reutiliza clase .tile) -->
+                <section class="my-data-form tile data-card">
+                    <!-- data-card-title: h4 como título de tarjeta, mayor que h5 y todos los <p> internos -->
+                    <h4 class="data-card-title">Datos del Empleado</h4>
+
+                    <!-- my-data-info: sub-sección de información personal del empleado -->
+                    <section class="my-data-info">
+                        <!-- section-subtitle: h5 mayor que los <p> de datos, menor que h4 -->
+                        <h5 class="section-subtitle">Información</h5>
+                        <!-- data-row: contenedor de par label + valor para cada campo -->
+                        <div class="data-row">
+                            <p class="data-label">Nombre</p>
+                            <t t-if="name">
+                                <p class="data-value"><t t-out="name" /></p>
+                            </t>
+                        </div>
+                        <div class="data-row">
+                            <p class="data-label">Correo Electronico</p>
+                            <t t-if="work_email">
+                                <p class="data-value"><t
+                                        t-out="work_email"
+                                    /></p>
+                            </t>
+                        </div>
+                        <div class="data-row">
+                            <p class="data-label">Telefono</p>
+                            <t t-if="mobile_phone">
+                                <p class="data-value"><t
+                                        t-out="mobile_phone"
+                                    /></p>
+                            </t>
+                        </div>
+                        <div class="data-row">
+                            <p class="data-label">Contraseña Portal</p>
+                            <t t-if="contraseña_portal">
+                                <p class="data-value"><t
+                                        t-out="contraseña_portal"
+                                    /></p>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- my-data-contract: sub-sección de información de contrato -->
+                    <section class="my-data-contract">
+                        <h5 class="section-subtitle">Contrato</h5>
+                        <t t-if="expiration_date">
+                            <!-- data-row dentro del condicional: label + valor de vigencia -->
+                            <div class="data-row">
+                                <p class="data-label">Vigencia</p>
+                                <p class="data-value"><t
+                                        t-out="expiration_date"
+                                    /></p>
+                            </div>
+                        </t>
+                        <t t-if="contract_id">
+                            <form action="/my-contract">
+                                <!-- btn-action: botón con hover lift para visualizar el contrato -->
+                                <button
+                                    class="btn-action"
+                                    type="submit"
+                                >Visualizar Contrato Activo</button>
+                            </form>
+                        </t>
+                        <t t-else="">
+                            <!-- no-contract: estado vacío cuando no existe contrato activo -->
+                            <section class="no-contract">
+                                <input
+                                    id="no-data"
+                                    class="no-data-input"
+                                    placeholder="Sin Contratos Activos"
+                                    disabled="1"
+                                />
+                                <!-- no-data-msg: aviso informativo con tipografía menor -->
+                                <p
+                                    class="no-data-msg"
+                                >Los contratos solo pueden ser cargados por el administrador.</p>
+                            </section>
+                        </t>
+                    </section>
+
+                    <!-- btn-action btn-edit: link estilizado como botón con hover lift -->
+                    <a
+                        class="btn-action btn-edit"
+                        href="/editar-formulario"
+                        id="edit-form"
+                    >Editar Información</a>
+                </section>
+
+                <!-- documents-section: sección de tabla de documentos, debajo de la tarjeta -->
+                <section class="documents-section">
+                    <!-- section-subtitle docs-title: h5 de la sección de documentos -->
+                    <h5
+                        class="section-subtitle docs-title"
+                    >Documentos Cargados</h5>
+                    <t t-if="active_documents">
+                        <!-- table-wrapper: div con overflow:hidden para aplicar border-radius a la tabla -->
+                        <div class="table-wrapper">
+                            <table class="documents-table">
+                                <thead>
+                                    <tr>
+                                        <!-- table-th: encabezados con fondo oscuro de paleta y texto blanco -->
+                                        <th class="table-th">Id</th>
+                                        <th class="table-th">Nombre</th>
+                                        <th class="table-th">Tipo</th>
+                                        <th class="table-th">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="active_documents" t-as="doc">
+                                        <tr>
+                                            <!-- table-td: celdas con padding y color oscuro de paleta -->
+                                            <td class="table-td"><t
+                                                    t-out="doc['id']"
+                                                /></td>
+                                            <td class="table-td"><t
+                                                    t-out="doc['nombre']"
+                                                /></td>
+                                            <td class="table-td"><t
+                                                    t-out="doc['tipo']"
+                                                /></td>
+                                            <td class="table-td"><a
+                                                    t-attf-href="/ver-documento/{{doc['id']}}"
+                                                    class="table-action-link"
+                                                >
+                                                Ver Documento
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- btn-action: botón de navegación a carga de documentos con hover lift -->
+                        <a
+                            class="btn-action"
+                            href="/carga-documentos"
+                            id="add-documents"
+                        >Carga Documentos</a>
+                    </t>
+                    <t t-else="">
+                        <!-- no-docs-container: tarjeta de estado vacío de documentos -->
+                        <section class="no-docs-container">
+                            <!-- no-docs-msg: mensaje informativo en tono medio de paleta -->
+                            <p
+                                class="no-docs-msg"
+                                id="no-documents"
+                            >Sin documentos por mostrar</p>
+                            <input
+                                class="no-data"
+                                placeholder="Documentos Varios"
+                                disabled="1"
+                            />
+                            <br />
+                            <a
+                                class="btn-action"
+                                href="/carga-documentos"
+                                id="add-documents"
+                            >Carga Documentos</a>
+                        </section>
+                    </t>
+                </section>
+
+            </main>
+
+            <!-- nentria-footer: pie de página consistente con el resto del portal -->
+            <footer class="nentria-footer">
+                <!-- Espacio reservado para links de contacto y portal admin -->
+            </footer>
+        </body>
+    </template>
+
+    <!-- Templata: Formulario de edición. -->
+    <template id="editar_formulario" name="formulario_empleado">
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+        </head>
+        <!-- nentria-header: mismo banner oscuro de paleta que en my_data -->
+        <header class="nentria-header">
+            <!-- top-bar: flex row; primer ítem va a la izquierda, top-bar-brand (flex:1) al centro, último a la derecha -->
+            <section class="top-bar">
+                <!-- nav-left: Volver a Inicio como primer ítem flex, queda en el extremo izquierdo -->
+                <a class="top-bar-link" href="/net/home">Volver a Inicio</a>
+                <!-- top-bar-brand: flex:1 + text-align:center centra el h1 entre los dos links laterales -->
+                <section class="top-bar-brand">
+                    <h1 class="nentria-brand top-bar-h1" id="nentria-colab">
+                        <t t-if="company">
+                            <p><t t-esc="company" /></p>
+                        </t>
+                    </h1>
+                </section>
+                <!-- nav-right: Cerrar Sesión como último ítem flex, queda en el extremo derecho -->
+                <a class="top-bar-link" href="/login">Cerrar Sesión</a>
+            </section>
+        </header>
+        <!-- my-space-page: layout flex columna con footer pegado al fondo -->
+        <body class="my-space-page">
+            <main class="main-content">
+                <!-- edit-form-card: tarjeta centrada reutilizando .tile y .data-card -->
+                <section class="tile data-card edit-form-card">
+                    <h4 class="data-card-title">Editar Información</h4>
+                    <!-- edit-form: layout vertical apilado igual que login-form -->
+                    <form
+                        action="/nentria/guardar-edicion"
+                        method="post"
+                        class="edit-form"
+                    >
+                        <input
+                            id="employee_id"
+                            name="employee_id"
+                            type="hidden"
+                            t-att-value="employee_id"
+                        />
+                        <label
+                            class="edit-form-label"
+                            for="name"
+                        >Nombre Completo</label>
+                        <input
+                            class="edit-form-input"
+                            id="name"
+                            name="name"
+                            type="text"
+                            t-att-value="name or ''"
+                        />
+                        <label
+                            class="edit-form-label"
+                            for="work_email"
+                        >Email Empresarial</label>
+                        <input
+                            class="edit-form-input"
+                            id="work_email"
+                            name="work_email"
+                            type="email"
+                            t-att-value="work_email or ''"
+                        />
+                        <label
+                            class="edit-form-label"
+                            for="mobile_phone"
+                        >Telefono</label>
+                        <input
+                            class="edit-form-input"
+                            id="mobile_phone"
+                            name="mobile_phone"
+                            type="mobile_phone"
+                            t-att-value="mobile_phone or ''"
+                        />
+                        <label
+                            class="edit-form-label"
+                            for="contraseña_portal"
+                        >Contraseña</label>
+                        <input
+                            class="edit-form-input"
+                            id="contraseña_portal"
+                            name="contraseña_portal"
+                            type="text"
+                            t-att-value="contraseña_portal or ''"
+                        />
+                        <!-- guardar-cambios: botón con hover lift coherente con el portal -->
+                        <button
+                            class="guardar-cambios"
+                            type="submit"
+                        >Guardar Cambios</button>
+                    </form>
+                </section>
+            </main>
+            <!-- nentria-footer: pie de página consistente con el resto del portal -->
+            <footer class="nentria-footer" />
+        </body>
+    </template>
+
+    <!-- Template: Carga de documentos -->
+    <template id="carga_documentos" name="carga_documentos_menu">
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+        </head>
+        <!-- nentria-header: banner oscuro de paleta, idéntico al de my_data y editar_formulario -->
+        <header class="nentria-header">
+            <!-- top-bar: flex row; primer ítem va a la izquierda, top-bar-brand (flex:1) al centro, último a la derecha -->
+            <section class="top-bar">
+                <!-- nav-left: Volver a Inicio como primer ítem flex, queda en el extremo izquierdo -->
+                <a class="top-bar-link" href="/net/home">Volver a Inicio</a>
+                <!-- top-bar-brand: flex:1 + text-align:center centra el h1 entre los dos links laterales -->
+                <section class="top-bar-brand">
+                    <h1 class="nentria-brand top-bar-h1" id="nentria-colab">
+                        <t t-if="company">
+                            <p><t t-esc="company" /></p>
+                        </t>
+                    </h1>
+                </section>
+                <!-- nav-right: Cerrar Sesión como último ítem flex, queda en el extremo derecho -->
+                <a class="top-bar-link" href="/login">Cerrar Sesión</a>
+            </section>
+        </header>
+        <!-- my-space-page: layout flex columna con footer pegado al fondo -->
+        <body class="my-space-page">
+            <main class="main-content">
+                <t t-if="options">
+                    <!-- upload-form-card: tarjeta centrada reutilizando .tile y .data-card -->
+                    <section class="tile data-card upload-form-card">
+                        <h4 class="data-card-title">Carga de Documentos</h4>
+                        <!-- upload-form: layout vertical apilado igual que edit-form -->
+                        <form
+                            action="/guardar-documento"
+                            method="post"
+                            enctype="multipart/form-data"
+                            class="upload-form"
+                        >
+                            <label
+                                class="edit-form-label"
+                                for="nombre"
+                            >Nombre del Documento</label>
+                            <input
+                                class="edit-form-input"
+                                id="nombre"
+                                name="nombre"
+                                type="text"
+                            />
+
+                            <label
+                                class="edit-form-label"
+                                for="pdf"
+                            >Documento PDF</label>
+                            <!-- upload-file-input: campo de archivo con borde dashed de paleta -->
+                            <input
+                                class="upload-file-input"
+                                id="pdf"
+                                name="pdf"
+                                type="file"
+                                accept=".pdf"
+                            />
+
+                            <label
+                                class="edit-form-label"
+                            >Tipo De Documento</label>
+                            <!-- upload-select: select estilizado coherente con los inputs del portal -->
+                            <select class="upload-select" name="tipo_documento">
+                                <t t-foreach="options" t-as="op">
+                                    <option>
+                                        <t t-out="op" />
+                                    </option>
+                                </t>
+                            </select>
+
+                            <!-- guardar-cambios: botón con hover lift, reutiliza clase del formulario de edición -->
+                            <button
+                                class="guardar-cambios"
+                                type="submit"
+                            >Guardar Documento</button>
+                        </form>
+                        <t t-if="error_carga_documento">
+                            <!-- login-error: fondo claro de paleta con texto rojo para errores -->
+                            <p class="login-error"><t
+                                    t-out="error_carga_documento"
+                                /></p>
+                        </t>
+                    </section>
+                </t>
+                <t t-else="">
+                    <!-- upload-success-card: tarjeta de estado vacío cuando no hay documentos pendientes -->
+                    <section class="tile upload-success-card">
+                        <p
+                            class="upload-success-msg"
+                        >¡Felicidades! No cuentas con documentos pendientes por cargar.</p>
+                    </section>
+                </t>
+            </main>
+            <!-- nentria-footer: pie de página consistente con el resto del portal -->
+            <footer class="nentria-footer" />
+        </body>
+    </template>
+
+    <!-- Template visualizar documentos -->
+    <template id="ver_pdfs" name="my_contrato">
+        <head>
+            <link rel="stylesheet" href="/net/static/css/style.css" />
+        </head>
+        <!-- nentria-header: banner oscuro de paleta, idéntico al resto del portal -->
+        <header class="nentria-header">
+            <!-- top-bar: flex row; primer ítem va a la izquierda, top-bar-brand (flex:1) al centro, último a la derecha -->
+            <section class="top-bar">
+                <!-- nav-left: Volver a Inicio como primer ítem flex, queda en el extremo izquierdo -->
+                <a class="top-bar-link" href="/net/home">Volver a Inicio</a>
+                <!-- top-bar-brand: flex:1 + text-align:center centra el h1 entre los dos links laterales -->
+                <section class="top-bar-brand">
+                    <h1 class="nentria-brand top-bar-h1">
+                        <t t-if="company">
+                            <p><t t-esc="company" /></p>
+                        </t>
+                    </h1>
+                </section>
+                <!-- nav-right: Cerrar Sesión como último ítem flex, queda en el extremo derecho -->
+                <a class="top-bar-link" href="/login">Cerrar Sesión</a>
+            </section>
+        </header>
+        <!-- my-space-page: layout flex columna con footer pegado al fondo -->
+        <body class="my-space-page">
+            <main class="main-content">
+                <t t-if="pdf and nombre">
+                    <!-- pdf-info-card: tarjeta con título y nombre del documento -->
+                    <section class="tile data-card pdf-info-card">
+                        <h4 class="data-card-title">Documento Encontrado</h4>
+                        <!-- pdf-doc-name: nombre del documento en tono medio de paleta -->
+                        <p class="pdf-doc-name"><t t-out="nombre" /></p>
+                    </section>
+                    <!-- pdf-viewer-wrapper: contenedor con sombra y border-radius para el iframe -->
+                    <section class="pdf-viewer-wrapper">
+                        <iframe
+                            class="pdf-iframe"
+                            t-attf-src="data:application/pdf;base64,{{ pdf }}"
+                            width="100%"
+                            height="600px"
+                        >
+                            Tu navegador no soporta PDFs incrustados.
+                            <a
+                                class="btn-action"
+                                t-attf-href="data:application/pdf;base64,{{ pdf }}"
+                                download="documento.pdf"
+                            >
+                                Descargar PDF
+                            </a>
+                        </iframe>
+                    </section>
+                </t>
+            </main>
+            <!-- nentria-footer: pie de página consistente con el resto del portal -->
+            <footer class="nentria-footer" />
+        </body>
+    </template>
+
+</odoo>

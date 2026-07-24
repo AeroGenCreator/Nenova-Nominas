@@ -1,0 +1,1007 @@
+/* =========================================
+   NENTRIA PORTAL — Estilos Login
+   Paleta de colores:
+     Claros  (texto negro): #FAE5D8, #DFB6B2
+     Oscuros (texto blanco): #824D69, #522959, #2A114B, #180018
+   Regla: los colores oscuros solo en banners/títulos,
+          NUNCA como fondo de página o tarjeta.
+   ========================================= */
+
+/* --- Body: página de login con centrado flex completo --- */
+/* Usamos flex en .login-page para centrar la tarjeta vertical y horizontalmente */
+.login-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #ffffff; /* Fondo blanco: los oscuros de paleta no van como fondo */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* --- Tarjeta central del formulario --- */
+/* Contenedor blanco elevado con sombra púrpura suave para cohesión con la paleta */
+.center-form {
+    background-color: #ffffff;
+    border-radius: 16px;
+    /* Sombra con tinte del oscuro más neutro de la paleta para dar profundidad */
+    box-shadow: 0 8px 40px rgba(42, 17, 75, 0.15);
+    padding: 48px 56px; /* Padding amplio en lados para experiencia visual amigable */
+    width: 100%;
+    max-width: 440px;
+    box-sizing: border-box;
+}
+
+/* --- Imagen de cabecera del formulario de login --- */
+/* Banner horizontal sin efectos adicionales */
+.login-logo {}
+
+/* --- Título del portal de login --- */
+/* Fuente mayor que cualquier <p> de la vista; color oscuro de paleta para banners/títulos */
+.login-title {
+    color: #2a114b; /* Púrpura oscuro: solo para títulos/banners, nunca como fondo */
+    font-size: 1.75rem; /* Claramente mayor que etiquetas y párrafos de error */
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 36px 0;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+}
+
+/* --- Formulario: layout vertical apilado --- */
+/* flex-direction column para que label y campo se apilen sin markup extra */
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Etiquetas de campo --- */
+/* Semibold en color oscuro de paleta; menor que el título, mayor que texto de error */
+.login-label {
+    color: #2a114b; /* Oscuro de paleta: texto negro sobre fondo claro */
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* --- Campos de entrada (email y password) --- */
+/* Borde con color claro de paleta; transición suave para foco interactivo */
+.login-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #dfb6b2; /* Color claro de paleta para borde en reposo */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2a114b;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    outline: none;
+}
+
+/* Foco: refuerzo visual usando un tono medio de la paleta */
+.login-input:focus {
+    border-color: #824d69; /* Tono medio de paleta al hacer foco */
+    box-shadow: 0 0 0 3px rgba(130, 77, 105, 0.18); /* Halo suave de foco */
+}
+
+/* --- Botón de envío --- */
+/* Color oscuro de paleta como fondo; texto blanco sobre oscuro; animación lift en hover */
+.login-btn {
+    margin-top: 28px;
+    padding: 14px 24px;
+    background-color: #522959; /* Oscuro de paleta: texto blanco sobre él */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 0.5px;
+    /* Transición para el efecto lift: transform + sombra + cambio de color */
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+/* Hover: el botón se eleva ligeramente y adquiere sombra (lift effect) */
+.login-btn:hover {
+    transform: translateY(
+        -3px
+    ); /* Elevación suave para percepción de "levantamiento" */
+    box-shadow: 0 8px 24px rgba(82, 41, 89, 0.45); /* Sombra que aparece al levantarse */
+    background-color: #2a114b; /* Oscuro más profundo de paleta en hover */
+}
+
+/* Active: reducimos elevación para simular presión física del click */
+.login-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(82, 41, 89, 0.3);
+}
+
+/* --- Mensajes de error y advertencia --- */
+/* Fondo claro de paleta + texto rojo: contraste alto sin romper el diseño */
+.login-error {
+    background-color: #fae5d8; /* Claro de paleta: los errores van sobre fondos claros */
+    color: #c0392b; /* Rojo para errores/warnings según indicación */
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem; /* Menor que el título, coherente con jerarquía tipográfica */
+    margin-top: 16px;
+    border-left: 4px solid #c0392b; /* Acento rojo izquierdo para reforzar la alerta */
+    line-height: 1.5;
+}
+
+/* =========================================
+   NENTRIA PORTAL — My Space Page Styles
+   ========================================= */
+
+/* --- Body my_space: fondo neutro con tinte de paleta, layout columna para footer pegado al fondo --- */
+/* flex-direction column permite que main crezca y el footer quede siempre abajo */
+.my-space-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f4f0f7; /* Fondo ligeramente púrpura para cohesión con la paleta */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* --- Header principal: banner oscuro de paleta con texto blanco --- */
+/* Los colores oscuros de paleta solo van en banners/títulos, nunca como fondo de página */
+.nentria-header {
+    background-color: #2a114b; /* Oscuro de paleta para el banner principal */
+    color: #ffffff;
+    padding: 0;
+}
+
+/* --- Top bar: flex row de navegación con fondo más oscuro que el banner del header --- */
+/* Con top-bar-brand (flex:1) como hijo central, el layout queda: izq | centro | der */
+/* Orden de DOM requerido para 3 col: link-izquierda | .top-bar-brand | link-derecha */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 32px;
+    background-color: #180018; /* Más oscuro de paleta como separador del nav */
+}
+
+/* --- Enlace de cerrar sesión en top bar --- */
+/* Color claro de paleta sobre fondo muy oscuro; sin subrayado para aspecto limpio */
+.top-bar-link {
+    color: #dfb6b2; /* Claro de paleta sobre el oscuro del top-bar*/
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.top-bar-link:hover {
+    color: #ffffff; /* Blanco puro al hacer hover */
+}
+
+/* --- Botón de acceso rápido en top bar --- */
+/* Pequeño, color medio de paleta, con hover lift coherente con el resto de botones */
+.btn-top-bar {
+    background-color: #522959; /* Oscuro de paleta: texto blanco garantizado */
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+/* Hover lift en botón de top bar: mismo patrón que el resto de botones del portal */
+.btn-top-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(82, 41, 89, 0.45);
+    background-color: #824d69; /* Tono medio de paleta al hacer hover */
+}
+
+/* --- Sección de bienvenida: título de marca y saludo centrado en el banner --- */
+/* Padding generoso para dar peso visual al banner */
+.bienvenida {
+    padding: 36px 32px 32px;
+    text-align: center;
+}
+
+/* --- Título de marca Nentria: h1, la fuente más grande de la vista --- */
+/* Mayor que cualquier <p> de la página; blanco sobre oscuro del banner */
+.nentria-brand {
+    font-size: 2.5rem; /* El mayor de la vista, cumple jerarquía h1 > p */
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* --- Texto de bienvenida: párrafo menor que h1, tono claro de paleta --- */
+/* Usa #DFB6B2 (claro de paleta) para suavizar el texto secundario sobre el oscuro */
+.bienvenida-texto {
+    font-size: 1rem; /* Menor que h1 (2.5rem), cumple jerarquía */
+    color: #dfb6b2; /* Claro rosado de paleta sobre fondo oscuro */
+    margin: 0;
+    font-weight: 400;
+}
+
+/* --- Contenedor principal: flex:1 para empujar el footer hacia el fondo --- */
+/* padding generoso para que las lozas respiren dentro del área de trabajo */
+.main-content {
+    flex: 1;
+    padding: 40px 32px;
+}
+
+/* --- Cuadrícula de lozas estilo Odoo: auto-fill responsivo --- */
+/* auto-fill con minmax(280px, 1fr) adapta el número de columnas a la pantalla */
+.grid-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px; /* Espacio uniforme entre lozas */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Loza base: tarjeta blanca con sombra suave estilo Odoo --- */
+/* Fondo blanco (los oscuros de paleta nunca son fondos); sombra con tinte de paleta */
+.tile {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(42, 17, 75, 0.1); /* Sombra tintada de paleta oscura */
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hover: la loza se levanta ligeramente, coherente con el efecto lift de los botones */
+.tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(42, 17, 75, 0.18);
+}
+
+/* --- Título de loza: h3 con la segunda mayor jerarquía tipográfica --- */
+/* h3 mayor que todos los <p> internos; color oscuro de paleta para títulos */
+.tile-title {
+    color: #522959; /* Oscuro de paleta para títulos; nunca como fondo */
+    font-size: 1.25rem; /* Mayor que cualquier <p> dentro de la loza */
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #fae5d8; /* Borde claro de paleta como separador sutil */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Contenedor de los 3 valores de tiempo: equiespaciados en fila --- */
+/* space-evenly distribuye los items con espacio igual entre y alrededor de ellos */
+.checks-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    flex: 1;
+}
+
+/* --- Item de tiempo: columna centrada con label arriba y valor abajo --- */
+/* Cada item (horas, entrada, salida) se muestra como columna independiente */
+.check-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+    min-width: 80px;
+}
+
+/* --- Label de cada valor: texto muy pequeño y en mayúsculas, jerárquicamente inferior --- */
+/* Fuente mínima de la vista; color medio de paleta para labels secundarios */
+.check-label {
+    font-size: 0.7rem; /* El más pequeño de la vista, es un label de apoyo */
+    font-weight: 700;
+    color: #824d69; /* Tono medio de paleta para texto auxiliar */
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+}
+
+/* --- Horas totales del mes: verde para distinción visual del resto de valores --- */
+/* Verde diferencia el total acumulado de las horas de entrada/salida puntuales */
+.hours-total {
+    font-size: 1.1rem; /* Menor que el h3 (.tile-title 1.25rem), cumple jerarquía */
+    font-weight: 700;
+    color: #27ae60; /* Verde para horas totales según indicación del usuario */
+    margin: 0;
+}
+
+/* --- Horas de entrada y salida: tamaño menor que hours-total --- */
+/* Fuente menor que las horas totales para crear jerarquía entre los 3 valores */
+.check-time {
+    font-size: 0.9rem; /* Menor que hours-total (1.1rem) */
+    font-weight: 500;
+    color: #2a114b; /* Oscuro de paleta sobre fondo blanco */
+    margin: 0;
+}
+
+/* --- Contenedor de botones de asistencia: centrado dentro de la loza --- */
+/* flex centrado para que el único botón activo quede en el centro de la tarjeta */
+.attendance-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 16px;
+}
+
+/* --- Botón base de asistencia: ancho controlado, fuente clara y transición lift --- */
+/* Base compartida por check-in, check-out y completed */
+.btn-check {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    max-width: 220px;
+    letter-spacing: 0.5px;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+/* --- Botón Entrar: verde para reforzar la acción positiva de entrada --- */
+/* Verde coherente con el color de las horas totales: familia visual de presencia */
+.btn-check-in {
+    background-color: #27ae60;
+    color: #ffffff;
+}
+
+.btn-check-in:hover {
+    transform: translateY(
+        -3px
+    ); /* Lift coherente con todos los botones del portal */
+    box-shadow: 0 8px 24px rgba(39, 174, 96, 0.4);
+    background-color: #219a52;
+}
+
+/* --- Botón Salir: color oscuro de paleta para distinguirlo del botón de entrada --- */
+/* Oscuro de paleta con texto blanco; hover hacia el oscuro más profundo */
+.btn-check-out {
+    background-color: #522959;
+    color: #ffffff;
+}
+
+.btn-check-out:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(82, 41, 89, 0.4);
+    background-color: #2a114b;
+}
+
+/* --- Botón Asistencia Pasada: estado deshabilitado con claro de paleta --- */
+/* Claro de paleta como fondo + oscuro como texto: legible y visualmente inactivo */
+.btn-completed {
+    background-color: #dfb6b2; /* Claro de paleta para estado deshabilitado */
+    color: #522959; /* Oscuro de paleta como texto sobre fondo claro */
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+/* --- Error de IP: mismo patrón que login-error, fondo claro y texto rojo --- */
+/* Los mensajes de error siempre van sobre fondos claros con texto rojo */
+.error-ip-msg {
+    background-color: #fae5d8; /* Claro de paleta para fondo de error */
+    color: #c0392b; /* Rojo para el texto del error/warning */
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem; /* Menor que el h3 de la loza, cumple jerarquía */
+    border-left: 4px solid #c0392b; /* Acento rojo para reforzar la alerta */
+    line-height: 1.5;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* --- Loza Mis Datos: alineación centrada para ícono + título + descripción --- */
+/* Sobreescribe el flex-direction de .tile para centrar el contenido del link */
+.tile-mis-datos {
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* --- Enlace dentro de tile-mis-datos: ocupa toda la loza para mayor área de click --- */
+/* Sin decoración de link; columna centrada igual que la loza */
+.tile-link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 8px;
+}
+
+/* --- Ícono Font Awesome de la loza: primer ítem visual del flex column --- */
+/* display:block convierte el <i> inline en bloque para que sea un ítem flex independiente */
+/* line-height:1 elimina el espacio extra que heredaría del line-height del contexto de texto */
+.tile-icon {
+    font-size: 4.5rem; /* Tamaño prominente; el elemento más visual de la loza */
+    display: block;    /* <i> es inline por defecto; block lo aísla en su propia fila del flex */
+    line-height: 1;    /* Colapsa el espacio vertical extra que generan los elementos inline */
+    color: #2a114b;    /* Mismo tono que .tile-mis-datos .tile-title para coherencia visual */
+    transition: color 0.2s ease; /* Transición de hover igual que el título */
+}
+
+/* --- Descripción de la loza Mis Datos: texto auxiliar menor que el h3 --- */
+/* El más pequeño de la loza; color medio de paleta para jerarquía secundaria */
+.tile-desc {
+    font-size: 0.8125rem; /* Menor que .check-time (0.9rem), mantiene jerarquía */
+    color: #824d69; /* Tono medio de paleta para texto descriptivo */
+    margin: 0;
+    text-align: center;
+}
+
+/* --- tile-title dentro de tile-mis-datos: hereda contexto de enlace --- */
+/* Elimina el separador de borde y ajusta color al link */
+.tile-mis-datos .tile-title {
+    color: #2a114b; /* Oscuro más profundo para el título de la loza de navegación */
+    border-bottom: none; /* Sin separador en la loza de navegación centrada */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Hover sobre la loza Mis Datos: el title cambia de color como feedback de link */
+.tile-mis-datos:hover .tile-title {
+    color: #824d69; /* Tono medio de paleta al hacer hover sobre la loza */
+}
+
+/* Hover: el ícono cambia al mismo tono que el título para feedback visual unificado */
+.tile-mis-datos:hover .tile-icon {
+    color: #824d69;
+}
+
+/* --- Pie de página: fondo oscuro de paleta reservado para links futuros --- */
+/* Footer con oscuro de paleta y texto claro; min-height garantiza espacio aunque esté vacío */
+.nentria-footer {
+    background-color: #2a114b; /* Oscuro de paleta para el footer */
+    color: #dfb6b2; /* Claro de paleta para texto del footer sobre oscuro */
+    padding: 24px 32px;
+    text-align: center;
+    font-size: 0.875rem;
+    min-height: 64px; /* Altura mínima para que el footer sea visible aunque esté vacío */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================
+   NENTRIA PORTAL — My Data Page Styles
+   ========================================= */
+
+
+/* --- h1 en contexto de top-bar (my_data): tamaño reducido respecto al banner de my_space --- */
+/* El h1 de my_data está dentro del top-bar nav, no en un banner independiente */
+.top-bar-h1 {
+    font-size: 1.375rem; /* Menor que el banner de my_space (2.5rem); mayor que h4 y todo lo demás */
+    margin: 0;
+    letter-spacing: 1.5px;
+}
+
+/* --- Sección central del top-bar: flex:1 absorbe todo el espacio libre entre los links laterales --- */
+/* text-align:center posiciona el texto del h1 visualmente al centro de la barra */
+.top-bar-brand {
+    flex: 1;
+    text-align: center;
+}
+
+
+/* --- Tarjeta principal de datos del empleado: reutiliza .tile, centrada y con ancho máximo --- */
+/* max-width evita que la tarjeta se extienda demasiado en pantallas muy anchas */
+.data-card {
+    max-width: 760px;
+    margin: 0 auto 32px;
+}
+
+/* --- Título de la tarjeta de datos: h4, mayor que h5 y todos los <p> internos --- */
+/* Jerarquía: h1 (1.375rem) > h4 (1.25rem) > h5 (1.0625rem) > p.data-value (0.9375rem) */
+.data-card-title {
+    color: #2A114B; /* Oscuro de paleta para el título principal de la tarjeta */
+    font-size: 1.25rem; /* Menor que .top-bar-h1 (1.375rem), mayor que .section-subtitle */
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #FAE5D8; /* Separador sólido con claro de paleta */
+}
+
+
+/* --- Sub-sección de información personal: separador inferior hacia la sección de contrato --- */
+.my-data-info {
+    margin-bottom: 24px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #FAE5D8; /* Línea suave de paleta entre las dos sub-secciones */
+}
+
+/* --- Sub-sección de contrato: sin separador inferior; la tarjeta termina aquí --- */
+.my-data-contract {
+    margin-bottom: 8px;
+}
+
+/* --- Subtítulo de sección: h5, mayor que los <p> de datos internos --- */
+/* Dashed más delicado que el borde sólido del h4, para jerarquía visual diferenciada */
+.section-subtitle {
+    color: #522959; /* Oscuro de paleta para subtítulos de sección */
+    font-size: 1.0625rem; /* Menor que .data-card-title (1.25rem), mayor que .data-value (0.9375rem) */
+    font-weight: 700;
+    margin: 0 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #DFB6B2; /* Dashed para diferenciar del separador sólido del h4 */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Subtítulo de la sección documentos: separación superior antes de la tabla --- */
+.docs-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+
+/* --- Fila de dato: par label izquierda + valor derecha --- */
+/* justify-content:space-between separa label y valor a los extremos de la fila */
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid #f4f0f7; /* Separador muy sutil entre filas */
+}
+
+.data-row:last-child {
+    border-bottom: none; /* Sin separador en la última fila de cada sección */
+}
+
+/* --- Label de campo: el más pequeño de los <p>; mayúsculas para rol de etiqueta --- */
+/* Menor que data-value; el uppercase evita confusión con el valor del campo */
+.data-label {
+    font-size: 0.8125rem; /* El menor de los <p>; menor que data-value (0.9375rem) */
+    font-weight: 600;
+    color: #824D69; /* Tono medio de paleta para texto de apoyo */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* --- Valor de campo: mayor que el label, texto principal del dato --- */
+/* Oscuro de paleta sobre fondo blanco para máxima legibilidad */
+.data-value {
+    font-size: 0.9375rem; /* Menor que h5 (1.0625rem); mayor que data-label (0.8125rem) */
+    font-weight: 500;
+    color: #2A114B; /* Oscuro de paleta sobre fondo blanco */
+    margin: 0;
+    text-align: right;
+    padding-left: 12px;
+}
+
+
+/* --- Estado sin contrato: columna con input inactivo + nota informativa --- */
+.no-contract {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+/* --- Input deshabilitado de contrato: borde dashed para indicar campo vacío/inactivo --- */
+/* Dashed diferencia visualmente un campo sin datos de uno activo */
+.no-data-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px dashed #DFB6B2; /* Dashed con claro de paleta: estado inactivo */
+    border-radius: 8px;
+    background-color: #faf7fb; /* Fondo sutilmente púrpura para cohesión con la paleta */
+    color: #824D69;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+}
+
+/* --- Nota informativa del administrador: texto pequeño en cursiva --- */
+/* Italic + tono medio de paleta lo distingue de los valores de datos normales */
+.no-data-msg {
+    font-size: 0.8125rem; /* Misma escala que data-label, fuente de nota */
+    color: #824D69;
+    margin: 0;
+    font-style: italic;
+}
+
+
+/* --- Botón/link de acción: estilo unificado con hover lift para toda la vista my_data --- */
+/* Aplicado a: Visualizar Contrato, Editar Información, Carga Documentos */
+.btn-action {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #522959; /* Oscuro de paleta: texto blanco garantizado */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    /* Mismo efecto lift que en login_screen y my_space */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    margin-top: 16px;
+}
+
+/* Hover lift: el botón se eleva y adquiere sombra, coherente con el resto del portal */
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(82, 41, 89, 0.4);
+    background-color: #2A114B; /* Oscuro más profundo de paleta en hover */
+    color: #ffffff;
+}
+
+.btn-action:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(82, 41, 89, 0.3);
+}
+
+
+/* --- Sección de documentos: alineada con el ancho de la tarjeta de datos --- */
+.documents-section {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* --- Wrapper de tabla: aplica border-radius con overflow:hidden --- */
+/* Las tablas no aceptan border-radius directamente; el wrapper los recorta */
+.table-wrapper {
+    border-radius: 12px;
+    overflow: hidden; /* Recorta las esquinas de la tabla para respetar el border-radius */
+    box-shadow: 0 4px 20px rgba(42, 17, 75, 0.10); /* Sombra tintada de paleta */
+    margin-bottom: 16px;
+}
+
+/* --- Tabla de documentos: ocupa todo el ancho del wrapper --- */
+/* border-collapse:collapse elimina el espacio doble entre celdas adyacentes */
+.documents-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    table-layout: auto;
+}
+
+/* --- Encabezado de tabla: fondo oscuro de paleta con texto blanco --- */
+/* Mismo principio que los banners de página: oscuro de paleta solo en cabeceras */
+.documents-table thead tr {
+    background-color: #522959; /* Oscuro de paleta para la cabecera de tabla */
+}
+
+/* --- Celdas del encabezado: texto blanco, uppercase y letra-spacing para distinción de rol --- */
+.table-th {
+    padding: 14px 20px;
+    text-align: left;
+    color: #ffffff; /* Blanco sobre el oscuro del encabezado */
+    font-weight: 700;
+    font-size: 0.8125rem; /* Menor que el contenido (table-td) para distinción de tipo */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Filas impares del body: fondo blanco (base) --- */
+.documents-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* --- Filas pares del body: claro de paleta para el intercalado visual --- */
+/* FAE5D8 (el más suave de la paleta) para no sobrecargar el fondo */
+.documents-table tbody tr:nth-child(even) {
+    background-color: #FAE5D8; /* Claro de paleta para filas alternas */
+}
+
+/* Hover sobre fila: segundo claro de paleta como retroalimentación visual */
+.documents-table tbody tr:hover {
+    background-color: #DFB6B2; /* Segundo claro de paleta al hacer hover */
+}
+
+/* --- Celdas del body: padding generoso y color oscuro de paleta --- */
+.table-td {
+    padding: 12px 20px;
+    color: #2A114B; /* Oscuro de paleta sobre fondos claros */
+    border-bottom: 1px solid #FAE5D8; /* Separador sutil alineado con el color alterno */
+    font-size: 0.9rem;
+}
+
+/* --- Link de acción dentro de la tabla: discreto, sin estilo de botón completo --- */
+/* Subrayado solo en hover para indicar cliqueabilidad sin sobrecargar la celda */
+.table-action-link {
+    color: #522959; /* Oscuro de paleta para el link de acción */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.table-action-link:hover {
+    color: #824D69; /* Tono medio de paleta en hover */
+    text-decoration: underline;
+}
+
+
+/* --- Input .no-data en estado vacío de documentos: mismo estilo que .no-data-input --- */
+/* Dashed + fondo sutil para señalar campo inactivo sin datos */
+.no-data {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px dashed #DFB6B2; /* Dashed con claro de paleta para estado inactivo */
+    border-radius: 8px;
+    background-color: #faf7fb;
+    color: #824D69;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+}
+
+/* --- Contenedor de estado sin documentos: tarjeta blanca con sombra --- */
+/* Coherente con el resto de tarjetas del portal: blanco, border-radius, sombra */
+.no-docs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(42, 17, 75, 0.10);
+}
+
+/* --- Mensaje sin documentos: texto informativo en tono medio de paleta --- */
+.no-docs-msg {
+    font-size: 0.9375rem; /* Coherente con data-value; legible sin ser el elemento principal */
+    color: #824D69;
+    margin: 0;
+    font-style: italic;
+}
+
+
+/* =========================================
+   NENTRIA PORTAL — Edit Form Styles
+   ========================================= */
+
+/* --- Tarjeta del formulario de edición: más estrecha que data-card, centrada --- */
+/* max-width menor que data-card (760px) para que el form no se estire demasiado */
+.edit-form-card {
+    max-width: 560px;
+    margin: 0 auto 32px;
+}
+
+/* --- Formulario con layout vertical apilado: idéntico a login-form --- */
+/* flex-direction column apila label + input sin markup extra */
+.edit-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Etiquetas del formulario de edición: igual que login-label --- */
+/* Semibold en oscuro de paleta; menor que el h4 de título, mayor que texto de ayuda */
+.edit-form-label {
+    color: #2a114b; /* Oscuro de paleta: texto negro sobre fondo claro */
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* --- Inputs del formulario de edición: idéntico a login-input --- */
+/* Borde con claro de paleta; transición suave al hacer foco */
+.edit-form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #dfb6b2; /* Claro de paleta para borde en reposo */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2a114b;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    outline: none;
+}
+
+/* Foco: refuerzo visual con tono medio de paleta, igual que login-input:focus */
+.edit-form-input:focus {
+    border-color: #824d69; /* Tono medio de paleta al hacer foco */
+    box-shadow: 0 0 0 3px rgba(130, 77, 105, 0.18); /* Halo suave de foco */
+}
+
+/* --- Botón guardar cambios: mismo patrón que login-btn y btn-action --- */
+/* Color oscuro de paleta como fondo; texto blanco; animación lift en hover */
+.guardar-cambios {
+    margin-top: 28px;
+    padding: 14px 24px;
+    background-color: #522959; /* Oscuro de paleta: texto blanco garantizado */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 0.5px;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+/* Hover lift: elevación coherente con todos los botones del portal */
+.guardar-cambios:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(82, 41, 89, 0.45);
+    background-color: #2a114b; /* Oscuro más profundo de paleta en hover */
+}
+
+/* Active: reducción de elevación para simular presión física del click */
+.guardar-cambios:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(82, 41, 89, 0.3);
+}
+
+
+/* =========================================
+   NENTRIA PORTAL — Upload Form Styles
+   ========================================= */
+
+/* --- Tarjeta del formulario de carga: mismo ancho que edit-form-card --- */
+.upload-form-card {
+    max-width: 560px;
+    margin: 0 auto 32px;
+}
+
+/* --- Formulario con layout vertical apilado: idéntico a edit-form --- */
+.upload-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Input de archivo: borde dashed de paleta para distinguirlo de los inputs de texto --- */
+/* Dashed señala que es un campo especial (selección de archivo), no un campo editable normal */
+.upload-file-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px dashed #dfb6b2; /* Dashed con claro de paleta: diferencia el tipo de campo */
+    border-radius: 8px;
+    background-color: #faf7fb; /* Fondo sutil púrpura para cohesión con la paleta */
+    color: #824d69; /* Tono medio de paleta sobre fondo claro */
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition:
+        border-color 0.25s ease,
+        background-color 0.25s ease;
+}
+
+/* Hover: el borde se refuerza con el tono medio de paleta */
+.upload-file-input:hover {
+    border-color: #824d69; /* Tono medio de paleta al hacer hover */
+    background-color: #f4f0f7;
+}
+
+/* --- Select de tipo de documento: mismo visual que login-input --- */
+/* appearance:none elimina el estilo nativo del navegador para control total */
+.upload-select {
+    width: 100%;
+    padding: 12px 40px 12px 16px; /* padding-right amplio para la flecha custom */
+    border: 2px solid #dfb6b2; /* Claro de paleta para borde en reposo */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2a114b; /* Oscuro de paleta sobre fondo blanco */
+    background-color: #ffffff;
+    box-sizing: border-box;
+    cursor: pointer;
+    outline: none;
+    /* Elimina la flecha nativa del navegador */
+    appearance: none;
+    -webkit-appearance: none;
+    /* Flecha SVG custom con color de paleta oscura (#2a114b) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232a114b' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Foco: mismo halo que los inputs de texto del portal */
+.upload-select:focus {
+    border-color: #824d69; /* Tono medio de paleta al hacer foco */
+    box-shadow: 0 0 0 3px rgba(130, 77, 105, 0.18); /* Halo suave de foco */
+}
+
+/* --- Tarjeta de estado exitoso: centrada, sin muchos documentos pendientes --- */
+/* Reutiliza .tile; centrado del contenido para el mensaje de felicitación */
+.upload-success-card {
+    max-width: 560px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 32px;
+}
+
+/* --- Mensaje de éxito: verde coherente con .hours-total y .btn-check-in --- */
+/* Verde para estados positivos/satisfactorios según paleta del portal */
+.upload-success-msg {
+    font-size: 1.0625rem; /* Coherente con section-subtitle; visible sin ser el elemento principal */
+    font-weight: 600;
+    color: #27ae60; /* Verde para éxito, coherente con horas totales y botón Entrar */
+    margin: 0;
+}
+
+
+/* =========================================
+   NENTRIA PORTAL — PDF Viewer Styles
+   ========================================= */
+
+/* --- Tarjeta de info del documento: mismo ancho máximo que documents-section --- */
+/* Se alinea visualmente con la tabla de documentos de my_data */
+.pdf-info-card {
+    max-width: 760px;
+    margin: 0 auto 24px;
+}
+
+/* --- Nombre del documento: tono medio de paleta, cursiva para distinguirlo del título --- */
+/* Menor que el h4 (.data-card-title); italic lo diferencia de un valor de dato normal */
+.pdf-doc-name {
+    font-size: 0.9375rem; /* Coherente con data-value; mayor que data-label */
+    font-weight: 500;
+    color: #824d69; /* Tono medio de paleta para texto secundario */
+    margin: 0;
+    font-style: italic;
+}
+
+/* --- Contenedor del iframe: sombra y border-radius coherentes con .table-wrapper --- */
+/* overflow:hidden recorta el iframe para que respete el border-radius del contenedor */
+.pdf-viewer-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden; /* Recorta las esquinas del iframe igual que table-wrapper */
+    box-shadow: 0 4px 20px rgba(42, 17, 75, 0.10); /* Sombra tintada de paleta oscura */
+}
+
+/* --- Iframe del PDF: sin borde nativo, ocupa todo el contenedor --- */
+/* display:block elimina el espacio en línea que dejan los iframes por defecto */
+.pdf-iframe {
+    display: block; /* Elimina el espacio inline inferior del iframe */
+    width: 100%;
+    min-height: 600px;
+    border: none; /* Elimina el borde nativo del navegador */
+}

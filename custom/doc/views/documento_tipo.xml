@@ -1,0 +1,54 @@
+<odoo>
+    
+    <record id="documento_tipo_form_view" model="ir.ui.view">
+        <field name="name">documento.tipo.form.view</field>
+        <field name="model">documento.tipo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Documentos Categorias">
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="documento_tipo_list_view" model="ir.ui.view">
+        <field name="name">documento.tipo.list.view</field>
+        <field name="model">documento.tipo</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="documento_tipo_search_view" model="ir.ui.view">
+        <field name="name">documento.tipo.search.view</field>
+        <field name="model">documento.tipo</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="deactivated"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="documento_tipo_view_action" model="ir.actions.act_window">
+        <field name="name">Categorias</field>
+        <field name="res_model">documento.tipo</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="documento_tipo_search_view" />
+    </record>
+
+</odoo>

@@ -1,0 +1,58 @@
+<odoo>
+    <record id="nomina_form_view_ext" model="ir.ui.view">
+        <field name="name">nomina.form.view.ext</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- AGREGA campo="años de antigüedad" -->
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <h5 class="d-flex align-items-baseline mb-0 mt-1">
+                    <i
+                        class="fa fa-calendar-o text-primary"
+                        title="Años Antiguedad"
+                        style="margin-left: 2px"
+                    />
+                    <p
+                        style="font-weight: 400; padding-left: 10px; color: black;">
+                        Antigüedad Años:
+                    </p>
+                    <field
+                        name="antiguedad_anhos"
+                        string="Antiguedad"
+                        widget="integer"
+                        readonly="1"
+                        style="margin-left: 10px; color: rgb(153,0,76);"
+                    />
+                </h5>
+            </xpath>
+
+            <!-- AGREGA pagina="Nomina" -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Nómina">
+                    <sheet>
+                        <group>
+                            <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
+                            <field name="plan_vacacional_id"/>
+                        </group>
+                        <group>
+                            <group string="Salario">
+                                <field 
+                                    name="sueldo_bruto"
+                                    widget="custom_monetary_float"
+                                />
+                                <field name="periodo_pago_id"/>
+                                <field name="sueldo_diario" widget="custom_monetary_float"/>
+                                <field name="jornada_id"/>
+                            </group>
+                            <group string="Salario Integrado">
+                                <field name="salario_integral" widget="custom_monetary_float"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

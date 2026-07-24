@@ -1,0 +1,30 @@
+<odoo>
+
+    <menuitem
+        name="Archivos"
+        id="doc.root_menu"
+        web_icon="doc,static/description/icon.png"
+    />
+
+    <menuitem
+        name="Contratos"
+        id="doc.contrato_top_menu"
+        parent="doc.root_menu"
+        action="contrato_view_action"
+    />
+
+    <menuitem
+        name="Documentos"
+        id="doc.documento_top_menu"
+        parent="doc.root_menu"
+        action="documento_view_action"
+    />
+
+    <menuitem
+        name="Categorias"
+        id="doc.documento_tipo_top_menu"
+        parent="doc.root_menu"
+        action="documento_tipo_view_action"
+    />
+
+</odoo>

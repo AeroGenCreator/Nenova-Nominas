@@ -1,0 +1,74 @@
+<odoo>
+    
+    <!-- VISTA DE FORMULARIO -->
+    <record id="vacaciones_form_view" model="ir.ui.view">
+        <field name="name">vacaciones.form.view</field>
+        <field name="model">nomina.vacaciones</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <div class="container">
+                            <group class="bg-light py-4 px-2 rounded">
+                                <field name="name" class="fw-bold"/>
+                                <field name="empleado_id"/>
+                                <field
+                                    name="derecho_id"
+                                    readonly="empleado_id == False"
+                                    domain="[('empleado_id','=',empleado_id)]"
+                                />
+                                <field name="anticipacion" class="text-warning"/>
+                            </group>
+                        </div>
+                        <group>
+                            <field name="disponibles"/>
+                            <field name="comienza" readonly="empleado_id == False"/>
+                            <field name="finaliza" readonly="empleado_id == False"/>
+                            <field name="dias" class="text-info fw-bold"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA DE LISTA -->
+    <record id="vacaciones_list_view" model="ir.ui.view">
+        <field name="name">vacaciones.list.view</field>
+        <field name="model">nomina.vacaciones</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="empleado_id" width="60"/>
+                <field name="derecho_id" width="80"/>
+                <field name="comienza" width="60"/>
+                <field name="finaliza" width="60"/>
+                <field name="dias" width="60"/>
+                <field name="anho" width="60" widget="char"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="vacaciones_search_view" model="ir.ui.view">
+        <field name="name">vacaciones.search.view</field>
+        <field name="model">nomina.vacaciones</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN VISTA -->
+    <record id="vacaciones_view_action" model="ir.actions.act_window">
+        <field name="name">Vacaciones</field>
+        <field name="res_model">nomina.vacaciones</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="vacaciones_search_view"/>
+    </record>
+
+</odoo>

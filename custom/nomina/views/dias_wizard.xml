@@ -1,0 +1,45 @@
+<odoo>
+
+    <record id="nomina_dias_wizard_form_view" model="ir.ui.view">
+        <field name="name">nomina.dias.wizard.form.view</field>
+        <field name="model">nomina.dias.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Carga Automática">
+                        <group>
+                            <field name="dia" widget="many2many_checkboxes"/>
+                        </group>
+                        <group>
+                            <field name="hora_inicio" widget="float_time"/>
+                            <field name="hora_termino" widget="float_time"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        string="Agregar Días"
+                        name="action_generar_dias"
+                        class="btn-info"
+                        type="object"
+                    />
+                    <!-- Botón rojo para cancelar -->
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Llamar un pop-up requiere del campo name="target" >new< -->
+    <record id="nomina_dias_wizard_action" model="ir.actions.act_window">
+        <field name="name">Carga de horas</field>
+        <field name="res_model">nomina.dias.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

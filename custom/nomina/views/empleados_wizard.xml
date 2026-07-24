@@ -1,0 +1,43 @@
+<odoo>
+
+    <record id="nomina_empleados_wizard_form_view" model="ir.ui.view">
+        <field name="name">nomina.empleados.wizard.form.view</field>
+        <field name="model">nomina.empleados.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p style="font-weight: 600;">
+                        Este menú permite preseleccionar a los empleados que desea incluir en la jornada laboral actual. Al hacer clic en 'Agregar línea', podrá explorar la lista completa de empleados disponibles.
+                    </p>
+                    <notebook>
+                        <page string="Previsualizar Posibles Empleados">
+                            <field name="empleado_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button
+                        string="Agregar Empleados"
+                        name="action_agregar_empleados"
+                        class="btn-info"
+                        type="object"
+                    />
+                    <!-- Botón rojo para cancelar -->
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="nomina_empleados_wizard_action" model="ir.actions.act_window">
+        <field name="name">Agregar Empleados</field>
+        <field name="res_model">nomina.empleados.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

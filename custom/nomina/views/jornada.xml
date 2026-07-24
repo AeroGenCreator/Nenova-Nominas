@@ -1,0 +1,117 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_jornada_view_form" model="ir.ui.view">
+        <field name="name">nomina.jornada.form.view</field>
+        <field name="model">nomina.jornada</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <div>
+                        <button
+                            string="Agregar Días - Automático"
+                            name="%(nomina.nomina_dias_wizard_action)d"
+                            type="action"
+                            class="btn-success ms-2 me-2"
+                            icon="fa-plus"
+                        />
+                        <button
+                            string="Agregar Empleados - Automático"
+                            name="%(nomina.nomina_empleados_wizard_action)d"
+                            type="action"
+                            class="btn-primary ms-2 me-2"
+                            icon="fa-plus"
+                        />
+                    </div>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Nombres">
+                            <field name="name"/>
+                            <field name="alias"/>
+                            <field name="turno"/>
+                            <field name="total_empleados"/>
+                            <!-- Llamar una vista xml por id (wizard 'pop-up') -->
+                        </group>
+                        <group string="Configuración">
+                            <field name="horas_totales" widget="float_time"/>
+                            <field name="descanso" widget="float_time"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Horario">
+                            <field name="dia_ids">
+                                <list
+                                    decoration-info="estatus != 'descanso'"
+                                    decoration-danger="estatus == 'descanso'"
+                                >
+                                    <field name="name" width="200"/>
+                                    <field name="dia_id" width="200"/>
+                                    <field name="estatus" width="100"/>
+                                    <field name="hora_inicio" width="200"/>
+                                    <field name="hora_termino" width="200"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Empleados">
+                            <field name="empleado_ids">
+                                <list>
+                                    <field name="name" width="200"/>
+                                    <field name="work_email" width="200"/>
+                                    <field name="antiguedad_anhos" width="80"/>
+                                    <field name="sueldo_bruto" width="200"/>
+                                    <field name="periodo_pago_id" width="200"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>                
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA JORNADA -->
+    <record id="nomina_jonada_list_view" model="ir.ui.view">
+        <field name="name">nomina.jornada.list.view</field>
+        <field name="model">nomina.jornada</field>
+        <field name="arch" type="xml">
+            <list
+                string="Jorna Registros"
+                decoration-success="turno == 'diurna'" 
+                decoration-info="turno == 'nocturna'"
+                decoration-warning="turno == 'mixta'"
+                >
+                <field name="name" width="100"/>
+                <field name="turno" width="100"/>
+                <field name="descanso" width="100"/>
+                <field name="total_empleados" width="100"/>
+                <field name="horas_totales" width="100"/>
+                <field name="active" width="100"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH JORNADA -->
+    <record id="nomina_jornada_search_view" model="ir.ui.view">
+        <field name="name">nomina.jornada.search.view</field>
+        <field name="model">nomina.jornada</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter 
+                    string="Archivados"
+                    name="jornada_archivados"
+                    domain="[('active', '!=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN JORNADA -->
+    <record id="jornada_action" model="ir.actions.act_window">
+        <field name="name">Jornada</field>
+        <field name="res_model">nomina.jornada</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_jornada_search_view" />
+    </record>
+
+</odoo>

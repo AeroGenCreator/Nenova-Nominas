@@ -1,0 +1,63 @@
+<odoo>
+    <!-- VISTA FORMULARIO -->
+    <record id="documento_form_view" model="ir.ui.view">
+        <field name="name">documento.form.view</field>
+        <field name="model">documento</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group string="Información Requerida">
+                        <field name="name" />
+                        <field name="empleado_id" />
+                        <field name="fecha" />
+                        <field name="documento_tipo_id" />
+                    </group>
+                    <group string="Contrato">
+                        <field name="active" widget="toggle" />
+                        <field name="documento_pdf" widget="pdf_viewer" />
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="documento_list_view" model="ir.ui.view">
+        <field name="name">documento.list.view</field>
+        <field name="model">documento</field>
+        <field name="arch" type="xml">
+            <list
+                string="Lista de Documentos"
+                decoration-success="active == True"
+                decoration-muted="active == False"
+            >
+                <field name="name" />
+                <field name="documento_tipo_id" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH -->
+    <record id="documento_search_view" model="ir.ui.view">
+        <field name="name">documento.search.view</field>
+        <field name="model">documento</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Activos"
+                    name="activos"
+                    domain="[('active','=', True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="documento_view_action" model="ir.actions.act_window">
+        <field name="name">Documentos</field>
+        <field name="res_model">documento</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="documento_search_view" />
+    </record>
+
+</odoo>

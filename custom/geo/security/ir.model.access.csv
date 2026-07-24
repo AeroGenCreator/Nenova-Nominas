@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_geo_plan_ubicacion_linea,access.geo.plan.ubicacion.linea,model_geo_plan_ubicacion_linea,base.group_user,1,1,1,1
+access_geo_empleado_plan_linea,access.geo.empleado.plan.linea,model_geo_empleado_plan_linea,base.group_user,1,1,1,1
+access_geo_ubicacion,access.geo.ubicacion,model_geo_ubicacion,base.group_user,1,1,1,1
+access_geo_categoria,access.geo.categoria,model_geo_categoria,base.group_user,1,1,1,1
+access_geo_plan,acces.geo.plan,model_geo_plan,base.group_user,1,1,1,1

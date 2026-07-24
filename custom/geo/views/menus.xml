@@ -1,0 +1,28 @@
+<odoo>
+
+    <menuitem
+        id="geo.root_menu"
+        name="Geolocalización"
+        web_icon="geo,static/description/icon.png"
+    >
+        <menuitem
+            id="geo.plan"
+            name="Planes"
+            action="plan_view_action"
+            sequence="1"
+        />
+        <menuitem
+            id="geo.ubicacion"
+            name="Ubicación"
+            action="ubicacion_view_action"
+            sequence="2"
+        />
+        <menuitem
+            id="geo.categoria"
+            name="Categoria"
+            action="categoria_view_action"
+            sequence="3"
+        />
+    </menuitem>
+
+</odoo>

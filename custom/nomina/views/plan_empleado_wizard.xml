@@ -1,0 +1,42 @@
+<odoo>
+    
+    <record id="nomina_plan_empleado_wizard_form_view" model="ir.ui.view">
+        <field name="name">nomina.plan.empleado.wizard.form.view</field>
+        <field name="model">nomina.plan.empleado.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p style="font-weight: bold;">
+                        Agregue empleados en la lista a acontinuación.
+                    </p>
+                    <notebook>
+                        <page string="Lineas Empleado">
+                            <field name="empleado_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button
+                        string="Crear Relación"
+                        name="action_relacionar_empleados"
+                        class="btn-info"
+                        type="object"
+                    />
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="nomina_plan_empleado_wizard_action" model="ir.actions.act_window">
+        <field name="name">Relación Plan-Empleado</field>
+        <field name="res_model">nomina.plan.empleado.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

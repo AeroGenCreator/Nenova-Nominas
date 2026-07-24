@@ -1,0 +1,37 @@
+<odoo>
+    <!-- OCULTA VISTAS AMERICANAS DE NOMINAS Y AGREGA DOCUMENTOS Y CONTRATOS. -->
+    <record id="form_emp_employee_ext" model="ir.ui.view">
+        <field name="name">form.emp.employee.ext</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+
+            <!-- OCULTAR pagina="personal_information" Evitar cargar documento INE -->
+            <xpath expr="//field[@name='id_card']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            
+            <!-- OCULTAR pagina="payroll_information" -->
+            <xpath expr="//page[@name='payroll_information']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            
+            <!-- OCULTAR pagina="resume" -->
+            <xpath expr="//page[@name='resume']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            
+            <!-- AGREGAR pagina="contrato" && pagina="documentos" -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Contrato">
+                    <field name="contrato_ids" />
+                </page>
+                <page string="Documentos">
+                    <field name="documento_ids" />
+                </page>
+            </xpath>
+        
+        </field>
+    </record>
+
+</odoo>

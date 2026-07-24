@@ -1,0 +1,59 @@
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="geo_categoria_form_view" model="ir.ui.view">
+        <field name="name">geo.categoria.form.view</field>
+        <field name="model">geo.categoria</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Formulario">
+                        <field name="name" />
+                        <field
+                            name="ubicacion_empresa"
+                            widget="boolean_toggle"
+                        />
+                        <field name="active" widget="boolean_toggle" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- === VISTA LISTA -->
+    <record id="geo_categoria_list_view" model="ir.ui.view">
+        <field name="name">geo.categoria.list.view</field>
+        <field name="model">geo.categoria</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="ubicacion_empresa" widget="boolean_toggle" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <!-- === VISTA SEARCH === -->
+    <record id="geo_categoria_search_view" model="ir.ui.view">
+        <field name="name">geo.categoria.search.view</field>
+        <field name="model">geo.categoria</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="categoria_archivada"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="categoria_view_action" model="ir.actions.act_window">
+        <field name="name">Categoria</field>
+        <field name="res_model">geo.categoria</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="geo_categoria_search_view" />
+    </record>
+
+</odoo>

@@ -1,0 +1,90 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_plan_vacacional_form_view" model="ir.ui.view">
+        <field name="name">nomina.plan.vacacional.form.view</field>
+        <field name="model">nomina.plan.vacacional</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        string="Agregar Rangos (Automático)"
+                        type="action"
+                        name="%(nomina.nomina_plan_rangos_wizard_action)d"
+                        class="btn-success mt-1 mb-1 ms-2 me-2"
+                        icon="fa-plus"
+                    />
+                    <button
+                        string="Agregar Empleados (Manual)"
+                        type="action"
+                        name="%(nomina.nomina_plan_empleado_wizard_action)d"
+                        class="btn-primary mt-1 mb-1 ms-2 me-2"
+                        icon="fa-plus"
+                    />
+                </header>
+                <sheet>
+                    <group string="Plan Configuración">
+                        <group string="Información">
+                            <field name="name"/>
+                            <field name="minimo_anticipacion" class="text-info"/>
+                            <field name="total_rangos"/>
+                            <field name="total_empleados"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Caducidad Aplicada al Derecho Vacacional">
+                            <field name="caduca_anhos" class="text-danger"/>
+                            <field name="caduca_meses" class="text-danger"/>
+                            <field name="caduca_dias" class="text-danger"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rangos Vacacionales">
+                            <field name="rango_ids"/>
+                        </page>
+                        <page string="Empleados Relacionados">
+                            <field name="empleado_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="nomina_plan_vacacional_list_view" model="ir.ui.view">
+        <field name="name">nomina.plan.vacacional.list.view</field>
+        <field name="model">nomina.plan.vacacional</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="100"/>
+                <field name="total_rangos" width="100"/>
+                <field name="total_empleados" width="100"/>
+                <field name="active" width="100"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH -->
+    <record id="nomina_plan_vacacional_search_view" model="ir.ui.view">
+        <field name="name">nomina.plan.vacacional.search.view</field>
+        <field name="model">nomina.plan.vacacional</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN PLAN VACACIONAL -->
+    <record id="plan_vacacional_action" model="ir.actions.act_window">
+        <field name="name">Plan Vacacional</field>
+        <field name="res_model">nomina.plan.vacacional</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_plan_vacacional_search_view"/>
+    </record>
+
+</odoo>

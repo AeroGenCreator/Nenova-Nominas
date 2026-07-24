@@ -1,0 +1,75 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_vacacional_rangos_form_view" model="ir.ui.view">
+        <field name="name">nomina.vacacional.rangos.form.view</field>
+        <field name="model">nomina.vacacional.rangos</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Registro">
+                            <field name="name"/>
+                            <field name="categoria_id"/>
+                            <field name="dias_vacaciones" class="text-info"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Configuración">
+                            <field name="limite_inferior"/>
+                            <field name="limite_superior"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="nomina_vacacional_rangos_list_view" model="ir.ui.view">
+        <field name="name">nomina.vacacional.rangos.list.view</field>
+        <field name="model">nomina.vacacional.rangos</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-success="categoria_id == 1"
+                decoration-info="categoria_id != 1"
+            >
+                <field name="name" width="100"/>
+                <field name="categoria_id" width="100"/>
+                <field name="limite_inferior" width="100"/>
+                <field name="limite_superior" width="100"/>
+                <field name="dias_vacaciones" width="100"/>
+                <field name="active" width="100"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH -->
+    <record id="nomina_vacacional_rangos_search_view" model="ir.ui.view">
+        <field name="name">nomina.vacacional.rangos.search.view</field>
+        <field name="model">nomina.vacacional.rangos</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+                <filter
+                    string="Por Categoria"
+                    name="group_by_categoria"
+                    context="{'group_by': 'categoria_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="nomina_vacacional_rangos_action" model="ir.actions.act_window">
+        <field name="name">Vacacional Rangos</field>
+        <field name="res_model">nomina.vacacional.rangos</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_vacacional_rangos_search_view"/>
+        <field name="context">{'group_by': 'categoria_id'}</field>
+    </record>
+
+</odoo>

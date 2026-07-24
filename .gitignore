@@ -1,0 +1,8 @@
+# Respaldo de bases de datos
+data/
+
+# Ficheros de configuracion para odoo
+config/
+
+# Variables de entorno
+.env

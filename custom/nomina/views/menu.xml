@@ -1,0 +1,95 @@
+<odoo>
+    
+    <menuitem
+        id="nomina.root_menu"
+        name="Nómina"
+        web_icon="nomina,static/description/icon.png"
+    />
+
+    <menuitem
+        id="nomina.main_view"
+        name="¡Bienvenido!"
+        action="nomina_main_view_action"
+        parent="nomina.root_menu"
+        sequence="1"
+    />
+
+    <menuitem 
+        id="nomina.jornada" 
+        name="Jornada" 
+        action="jornada_action"
+        parent="nomina.root_menu"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina.vacaciones_menu"
+        name="Vacaciones"
+        parent="nomina.root_menu"
+        sequence="3"
+    />
+
+    <menuitem
+        id="nomina.derecho_vacacional"
+        name="Vacación Derechos"
+        action="derecho_vacacional_action"
+        parent="nomina.vacaciones_menu"
+        sequence="1"
+    />
+
+    <menuitem
+        id="nomina.vacaciones"
+        name="Vacaciones"
+        action="vacaciones_view_action"
+        parent="nomina.vacaciones_menu"
+        sequence="2"
+    />
+
+    <menuitem 
+        id="nomina.configuracion"
+        name="Configuraciones"
+        parent="nomina.root_menu"
+        sequence="4"
+    />
+
+    <menuitem
+        id="nomina.plan_vacacional"
+        name="Plan Vacacional"
+        action="plan_vacacional_action"
+        parent="nomina.configuracion"
+        sequence="1"
+    />
+
+    <menuitem
+        id="nomina.vacacional_rangos"
+        name="Vacacional Rangos"
+        parent="nomina.configuracion"
+        action="nomina_vacacional_rangos_action"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina.vacacional_categoria"
+        name="Vacacional Categoría"
+        parent="nomina.configuracion"
+        action="nomina_vacacional_categoria_action"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina.periodo_pago"
+        name="Período Pagos"
+        parent="nomina.configuracion"
+        action="periodo_pago_action"
+        sequence="3"
+    />
+
+    <menuitem
+        id="nomina.dia_hora_linea"
+        name="Días Armados"
+        action="dia_hora_linea_action"
+        parent="nomina.configuracion"
+        sequence="4"
+    />
+
+</odoo>

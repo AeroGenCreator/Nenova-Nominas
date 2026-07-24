@@ -1,0 +1,70 @@
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_derecho_vacacional_form_view" model="ir.ui.view">
+        <field name="name">nomina.derecho.vacacional.form.view</field>
+        <field name="model">nomina.derecho.vacacional</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Información">
+                            <field name="name" class="fw-bold"/>
+                            <field name="empleado_id" readonly="1"/>
+                            <field name="plan_id" readonly="1"/>
+                            <field name="rango_id" readonly="1"/>
+                            <field name="dias_vacaciones" class="text-info" readonly="1"/>
+                            <field name="cuenta_regresiva" class="text-warning" readonly="1"/>
+                        </group>
+                        <group string="Fechas &amp; Estado" class="bg-light pb-5">
+                            <field name="anho_activacion" widget="char" readonly="1"/>
+                            <field name="fecha_activacion" readonly="1"/>
+                            <field name="fecha_caducidad" readonly="1"/>
+                            <field name="fecha_contratacion" readonly="1"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vacaciones Relacionadas">
+                            <field name="vacaciones_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="comienza"/>
+                                    <field name="finaliza"/>
+                                    <field name="dias"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="nomina_derecho_vacacional_list_view" model="ir.ui.view">
+        <field name="name">nomina.derecho.vacacional.list.view</field>
+        <field name="model">nomina.derecho.vacacional</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="empleado_id" width="60"/>
+                <field name="plan_id" width="60"/>
+                <field name="rango_id" width="60"/>
+                <field name="dias_vacaciones" width="60"/>
+                <field name="cuenta_regresiva" width="60"/>
+                <field name="anho_activacion" width="60" widget="char"/>
+                <field name="fecha_activacion" width="60"/>
+                <field name="fecha_caducidad" width="60"/>
+                <field name="fecha_contratacion" width="60"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DERECHO VACACIONAL -->
+    <record id="derecho_vacacional_action" model="ir.actions.act_window">
+        <field name="name">Derecho Vacacional</field>
+        <field name="res_model">nomina.derecho.vacacional</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

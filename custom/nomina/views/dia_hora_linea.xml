@@ -1,0 +1,74 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_dia_hora_linea_form_view" model="ir.ui.view">
+        <field name="name">nomina.dia.hora.linea.form.view</field>
+        <field name="model">nomina.dia.hora.linea</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <group string="Configuración">
+                        <group>
+                            <field name="name"/>
+                            <field name="jornada_id"/>
+                            <field name="estatus"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="dia_id"/>
+                            <field name="hora_inicio" widget="float_time"/>
+                            <field name="hora_termino" widget="float_time"/>
+                        </group>
+                    </group>
+                </sheet>                
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA DIA-HORA LINEA-->
+    <record id="nomina_dia_hora_linea_list_view" model="ir.ui.view">
+        <field name="name">nomina.dia.hora.linea.list.view</field>
+        <field name="model">nomina.dia.hora.linea</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="100"/>
+                <field name="dia_id" width="60"/>
+                <field name="hora_inicio" width="60"/>
+                <field name="hora_termino" width="60"/>
+                <field name="jornada_id" width="100"/>
+                <field name="active" width="100"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH DIA-HORA LINEA -->
+    <record id="nomina_dia_hora_linea_search_view" model="ir.ui.view">
+        <field name="name">nomina.dia.hora.linea.search.view</field>
+        <field name="model">nomina.dia.hora.linea</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived_lines"
+                    domain="[('active','!=',True)]"
+                />
+                <filter 
+                    string="Por Jornada"
+                    name="group_by_jornada"
+                    context="{'group_by': 'jornada_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DÍAS -->
+    <record id="dia_hora_linea_action" model="ir.actions.act_window">
+        <field name="name">Armar Días</field>
+        <field name="res_model">nomina.dia.hora.linea</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'group_by': 'jornada_id'}</field>
+        <field name="search_view_id" ref="nomina_dia_hora_linea_search_view"/>
+    </record>
+
+</odoo>

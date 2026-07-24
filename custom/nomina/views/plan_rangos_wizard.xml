@@ -1,0 +1,44 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO DEL WIZARD -->
+    <record id="nomina_plan_rangos_wizard_form_view" model="ir.ui.view">
+        <field name="name">nomina.plan.rangos.wizard.form.view</field>
+        <field name="model">nomina.plan.rangos.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p style="font-weight: bold;">
+                        Selecciona la categoría vacacional por la cual se
+                        desea realizar la importación.
+                    </p>
+                    <group string="Selección">
+                        <field name="categoria_id"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        string="Agregar Empleados"
+                        name="action_agregar_rangos"
+                        class="btn-info"
+                        type="object"
+                    />
+                    <!-- Botón rojo para cancelar -->
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DEL WIZARD -->
+    <record id="nomina_plan_rangos_wizard_action" model="ir.actions.act_window">
+        <field name="name">Agregar Rangos (Automático)</field>
+        <field name="res_model">nomina.plan.rangos.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,48 @@
+<odoo>
+    
+    <!-- VISTA PRINCIPAL (DASHBOARD) -->
+    <record id="nomina_main_view_dashboard" model="ir.ui.view">
+        <field name="name">nomina.main.view.dashboard</field>
+        <field name="model">nomina.main.view</field>
+        <field name="arch" type="xml">
+            <form string="Bienvenida" create="0" delete="0" edit="0">
+                <sheet>
+                    <div class="container px-5 py-5 bg-secondary rounded-5">
+                        <div class="row justify-content-md-center mb-4">
+                            <field name="welcome" class="fs-1" style="font-weight: bold;"/>
+                        </div>
+                        <div class="row justify-content-start" style="min-height: 120px;">
+                            <div class="col">
+                                <button
+                                    string="Crear Nóminas (Por lote)"
+                                    name=""
+                                    type="action"
+                                    class="btn-success btn-lg w-100 h-100"
+                                    icon="fa-file-text"
+                                />
+                            </div>
+                            <div class="col">
+                                <button
+                                    string="Refrescar Lista de Derecho Vacacional"
+                                    name="action_refrescar_derecho_vacacional"
+                                    type="object"
+                                    class="btn-primary btn-lg w-100 h-100"
+                                    icon="fa-refresh"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DE VISTA PRINCIPAL -->
+    <record id="nomina_main_view_action" model="ir.actions.act_window">
+        <field name="name">¡Bienvenido!</field>
+        <field name="res_model">nomina.main.view</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

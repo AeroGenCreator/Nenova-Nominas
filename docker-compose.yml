@@ -1,0 +1,79 @@
+services:
+  # Nombre del servicio
+  db_nominas:
+    # Imagen del contenedor
+    image: postgres:15
+    # Nombre del contenedor
+    container_name: db-nominas
+    # Actividad del contenedor; always: Reiniciar siempre cuando por algun motivo se detenga a no ser que sea manual.
+    restart: always
+    # Variables de entorno, las inyecto desde el .env al contenedor, posteriormente el .sh las carga y las usa en el entrypoint.
+    # Esto porque el servicio de entrypoint se ejecuta una vez el servicio de 'database' se haya inicializado.
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # Espejo de directorios entre el contenedor y el ordenador anfitrion
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./data/import:/import
+
+  odoo_nominas:
+    # El servicio de odoo depende del Dockerfile (Imagen)
+    build: .
+    container_name: odoo-nominas
+    # Se especifica que el servicio no debe correr sino se inicializa 'db' primero
+    restart: always
+    depends_on:
+      - db_nominas
+    # Puertos entre el anfitrion y el contenedor
+    ports:
+      - 8077:8069
+    environment:
+      # Variable de entonrno que leera el .sh - se gaurda en DB_HOST la cual depende del servicio 'db'
+      DB_HOST: db_nominas
+      UPDATE_MODULES: false
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/odoo:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - ./custom:/mnt/extra-addons
+    entrypoint: ["/entrypoint.sh"]
+
+  db_nominas_dev:
+    image: postgres:15
+    container_name: db-nominas-dev
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/db_dev:/var/lib/postgresql/data
+      - ./data/import_dev:/import
+
+  odoo_nominas_dev:
+    build: .
+    container_name: odoo-nominas-dev
+    restart: no
+    depends_on:
+      - db_nominas_dev
+    ports:
+      - 8078:8069
+    environment:
+      DB_HOST: db_nominas_dev
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./config/odoo_dev.conf:/etc/odoo/odoo.conf
+      - ./custom:/mnt/extra-addons
+      - ./data/odoo_dev:/var/lib/odoo
+    # Comando: Sige las ultimas lineas de logs del contendor; pero sin mostrar nada
+    # Sirve para que el contender este corriendo aunque no se este ejecutando alguna instancia de odoo
+    # De esta manera se entra a bash
+    # En compose 'Si especificamos el entrypoint' ignoramos los entrypoint por defecto de las imagenes
+    # Oficiales y creadas.
+    entrypoint: ["tail", "-f", "/dev/null"]

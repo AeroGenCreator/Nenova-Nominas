@@ -1,0 +1,32 @@
+<odoo>
+    <record id="nentria_porta_employee_form_view_ext" model="ir.ui.view">
+        <field name="name">nentria.porta.employee.form.view.ext</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+
+            <!-- AGREGA campo="Contraseña" accion="generar contraseña" -->
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <h5 class="d-flex align-items-baseline mb-0 mt-1">
+                    <i
+                        class="fa fa-user-secret fa-fw me-1 text-primary"
+                        title="Contraseña Portal"
+                    />
+                    <field
+                        name="contraseña_portal"
+                        string="Contraseña Portal"
+                        style="font-weight: 500; color: gray;"
+                    />
+                </h5>
+                <button
+                    name="generar_contraseña"
+                    type="object"
+                    string="Generar Constraseña"
+                    class="btn-secondary"
+                >
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
