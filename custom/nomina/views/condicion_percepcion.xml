@@ -1,0 +1,61 @@
+<odoo>
+    
+    <!-- FORM VIEW -->
+    <record id="condicion_percepcion_form_view" model="ir.ui.view">
+        <field name="name">condicion.percepcion.form.view</field>
+        <field name="model">nomina.condicion.percepcion</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" class="fw-bold"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field 
+                                name="descripcion"
+                                placeholder="Condiciones que deben cumplirse para obtener esta persepcion"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="condicion_percepcion_list_view" model="ir.ui.view">
+        <field name="name">condicion.percepcion.list.view</field>
+        <field name="model">nomina.condicion.percepcion</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="60"/>
+                <field name="active" width="40"/>
+                <field name="descripcion" width="200"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="condicion_percepcion_search_view" model="ir.ui.view">
+        <field name="name">condicion.percepcion.search.view</field>
+        <field name="model">nomina.condicion.percepcion</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="condicion_percepcion_action" model="ir.actions.act_window">
+        <field name="name">Condición Percepciones</field>
+        <field name="res_model">nomina.condicion.percepcion</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -24,6 +24,7 @@ def apartar_a_partir_de(dias: int, anticipacion: fields.Date):
 
 
 class NominaVacaciones(models.Model):
+
     # === MODELO CONFIG ===
 
     _name = "nomina.vacaciones"
@@ -77,6 +78,7 @@ class NominaVacaciones(models.Model):
                 NAME = f"{rec.derecho_id.name} {rec.dias}"
             rec.name = NAME
 
+    # OJO, EL DIA DE COMIENZO NO SE ESTA CONTANDO - ARREGLAR ESTA SITUACION !!!
     @api.depends("derecho_id", "comienza", "finaliza")
     def computar_dias_de_vacaciones(self):
         """
@@ -90,7 +92,7 @@ class NominaVacaciones(models.Model):
         Los descansos de jornada (No se cuentan como vacaciones)
         Sí en jornada; el descanso es el domingo - Y domingo cae (13 Enero)
         El día 13 no se cuenta como día vacacional.
-        EJ. 15 - 10 = 5 -> 5 días vacaciones - 1 día descanso = 4
+        EJ. 15 - 10 = 5 -> 5 días vacaciones - 1 día descanso = 4 vacaciones
 
         Dias reales de vacaciones = 4
         """

@@ -10,4 +10,7 @@ from . import (
     vacacional_categoria,
     plan_rango_rel,
     vacaciones,
+    percepciones,
+    condicion_percepcion,
+    plan_percepciones
 )

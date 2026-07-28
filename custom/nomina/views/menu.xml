@@ -45,11 +45,42 @@
         sequence="2"
     />
 
+    <menuitem
+        id="nomina.config_percepciones"
+        name="Percepciones"
+        parent="nomina.root_menu"
+        sequence="4"
+    />
+
+    <menuitem
+        id="nomina.plan_percepciones"
+        name="Planes - Percepciones"
+        action="plan_percepciones_action"
+        parent="nomina.config_percepciones"
+        sequence="1"
+    />
+
+    <menuitem
+        id="nomina.percepciones"
+        name="Percepciones"
+        action="percepcion_action"
+        parent="nomina.config_percepciones"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina.condicion_percepcion"
+        name="Condición Percepcion"
+        action="condicion_percepcion_action"
+        parent="nomina.config_percepciones"
+        sequence="3"
+    />
+
     <menuitem 
         id="nomina.configuracion"
         name="Configuraciones"
         parent="nomina.root_menu"
-        sequence="4"
+        sequence="5"
     />
 
     <menuitem
@@ -91,5 +122,6 @@
         parent="nomina.configuracion"
         sequence="4"
     />
+
 
 </odoo>

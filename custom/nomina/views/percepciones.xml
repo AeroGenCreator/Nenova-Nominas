@@ -1,0 +1,72 @@
+<odoo>
+    
+    <!-- FORM VIEW -->
+    <record id="nomina_percepcion_form_view" model="ir.ui.view">
+        <field name="name">nomina.percepcion.form.view</field>
+        <field name="model">nomina.percepciones</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="tipo" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" class="fw-bold"/>
+                            <field name="tipo_de_flujo" widget="statusbar" options="{'clickable': '1'}"/>
+                            <field name="periodicidad" invisible="tipo_de_flujo != 'fijo'"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="es_fija" widget="boolean_toggle"/>
+                            <field
+                                name="cantidad_fija"
+                                invisible="not es_fija"
+                                widget="custom_monetary_float"
+                            />
+                            <field name="condicion" invisible="es_fija"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="nomina_percepcion_list_view" model="ir.ui.view">
+        <field name="name">nomina.percepcion.list.view</field>
+        <field name="model">nomina.percepciones</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="65"/>
+                <field name="tipo" width="65"/>
+                <field name="tipo_de_flujo" width="65"/>
+                <field name="es_fija" width="65"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="nomina_percepcion_search_view" model="ir.ui.view">
+        <field name="name">nomina.percepcion.search.view</field>
+        <field name="model">nomina.percepciones</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="percepcion_action" model="ir.actions.act_window">
+        <field name="name">Percepciones</field>
+        <field name="res_model">nomina.percepciones</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_percepcion_search_view"/>
+    </record>
+
+</odoo>
