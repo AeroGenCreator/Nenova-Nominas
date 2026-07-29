@@ -1,0 +1,44 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO DEL WIZARD -->
+    <record id="plan_percepciones_empleado_form_view" model="ir.ui.view">
+        <field name="name">plan.percepcion.empleado.form.view</field>
+        <field name="model">plan.percepciones.empleado.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p class="text-info">
+                        A continuación liste a los empleados que desea agregar en este
+                        plan de percepciones.
+                    </p>
+                    <group string="Selección">
+                        <field name="empleado_ids"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        string="Agregar Empleados"
+                        name="action_relacionar_empleados"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <!-- Botón rojo para cancelar -->
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DEL WIZARD -->
+    <record id="nomina_plan_percepciones_empleado_wizard" model="ir.actions.act_window">
+        <field name="name">Agregar Empleados Automático</field>
+        <field name="res_model">plan.percepciones.empleado.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

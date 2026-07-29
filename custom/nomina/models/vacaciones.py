@@ -12,6 +12,12 @@ CREATE_VAL = (
     "Dias apartados para vacaciones y el 'id' del derecho "
     "vacacional."
 )
+JORNADA_MSG = (
+    "Es necesario que el empleado tenga una jornada laboral asignada "
+    "de lo contrario no se podra procesar ninguna solicitud de "
+    "vacaciones. Los días de descanso no se cuenta como vacaciones "
+    "según la jornada asignada."
+)
 
 # Mensaje de error dinámico
 def apartar_a_partir_de(dias: int, anticipacion: fields.Date):
@@ -98,7 +104,7 @@ class NominaVacaciones(models.Model):
         """
         for rec in self:
             DIFERENCIA = False
-            # Constante. Incluye el rango superior a la cuenta total.
+            # Constante. Incluye el rango superior e inferior de cuenta total.
             INCLUYENTE = 1
             if rec.comienza and rec.finaliza:
                 # Se obtienen los codigos de weekday() 'datetime'
@@ -112,15 +118,12 @@ class NominaVacaciones(models.Model):
                 descansos = 0
                 # Loop - Iterar el rango para encontrar días de descanso.
                 FECHA_DE_CALCULO = rec.comienza
-                while (
-                    FECHA_DE_CALCULO <= rec.finaliza
-                    or FECHA_DE_CALCULO >= rec.comienza
-                ):
+                while FECHA_DE_CALCULO <= rec.finaliza:
                     FECHA_DE_CALCULO += relativedelta(days=1)
                     # Si hay día de descanso. Descontamos de la cuenta final.
                     if FECHA_DE_CALCULO.weekday() in dias_codigo:
                         descansos += 1
-                    if FECHA_DE_CALCULO > rec.finaliza:
+                    if FECHA_DE_CALCULO >= rec.finaliza:
                         break
                 # (Finaliza - Comienza) - Descansos + Constante(Incluir 1)
                 DIFERENCIA = (
@@ -215,3 +218,10 @@ class NominaVacaciones(models.Model):
                 raise ValidationError(
                     apartar_a_partir_de(dias=MINIMO, anticipacion=ANTICIPACION)
                 )
+
+    @api.constrains("empleado_id")
+    def _validar_jornada_(self):
+        for rec in self:
+            if rec.empleado_id:
+                if not rec.empleado_id.jornada_id:
+                    raise ValidationError(JORNADA_MSG)

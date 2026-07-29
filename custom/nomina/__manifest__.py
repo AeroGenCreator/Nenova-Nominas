@@ -22,6 +22,7 @@
         "data/nomina.plan.rango.rel.csv",
         "data/nomina.periodo.pago.csv",
         "data/nomina.dias.csv",
+        "views/plan_percepciones_empleado_wizard.xml",
         "views/cronjob_vacaciones.xml",
         "views/condicion_percepcion.xml",
         "views/vacacional_categoria.xml",

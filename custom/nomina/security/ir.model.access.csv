@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_plan_percepciones_empleado_wizard,accessplan.percepciones.empleado.wizard,model_plan_percepciones_empleado_wizard,base.group_user,1,1,1,1
 access_nomina_vacacional_categoria,access.nomina.vacacional.categoria,model_nomina_vacacional_categoria,base.group_user,1,1,1,1
 access_nomina_plan_empleado_wizard,access.nomina.plan.empleado.wizard,model_nomina_plan_empleado_wizard,base.group_user,1,1,1,1
 access_nomina_condicion_percepcion,access.nomina.condicion.percepcion,model_nomina_condicion_percepcion,base.group_user,1,1,1,1

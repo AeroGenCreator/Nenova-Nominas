@@ -7,7 +7,13 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <p style="color: tomato;">Agregar Boton Para Agregar Empleados</p>
+                    <button
+                        string="Agregar Empleados (Manual)"
+                        type="action"
+                        name="%(nomina_plan_percepciones_empleado_wizard)d"
+                        class="btn-success"
+                        icon="fa-user-plus"
+                    />
                 </header>
                 <sheet>
                     <group>

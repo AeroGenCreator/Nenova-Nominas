@@ -8,10 +8,9 @@
                 <sheet>
                     <group string="Carga Automática">
                         <group>
-                            <field name="dia" widget="many2many_checkboxes"/>
+                            <field name="hora_inicio" widget="float_time"/>
                         </group>
                         <group>
-                            <field name="hora_inicio" widget="float_time"/>
                             <field name="hora_termino" widget="float_time"/>
                         </group>
                     </group>

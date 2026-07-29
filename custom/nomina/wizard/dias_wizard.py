@@ -19,11 +19,6 @@ class NominaDiasWizard(models.TransientModel):
 
     # === MODELO CAMPOS ===
 
-    dia = fields.Many2many(
-        string="Dias por generar",
-        comodel_name="nomina.dias",
-        required=True,
-    )
     hora_inicio = fields.Float(string="Hora Inicio", required=True)
     hora_termino = fields.Float(string="Hora Termino", required=True)
 
@@ -37,6 +32,8 @@ class NominaDiasWizard(models.TransientModel):
 
         # Accion individual - Solo en el registro donde es llamada.
         self.ensure_one()
+
+        dias = self.env["nomina.dias"].search([])
 
         # Extracción "id". Guardado en (self.env.context)
         record_id = self.env.context.get("active_id", "")
@@ -53,7 +50,6 @@ class NominaDiasWizard(models.TransientModel):
             singleton.dia_ids.unlink()
 
         # Iterar los dias del wizard. Creaciond e registros. (jornada - dia)
-        dias = self.dia
         vals = []
         for dia in dias:
             vals.append({

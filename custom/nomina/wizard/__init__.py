@@ -3,5 +3,6 @@ from . import (
     empleados_wizard,
     plan_rangos_wizard,
     plan_empleado_wizard,
-    main_view
+    main_view,
+    plan_percepciones_empleado_wizard,
 )
