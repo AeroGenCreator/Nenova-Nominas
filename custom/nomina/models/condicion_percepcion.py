@@ -17,6 +17,11 @@ class NominaCondicionPercepcion(models.Model):
     name = fields.Char(string="Condición", required=True)
     descripcion = fields.Text(string="Descripción", required=True)
     active = fields.Boolean(string="Registro Activo", default=True)
+    monto = fields.Float(
+        string="Monto para realizar el cálculo.",
+        digits=(16, 4),
+        required=True,
+    )
 
     # === MODELO LÓGICA ===
 

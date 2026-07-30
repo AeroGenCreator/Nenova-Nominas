@@ -47,6 +47,8 @@
                                 <field name="jornada_id"/>
                             </group>
                             <group string="Salario Integrado">
+                                <field name="factor_prima_vacacional" widget="percentage"/>
+                                <field name="dias_aguinaldo" widget="char"/>
                                 <field name="salario_integral" widget="custom_monetary_float"/>
                             </group>
                         </group>

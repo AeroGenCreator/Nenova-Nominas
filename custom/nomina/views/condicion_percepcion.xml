@@ -11,11 +11,12 @@
                         <group>
                             <field name="name" class="fw-bold"/>
                             <field name="active" widget="boolean_toggle"/>
+                            <field name="monto" widget="custom_monetary_float"/>
                         </group>
                         <group>
                             <field 
                                 name="descripcion"
-                                placeholder="Condiciones que deben cumplirse para obtener esta persepcion"/>
+                                placeholder="Condiciones que deben cumplirse para obtener esta persepcion..."/>
                         </group>
                     </group>
                 </sheet>
@@ -29,9 +30,9 @@
         <field name="model">nomina.condicion.percepcion</field>
         <field name="arch" type="xml">
             <list>
-                <field name="name" width="60"/>
-                <field name="active" width="40"/>
-                <field name="descripcion" width="200"/>
+                <field name="name" width="100"/>
+                <field name="monto" widget="custom_monetary_float" width="100"/>
+                <field name="active"  width="100"/>
             </list>
         </field>
     </record>

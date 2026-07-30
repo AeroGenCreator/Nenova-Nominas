@@ -48,7 +48,7 @@ class NominaEmployeeExt(models.Model):
     salario_integral = fields.Float(
         string="Salario Diario Integrado (SDI)",
         help=MSG_SDI,
-        compute="",  # Agregar el computado cuando se termine la función
+        compute="computar_salario_diario_integrado",
         digits=(12, 4),
         store=True
     )
@@ -66,6 +66,19 @@ class NominaEmployeeExt(models.Model):
         string="Plan de Percepciones",
         comodel_name="nomina.plan.percepciones",
         ondelete="set null",
+    )
+    factor_prima_vacacional = fields.Float(
+        string="Factor Prima Vacacional (Porcentaje)",
+        digits=(3, 2),
+        default=0.25
+    )
+    dias_aguinaldo = fields.Integer(
+        string="Días de Aguinaldo",
+        help=(
+            "Campo manual. "
+            "Ingresar los dias de aguinaldo que desea pagarle al trabajador."
+        ),
+        default=15
     )
 
     # === MODELO LÓGICA ===
@@ -94,6 +107,41 @@ class NominaEmployeeExt(models.Model):
                 BRUTO_DIARIO = rec.sueldo_bruto / rec.periodo_pago_id.dias
             rec.sueldo_diario = BRUTO_DIARIO
 
-    @api.depends("")
+    @api.depends(
+        "antiguedad_anhos",
+        "sueldo_diario",
+        "dias_aguinaldo",
+        "factor_prima_vacacional",
+        "plan_vacacional_id.rango_ids.rango_id.limite_inferior",
+        "plan_vacacional_id.rango_ids.rango_id.limite_superior",
+        "plan_vacacional_id.rango_ids.rango_id.dias_vacaciones",
+    )
     def computar_salario_diario_integrado(self):
-        pass
+        for rec in self:
+            AMOUNT = 0
+            if (
+                rec.antiguedad_anhos and
+                rec.plan_vacacional_id and
+                rec.sueldo_diario and
+                rec.dias_aguinaldo and
+                rec.factor_prima_vacacional
+            ):
+                record_vacaciones = rec.plan_vacacional_id.rango_ids.filtered(
+                    lambda r:
+                    (
+                        r.rango_id.limite_inferior <=
+                        rec.antiguedad_anhos <=
+                        r.rango_id.limite_superior
+                    )
+                )[:1]
+                dias_vacaciones = record_vacaciones.rango_id.dias_vacaciones
+                # Determinar los dias de aguinaldo.
+                # Posiblemente debamos agregar ese campo en este modelo
+                AMOUNT = (
+                    (
+                        365 + rec.dias_aguinaldo +
+                        (dias_vacaciones * rec.factor_prima_vacacional)
+                    )
+                    / 365
+                ) * rec.sueldo_diario
+            rec.salario_integral = AMOUNT

@@ -13,42 +13,43 @@ class NominaPercepciones(models.Model):
     # === MODELO CAMPOS ===
 
     name = fields.Char(string="Percepción Nombre", required=True)
-    tipo = fields.Selection(
-        string="Tipo",
-        selection=[
-            ("exento", "Exento"),
-            ("gravada", "Gravada"),
-        ],
-        default="exento"
-    )
-    tipo_de_flujo = fields.Selection(
-        string="Tipo de Flujo",
-        selection=[
-            ("fijo", "Fijo"),
-            ("variable", "Variable")
-        ],
-        default="fijo",
-    )
     periodicidad = fields.Many2one(
         string="Periodicidad",
         comodel_name="nomina.periodo.pago"
     )
-    es_fija = fields.Boolean(
-        string="Es percepcion fija",
-        default=True,
-        help=(
-            "Activar sí se desea ingresar una cantidad "
-            "fija para esta percepcion."
-        )
-    )
-    cantidad_fija = fields.Float(
-        string="Percepcion",
+    monto = fields.Float(
+        string="Monto",
         digits=(16,4)
+    )
+    tipo_de_calculo = fields.Selection(
+        selection=[
+            ("fijo", "Fijo"),
+            ("porcentaje/sueldo", "Porcentaje Del Sueldo"),
+            ("manual", "Manual"),
+            ("formula", "Fórmula"),
+        ],
+        default="fijo"
     )
     condicion = fields.Many2one(
         string="Condición de la percepcion",
         comodel_name="nomina.condicion.percepcion",
         ondelete="restrict",
+    )
+    integra_sdi = fields.Boolean(
+        string="Esta percepción Integra al SDI",
+        default=False,
+    )
+    grava_isr = fields.Boolean(
+        string="Cuenta para el ISR",
+        default=False,
+    )
+    grava_imss = fields.Boolean(
+        string="Cuenta para el IMSS",
+        default=False,
+    )
+    grava_isn = fields.Boolean(
+        string="Cuenta para el ISN",
+        default=False,
     )
     active = fields.Boolean(string="Registro Activo", default=True)
 
@@ -56,6 +57,9 @@ class NominaPercepciones(models.Model):
 
     # === MODELO RESTRICCIONES ===
     _unicos_ = models.Constraint(
-        "UNIQUE(name, tipo, tipo_de_flujo, periodicidad, es_fija, condicion)",
+        (
+            "UNIQUE(name, periodicidad, tipo_de_calculo, "
+            "condicion, integra_sdi, grava_isr, grava_imss, grava_isn)"
+        ),
         UNIQUE
     )
