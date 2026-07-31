@@ -82,11 +82,42 @@
         sequence="3"
     />
 
+    <menuitem
+        id="nomina.aguinaldos"
+        name="Aguinaldos"
+        parent="nomina.root_menu"
+        sequence="5"
+    />
+
+    <menuitem
+        id="nomina.aguinaldo_plan"
+        name="Aguinaldo Plan"
+        action="aguinaldo_plan_action"
+        parent="nomina.aguinaldos"
+        sequence="1"
+    />
+
+    <menuitem
+        id="nomina.aguinaldo_rangos"
+        name="Aguinaldo Rangos"
+        action="aguinaldo_rangos_action"
+        parent="nomina.aguinaldos"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina.aguinaldo_categoria"
+        name="Aguinaldo Categorías"
+        action="aguinaldo_categoria_action"
+        parent="nomina.aguinaldos"
+        sequence="3"
+    />
+
     <menuitem 
         id="nomina.configuracion"
         name="Configuraciones"
         parent="nomina.root_menu"
-        sequence="5"
+        sequence="6"
     />
 
     <menuitem
@@ -128,6 +159,5 @@
         parent="nomina.configuracion"
         sequence="4"
     />
-
 
 </odoo>

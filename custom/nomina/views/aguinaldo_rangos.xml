@@ -1,0 +1,9 @@
+<odoo>
+	
+	<record id="aguinaldo_rangos_action" model="ir.actions.act_window">
+		<field name="name">Aguinaldo Rangos</field>
+		<field name="res_model">nomina.aguinaldo.rangos</field>
+		<field name="view_mode">list,form</field>
+	</record>
+
+</odoo>

@@ -16,6 +16,8 @@
     "depends": ["hr"],
     "data": [
         "security/ir.model.access.csv",
+        "data/nomina.aguinaldo.categoria.csv",
+        "data/nomina.aguinaldo.rangos.csv",
         "data/nomina.plan.vacacional.csv",
         "data/nomina.vacacional.categoria.csv",
         "data/nomina.vacacional.rangos.csv",
@@ -23,6 +25,9 @@
         "data/nomina.periodo.pago.csv",
         "data/nomina.dias.csv",
         "views/plan_percepciones_empleado_wizard.xml",
+        "views/aguinaldo_plan.xml",
+        "views/aguinaldo_rangos.xml",
+        "views/aguinaldo_categoria.xml",
         "views/cronjob_vacaciones.xml",
         "views/condicion_percepcion.xml",
         "views/vacacional_categoria.xml",

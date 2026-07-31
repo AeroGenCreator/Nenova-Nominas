@@ -1,0 +1,71 @@
+<odoo>
+		
+	<!-- AGUINALDO PLAN FORM VIEW -->
+	<record id="aguinaldo_plan_form_view" model="ir.ui.view">
+		<field name="name">aguinaldo.plan.form.view</field>
+		<field name="model">nomina.aguinaldo.plan</field>
+		<field name="arch" type="xml">
+			<form>
+				<header>
+					<button
+						string="Automático - Agregar todos los empleados"
+						type="object"
+						class="btn-primary"
+						name="action_agregar_todos_empleados"
+						icon="fa-user-plus"
+					/>
+				</header>
+				<sheet>
+					<group>
+						<group>
+							<field name="name" class="fw-bold"/>
+							<field name="active" widget="boolean_toggle"/>
+						</group>
+					</group>
+					<notebook>
+						<page string="Rangos">
+							<field name="rango_ids"/>
+						</page>
+						<page string="Empleados">
+							<field name="empleado_ids"/>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- AGUINALDO PLAN LIST VIEW -->
+	<record id="aguinaldo_plan_list_view" model="ir.ui.view">
+		<field name="name">aguinaldo.plan.list.view</field>
+		<field name="model">nomina.aguinaldo.plan</field>
+		<field name="arch" type="xml">
+			<list>
+				<field name="name" width="100"/>
+			</list>
+		</field>
+	</record>
+
+	<!-- AGUINALDO PLAN SEARCH VIEW -->
+	<record id="aguinaldo_plan_search_view" model="ir.ui.view">
+		<field name="name">aguinaldo.plan.search.view</field>
+		<field name="model">nomina.aguinaldo.plan</field>
+		<field name="arch" type="xml">
+			<search>
+				<filter
+					string="Archivados"
+					name="archived"
+					domain="[('active','!=',True)]"
+				/>
+			</search>
+		</field>
+	</record>
+
+	<!-- AGUINALDO PLAN ACCION -->
+	<record id="aguinaldo_plan_action" model="ir.actions.act_window">
+		<field name="name">Aguinaldo Planes</field>
+		<field name="res_model">nomina.aguinaldo.plan</field>
+		<field name="view_mode">list,form</field>
+	</record>
+
+</odoo>

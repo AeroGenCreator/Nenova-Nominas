@@ -1,0 +1,2 @@
+id,categoria_id:id,limite_inferior,limite_superior,dias,active
+static_range_01,static_cat_01,0,0,15,1

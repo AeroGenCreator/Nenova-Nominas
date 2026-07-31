@@ -72,13 +72,9 @@ class NominaEmployeeExt(models.Model):
         digits=(3, 2),
         default=0.25
     )
-    dias_aguinaldo = fields.Integer(
-        string="Días de Aguinaldo",
-        help=(
-            "Campo manual. "
-            "Ingresar los dias de aguinaldo que desea pagarle al trabajador."
-        ),
-        default=15
+    aguinaldo_plan_id = fields.Many2one(
+        string="Aguinaldo Plan",
+        comodel_name="nomina.aguinaldo.plan"
     )
 
     # === MODELO LÓGICA ===
@@ -110,8 +106,10 @@ class NominaEmployeeExt(models.Model):
     @api.depends(
         "antiguedad_anhos",
         "sueldo_diario",
-        "dias_aguinaldo",
         "factor_prima_vacacional",
+        "aguinaldo_plan_id.rango_ids.dias",
+        "aguinaldo_plan_id.rango_ids.limite_inferior",
+        "aguinaldo_plan_id.rango_ids.limite_superior",
         "plan_vacacional_id.rango_ids.rango_id.limite_inferior",
         "plan_vacacional_id.rango_ids.rango_id.limite_superior",
         "plan_vacacional_id.rango_ids.rango_id.dias_vacaciones",
@@ -123,9 +121,11 @@ class NominaEmployeeExt(models.Model):
                 rec.antiguedad_anhos and
                 rec.plan_vacacional_id and
                 rec.sueldo_diario and
-                rec.dias_aguinaldo and
+                rec.aguinaldo_plan_id and
                 rec.factor_prima_vacacional
             ):
+
+                # Singleton 'Rango Vacacional' segun antiguedad.
                 record_vacaciones = rec.plan_vacacional_id.rango_ids.filtered(
                     lambda r:
                     (
@@ -134,12 +134,34 @@ class NominaEmployeeExt(models.Model):
                         r.rango_id.limite_superior
                     )
                 )[:1]
+
+                # Si no se obtiene nada obtener el ultimo mas cercano
+                if not record_vacaciones:
+                    record_vacaciones = rec.plan_vacacional_id.rango_ids.sorted(
+                        key=lambda r: r.rango_id.limite_superior,
+                        reverse=True
+                    )[:1]
+
                 dias_vacaciones = record_vacaciones.rango_id.dias_vacaciones
-                # Determinar los dias de aguinaldo.
-                # Posiblemente debamos agregar ese campo en este modelo
+
+                record_aguinaldo = rec.aguinaldo_plan_id.rango_ids.filtered(
+                    lambda r:
+                    (
+                        r.limite_inferior <=
+                        rec.antiguedad_anhos <=
+                        r.limite_superior
+                    )
+                )[:1]
+
+                if not record_aguinaldo:
+                    record_aguinaldo = rec.aguinaldo_plan_id.rango_ids.sorted(
+                        key=lambda r: r.limite_superior,
+                        reverse=True
+                    )
+
                 AMOUNT = (
                     (
-                        365 + rec.dias_aguinaldo +
+                        365 + record_aguinaldo.dias +
                         (dias_vacaciones * rec.factor_prima_vacacional)
                     )
                     / 365

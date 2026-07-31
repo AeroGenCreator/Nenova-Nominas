@@ -12,5 +12,8 @@ from . import (
     vacaciones,
     percepciones,
     condicion_percepcion,
-    plan_percepciones
+    plan_percepciones,
+    aguinaldo_categoria,
+    aguinaldo_plan,
+    aguinaldo_rangos,
 )

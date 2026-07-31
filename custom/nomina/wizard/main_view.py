@@ -119,7 +119,15 @@ class NominaMainView(models.TransientModel):
                                 .limite_superior
                             )
                         )
-                    )
+                    )[:1]
+
+                    # Si no existe coincidencia en los rangos.
+                    # Devuelve el rango con limite superior mas alto.
+                    if not rango:
+                        rango = plan.rango_ids.sorted(
+                            key=lambda r: r.rango_id.limite_superior,
+                            reverse=True
+                        )[:1]
 
                     # Valores: Posible Derecho Vacacional.
                     kwargs = {
