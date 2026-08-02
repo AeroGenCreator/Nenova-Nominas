@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 
 # === MENSAJES AYUDA ===
+
 MSG_SDI = "Base de calculo para las contribuciones al IMSS"
 MSG_CAT = (
     "Esta categoria puede variar segun tipo de nomina "
@@ -67,14 +68,18 @@ class NominaEmployeeExt(models.Model):
         comodel_name="nomina.plan.percepciones",
         ondelete="set null",
     )
-    factor_prima_vacacional = fields.Float(
-        string="Factor Prima Vacacional (Porcentaje)",
-        digits=(3, 2),
-        default=0.25
+    prima_vacacional_factor_id = fields.Many2one(
+        string="Factor (Prima Vacacional)",
+        comodel_name="nomina.prima.vacacional.factor",
     )
     aguinaldo_plan_id = fields.Many2one(
         string="Aguinaldo Plan",
         comodel_name="nomina.aguinaldo.plan"
+    )
+    factor_integracion = fields.Float(
+        string="Factor Integracion",
+        digits=(16, 4),
+        compute="computar_factor_integracion",
     )
 
     # === MODELO LÓGICA ===
@@ -105,8 +110,7 @@ class NominaEmployeeExt(models.Model):
 
     @api.depends(
         "antiguedad_anhos",
-        "sueldo_diario",
-        "factor_prima_vacacional",
+        "prima_vacacional_factor_id",
         "aguinaldo_plan_id.rango_ids.dias",
         "aguinaldo_plan_id.rango_ids.limite_inferior",
         "aguinaldo_plan_id.rango_ids.limite_superior",
@@ -114,15 +118,14 @@ class NominaEmployeeExt(models.Model):
         "plan_vacacional_id.rango_ids.rango_id.limite_superior",
         "plan_vacacional_id.rango_ids.rango_id.dias_vacaciones",
     )
-    def computar_salario_diario_integrado(self):
+    def computar_factor_integracion(self):
         for rec in self:
-            AMOUNT = 0
+            FACTOR = 0
             if (
                 rec.antiguedad_anhos and
                 rec.plan_vacacional_id and
-                rec.sueldo_diario and
                 rec.aguinaldo_plan_id and
-                rec.factor_prima_vacacional
+                rec.prima_vacacional_factor_id
             ):
 
                 # Singleton 'Rango Vacacional' segun antiguedad.
@@ -158,12 +161,19 @@ class NominaEmployeeExt(models.Model):
                         key=lambda r: r.limite_superior,
                         reverse=True
                     )
+                FACTOR = (
+                            365 + record_aguinaldo.dias +
+                        (
+                            dias_vacaciones *
+                            rec.prima_vacacional_factor_id.factor
+                        )
+                    ) / 365
+            rec.factor_integracion = FACTOR
 
-                AMOUNT = (
-                    (
-                        365 + record_aguinaldo.dias +
-                        (dias_vacaciones * rec.factor_prima_vacacional)
-                    )
-                    / 365
-                ) * rec.sueldo_diario
+    @api.depends("sueldo_diario", "factor_integracion")
+    def computar_salario_diario_integrado(self):
+        for rec in self:
+            AMOUNT = 0
+            if rec.sueldo_diario and rec.factor_integracion:
+                AMOUNT = rec.sueldo_diario * rec.factor_integracion
             rec.salario_integral = AMOUNT

@@ -160,4 +160,12 @@
         sequence="4"
     />
 
+    <menuitem
+        id="nomina.prima_vacacional_factor"
+        name="Prima Vacacional Factor"
+        action="prima_vacacional_factor_action"
+        parent="nomina.configuracion"
+        sequence="5"
+    />
+
 </odoo>

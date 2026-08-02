@@ -1,0 +1,60 @@
+<odoo>
+	
+	<!-- VISTA FORMULARIO -->
+	<record id="prima_vacacional_factor_form_view" model="ir.ui.view">
+		<field name="name">prima.vacacional.factor.form.view</field>
+		<field name="model">nomina.prima.vacacional.factor</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="name" class="fw-bold"/>
+							<field name="factor"/>
+						</group>
+						<group>
+							<field name="active" widget="boolean_toggle"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<!-- VISTA LISTA -->
+	<record id="prima_vacacional_factor_list_view" model="ir.ui.view">
+		<field name="name">prima.vacacional.factor.list.view</field>
+		<field name="model">nomina.prima.vacacional.factor</field>
+		<field name="arch" type="xml">
+			<list>
+				<field name="name" width="100"/>
+				<field name="factor" width="100"/>
+				<field name="active" width="100"/>
+			</list>
+		</field>
+	</record>
+
+	<!-- VISTA SEARCH -->
+	<record id="prima_vacacional_factor_search_view" model="ir.ui.view">
+		<field name="name">prima.vacacional.factor.search.view</field>
+		<field name="model">nomina.prima.vacacional.factor</field>
+		<field name="arch" type="xml">
+			<search>
+				<filter
+					string="Archivados"
+					name="archived"
+					domain="[('active','!=',True)]"
+				/>
+			</search>
+		</field>
+	</record>
+
+	<!-- ACCION -->
+	<record id="prima_vacacional_factor_action" model="ir.actions.act_window">
+		<field name="name">Prima Vacacional Factor</field>
+		<field name="res_model">nomina.prima.vacacional.factor</field>
+		<field name="view_mode">list,form</field>
+		<field name="search_view_id" ref="prima_vacacional_factor_search_view"/>
+	</record>
+
+</odoo>
