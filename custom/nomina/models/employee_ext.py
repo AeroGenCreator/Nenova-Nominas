@@ -40,12 +40,6 @@ class NominaEmployeeExt(models.Model):
         readonly=True,
         store=True
     )
-    """
-    Sumar los días del año + días de vacaciones
-    (multiplicados por la prima vacacional que por ley es del 25%)
-    + días de aguinaldo.
-    Después el resultado se divide entre los días del año.
-    """
     salario_integral = fields.Float(
         string="Salario Diario Integrado (SDI)",
         help=MSG_SDI,
@@ -53,7 +47,6 @@ class NominaEmployeeExt(models.Model):
         digits=(12, 4),
         store=True
     )
-    # No se puede eliminar la jornada si hay empleados haciendo uso de esta.
     jornada_id = fields.Many2one(
         string="Jornada", comodel_name="nomina.jornada", ondelete="restrict"
     )
@@ -71,15 +64,18 @@ class NominaEmployeeExt(models.Model):
     prima_vacacional_factor_id = fields.Many2one(
         string="Factor (Prima Vacacional)",
         comodel_name="nomina.prima.vacacional.factor",
+        ondelete="restrict"
     )
     aguinaldo_plan_id = fields.Many2one(
         string="Aguinaldo Plan",
-        comodel_name="nomina.aguinaldo.plan"
+        comodel_name="nomina.aguinaldo.plan",
+        ondelete="restrict"
     )
     factor_integracion = fields.Float(
         string="Factor Integracion",
         digits=(16, 4),
         compute="computar_factor_integracion",
+        store=True
     )
 
     # === MODELO LÓGICA ===

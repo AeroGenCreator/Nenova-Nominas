@@ -19,4 +19,5 @@ class NominaPeriodoPago(models.Model):
     name = fields.Char(string="Periodicidad")
     clave = fields.Char(string="Clave Oficial")
     dias = fields.Float(string="Numero de días", digits=(5, 2))
+    dias_imss = fields.Integer(string="Numero de días IMSS")
     active = fields.Boolean(string="Categoria Activa", default=True)

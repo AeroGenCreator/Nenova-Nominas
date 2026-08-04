@@ -16,5 +16,7 @@ from . import (
     aguinaldo_categoria,
     aguinaldo_plan,
     aguinaldo_rangos,
-    prima_vacacional_factor
+    prima_vacacional_factor,
+    vacaciones_historial,
+    uma
 )

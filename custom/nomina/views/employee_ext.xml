@@ -51,6 +51,13 @@
                                 <field name="prima_vacacional_factor_id"/>
                                 <field name="factor_integracion" widget="custom_monetary_float"/>
                                 <field name="salario_integral" widget="custom_monetary_float"/>
+                                <button
+                                    string="Crear Nómina"
+                                    type="action"
+                                    name=""
+                                    class="btn-primary"
+                                    icon="fa-file-text-o"
+                                />
                             </group>
                         </group>
                     </sheet>

@@ -52,6 +52,14 @@
     />
 
     <menuitem
+        id="nomina.vacaciones_historial"
+        name="Vacaciones Historial"
+        action="vacaciones_historial_action"
+        parent="nomina.vacaciones_menu"
+        sequence="3"
+    />
+
+    <menuitem
         id="nomina.config_percepciones"
         name="Percepciones"
         parent="nomina.root_menu"
@@ -166,6 +174,14 @@
         action="prima_vacacional_factor_action"
         parent="nomina.configuracion"
         sequence="5"
+    />
+
+    <menuitem
+        id="nomina.uma"
+        name="UMAs"
+        action="uma_action"
+        parent="nomina.configuracion"
+        sequence="6"
     />
 
 </odoo>

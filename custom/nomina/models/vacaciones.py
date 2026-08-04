@@ -187,11 +187,17 @@ class NominaVacaciones(models.Model):
     def _unlink_recuperar_derechos_(self):
         """Repone los dias descontados de derecho vacacional"""
         for rec in self:
-            validate = ((rec.dias), (rec.derecho_id), (rec.derecho_id.active))
+            TODAY = fields.Date.today()
+            validate = (
+                (rec.dias),
+                (rec.derecho_id),
+                (rec.derecho_id.active),
+                (rec.finaliza > TODAY)
+            )
             if all(validate):
                 recuperar = rec.derecho_id.dias_vacaciones + rec.dias
                 rec.derecho_id.write({"dias_vacaciones": recuperar})
-            elif rec.dias:
+            elif rec.finaliza < TODAY:
                 continue
             else:
                 raise ValidationError("No se completo la petición")

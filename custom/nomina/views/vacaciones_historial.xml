@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="vacaciones_historial_list_view" model="ir.ui.view">
+        <field name="name">vacaciones.historial.list.view</field>
+        <field name="model">nomina.vacaciones.historial</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="80"/>
+                <field name="empleado" width="80"/>
+                <field name="derecho_vacacional" width="80"/>
+                <field name="comienza" width="80"/>
+                <field name="finaliza" width="80"/>
+                <field name="total_dias" width="80"/>
+                <field name="anho" width="80"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="vacaciones_historial_action" model="ir.actions.act_window">
+        <field name="name">Vacaciones Historial</field>
+        <field name="res_model">nomina.vacaciones.historial</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

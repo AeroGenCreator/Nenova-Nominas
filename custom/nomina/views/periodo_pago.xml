@@ -14,6 +14,7 @@
                         </group>
                         <group>
                             <field name="dias" widget="char"/>
+                            <field name="dias_imss" widget="char"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                     </group>
@@ -31,6 +32,7 @@
                 <field name="name" width="100"/>
                 <field name="clave" width="60"/>
                 <field name="dias" width="60" widget="char"/>
+                <field name="dias_imss" width="60" widget="char"/>
                 <field name="active" width="60"/>
             </list>
         </field>
