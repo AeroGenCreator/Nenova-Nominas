@@ -1,0 +1,63 @@
+<odoo>
+    
+    <!-- VISTA FORMULARIO -->
+    <record id="factor_riesgo_trabajo_form_view" model="ir.ui.view">
+        <field name="name">factor.riesgo.trabajo.form.view</field>
+        <field name="model">nomina.riesgo.trabajo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" class="fw-bold"/>
+                            <field name="clase"/>
+                            <field name="factor" class="text-danger" widget="percentage"/>
+                        </group>
+                        <group>
+                            <field name="descripcion"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- VISTA LISTA -->
+    <record id="factor_riesgo_trabajo_list_view" model="ir.ui.view">
+        <field name="name">factor.riesgo.trabajo.list.view</field>
+        <field name="model">nomina.riesgo.trabajo</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="clase" width="60"/>
+                <field name="factor" widget="percentage" width="60"/>
+                <field name="descripcion" width="60"/>
+                <field name="active" widget="boolean_toggle" width="60"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- VISTA SEARCH -->
+    <record id="factor_riesgo_trabajo_search_view" model="ir.ui.view">
+        <field name="name">factor.riesgo.trabajo.search.view</field>
+        <field name="model">nomina.riesgo.trabajo</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter
+                    string="Archivados"
+                    name="archived"
+                    domain="[('active','!=',True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="factor_riesgo_trabajo_action" model="ir.actions.act_window">
+        <field name="name">Factor Riesgo de Trabajo</field>
+        <field name="res_model">nomina.riesgo.trabajo</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="factor_riesgo_trabajo_search_view"/>
+    </record>
+
+</odoo>

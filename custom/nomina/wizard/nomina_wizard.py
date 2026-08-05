@@ -11,11 +11,11 @@ class NominaNominaWizard(models.TransientModel):
     name = fields.Char(string="", compute="", store=True)
     uma = fields.Many2one(
         string="UMA", comodel_name="nomina.uma"
-    )  # Nuevo Modelo
+    )
     sdi = fields.Float(string="Salario Diario Integrado (SDI)", digits=(16, 4))
     sueldo = fields.Float(string="Sueldo", compute="")
-    prima_riesgo_trabajo = fields.Many2one(
-        string="Prima Riesgo de Trabajo", comodel_name="nomina.prima.riesgo"
+    factor_riesgo_trabajo = fields.Many2one(
+        string="Factor Riesgo de Trabajo", comodel_name="nomina.riesgo.riesgo"
     )  # Nuevo Modelo
     percepciones_total = fields.Float(
         string="Perpeciones Total", digits=(16, 4)

@@ -17,6 +17,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/nomina.prima.vacacional.factor.csv",
+        "data/nomina.riesgo.trabajo.csv",
         "data/nomina.aguinaldo.categoria.csv",
         "data/nomina.aguinaldo.rangos.csv",
         "data/nomina.plan.vacacional.csv",
@@ -34,6 +35,7 @@
         "views/vacaciones_historial.xml",
         "views/condicion_percepcion.xml",
         "views/prima_vacacional_factor.xml",
+        "views/factor_riesgo_trabajo.xml",
         "views/vacacional_categoria.xml",
         "views/plan_empleado_wizard.xml",
         "views/derecho_vacacional.xml",

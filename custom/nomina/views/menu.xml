@@ -184,4 +184,12 @@
         sequence="6"
     />
 
+    <menuitem
+        id="nomina.factor_riesgo_trabajo"
+        name="Factor Riesgo de Trabajo"
+        action="factor_riesgo_trabajo_action"
+        parent="nomina.configuracion"
+        sequence="7"
+    />
+
 </odoo>

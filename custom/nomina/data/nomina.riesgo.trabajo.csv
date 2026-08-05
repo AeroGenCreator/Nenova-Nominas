@@ -1,0 +1,6 @@
+id,clase,factor,descripcion,active
+cl1,Clase I,0.0054355,"Servicios administrativos, comercio al por menor, despachos contables, oficinas",1
+cl2,Clase II,0.0113065,"Fabricación de ropa, papelerías, comercio mayorista sin transporte pesado",1
+cl3,Clase III,0.0259840,"Elaboración de alimentos, talleres mecánicos, laboratorios",1
+cl4,Clase IV,0.0465325,"Transporte de carga, manipulación de metales, industria textil pesada",1
+cl5,Clase V,0.0758875,"Construcción, minería, extracción de materiales, manejo de sustancias químicas/explosivos",1

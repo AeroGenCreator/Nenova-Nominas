@@ -18,5 +18,6 @@ from . import (
     aguinaldo_rangos,
     prima_vacacional_factor,
     vacaciones_historial,
-    uma
+    uma,
+    factor_riesgo_trabajo,
 )

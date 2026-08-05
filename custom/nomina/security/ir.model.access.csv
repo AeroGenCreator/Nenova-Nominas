@@ -16,6 +16,7 @@ access_nomina_plan_vacacional,access.nomina.plan.vacacional,model_nomina_plan_va
 access_nomina_plan_rango_rel,access.nomina.plan.rango.rel,model_nomina_plan_rango_rel,base.group_user,1,1,1,1
 access_nomina_dia_hora_linea,access.nomina.dia.hora.linea,model_nomina_dia_hora_linea,base.group_user,1,1,1,1
 access_nomina_aguinaldo_plan,access.nomina.aguinaldo.plan,model_nomina_aguinaldo_plan,base.group_user,1,1,1,1
+access_nomina_riesgo_trabajo,access.nomina.riesgo.trabajo,model_nomina_riesgo_trabajo,base.group_user,1,1,1,1
 access_nomina_periodo_pago,access.nomina.periodo.pago,model_nomina_periodo_pago,base.group_user,1,1,1,1
 access_nomina_percepciones,access.nomina.percepciones,model_nomina_percepciones,base.group_user,1,1,1,1
 access_nomina_dias_wizard,access.nomina.dias.wizard,model_nomina_dias_wizard,base.group_user,1,1,1,1
