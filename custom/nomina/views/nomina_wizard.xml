@@ -1,0 +1,44 @@
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_wizard_form_view" model="ir.ui.view">
+        <field name="name">nomina.wizard.form.view</field>
+        <field name="model">nomina.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sueldo"/>
+                            <field name="sdi"/>
+                            <field name="percepciones_total"/>
+                        </group>
+                        <group>
+                            <field name="uma"/>
+                            <field name="factor_riesgo_trabajo_id"/>
+                            <field name="total_dias"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Percepciones">
+                            <field name="percepciones_ids"/>
+                        </page>
+                        <page string="Deducciones">
+                            
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="nomina_wizard_action" model="ir.actions.act_window">
+        <field name="name">Nómina</field>
+        <field name="res_model">nomina.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -6,31 +6,10 @@
         <field name="model">nomina.percepciones</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="tipo_de_calculo" widget="statusbar" options="{'clickable': '1'}"/>
-                </header>
                 <sheet>
-                    <group string="Percepciones">
-                        <group string="Configuración">
-                            <field name="name"/>
-                            <field name="periodicidad"/>
-                            <field
-                                name="monto"
-                                widget="custom_monetary_float"
-                                invisible="tipo_de_calculo in ['formula', 'variable']"
-                            />
-                            <field
-                                name="condicion"
-                                invisible="tipo_de_calculo not in ['formula', 'variable']"
-                            />
-                            <field name="active" widget="boolean_toggle"/>
-                        </group>
-                        <group string="Parametros">
-                            <field name="integra_sdi" widget="boolean_toggle"/>
-                            <field name="grava_isr" widget="boolean_toggle"/>
-                            <field name="grava_imss" widget="boolean_toggle"/>
-                            <field name="grava_isn" widget="boolean_toggle"/>
-                        </group>
+                    <group>
+                        <field name="name" class="fw-bold"/>
+                        <field name="active" widget="boolean_toggle"/>
                     </group>
                 </sheet>
             </form>
@@ -43,7 +22,8 @@
         <field name="model">nomina.percepciones</field>
         <field name="arch" type="xml">
             <list>
-                <field name="name"/>
+                <field name="name" class="fw-bold"/>
+                <field name="active" widget="boolean_toggle"/>
             </list>
         </field>
     </record>

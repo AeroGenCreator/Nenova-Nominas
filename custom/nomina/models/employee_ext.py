@@ -56,11 +56,6 @@ class NominaEmployeeExt(models.Model):
         comodel_name="nomina.plan.vacacional",
         ondelete="set null"
     )
-    plan_percepciones_id = fields.Many2one(
-        string="Plan de Percepciones",
-        comodel_name="nomina.plan.percepciones",
-        ondelete="set null",
-    )
     prima_vacacional_factor_id = fields.Many2one(
         string="Factor (Prima Vacacional)",
         comodel_name="nomina.prima.vacacional.factor",

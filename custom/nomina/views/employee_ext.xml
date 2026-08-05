@@ -34,7 +34,6 @@
                         <group>
                             <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
                             <field name="plan_vacacional_id"/>
-                            <field name="plan_percepciones_id"/>
                         </group>
                         <group>
                             <group string="Salario">
@@ -54,7 +53,7 @@
                                 <button
                                     string="Crear Nómina"
                                     type="action"
-                                    name=""
+                                    name="%(nomina_wizard_action)d"
                                     class="btn-primary"
                                     icon="fa-file-text-o"
                                 />

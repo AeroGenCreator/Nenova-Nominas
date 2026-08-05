@@ -67,27 +67,19 @@
     />
 
     <menuitem
-        id="nomina.plan_percepciones"
-        name="Planes - Percepciones"
-        action="plan_percepciones_action"
+        id="nomina.percepciones"
+        name="Percepciones"
+        action="percepcion_action"
         parent="nomina.config_percepciones"
         sequence="1"
     />
 
     <menuitem
-        id="nomina.percepciones"
-        name="Percepciones"
-        action="percepcion_action"
+        id="nomina.percepcion_historial"
+        name="Percepción Historial"
+        action="percepcion_historial_action"
         parent="nomina.config_percepciones"
         sequence="2"
-    />
-
-    <menuitem
-        id="nomina.condicion_percepcion"
-        name="Condición Percepcion"
-        action="condicion_percepcion_action"
-        parent="nomina.config_percepciones"
-        sequence="3"
     />
 
     <menuitem

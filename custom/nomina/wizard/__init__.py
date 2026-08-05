@@ -4,5 +4,7 @@ from . import (
     plan_rangos_wizard,
     plan_empleado_wizard,
     main_view,
-    plan_percepciones_empleado_wizard,
+    percepcion_wizard,
+    nomina_wizard,
+    percepcion_wizard,
 )
