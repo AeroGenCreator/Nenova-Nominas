@@ -25,7 +25,7 @@ class NominaRiesgoTrabajo(models.Model):
         for rec in self:
             NAME = False
             if rec.factor:
-                NAME = f"% {rec.factor}"
+                NAME = f"% {round(100 * rec.factor, 5)}"
             rec.name = NAME
 
     # === MODELO RESTRICCIONES ===

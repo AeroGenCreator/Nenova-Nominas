@@ -8,15 +8,19 @@
             <form>
                 <sheet>
                     <group>
-                        <group>
-                            <field name="name"/>
+                        <field name="name" class="h1 text-info py-1"/>
+                        <group string="Datos Empleado">
+                            <field name="empleado_id" class="py-1"/>
                             <field name="sueldo"/>
-                            <field name="sdi"/>
+                            <field name="periodicidad"/>
+                            <field name="sueldo_diario" widget="custom_monetary_float"/>
+                            <field name="sdi" widget="custom_monetary_float"/>
                             <field name="percepciones_total"/>
                         </group>
-                        <group>
-                            <field name="uma"/>
-                            <field name="factor_riesgo_trabajo_id"/>
+                        <group string="Cálculo Factores">
+                            <field name="fecha_emision" readonly="1" class="text-warning"/>
+                            <field name="uma_id"/>
+                            <field name="factor_riesgo_trabajo_id" class="text-danger"/>
                             <field name="total_dias"/>
                         </group>
                     </group>

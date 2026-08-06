@@ -31,7 +31,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Nómina">
                     <sheet>
-                        <group>
+                        <group string="Planes">
                             <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
                             <field name="plan_vacacional_id"/>
                         </group>
