@@ -29,6 +29,20 @@
                         </page>
                     </notebook>
                 </sheet>
+                <footer>
+                    <button
+                        string="Guardar / Validar Nomina"
+                        name=""
+                        class="btn-success"
+                        type="object"
+                    />
+                    <!-- Botón rojo para cancelar -->
+                    <button
+                        string="Cerrar Ventana"
+                        class="btn-danger"
+                        special="cancel"
+                    />
+                </footer>
             </form>
         </field>
     </record>

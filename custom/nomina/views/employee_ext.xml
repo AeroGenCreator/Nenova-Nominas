@@ -10,7 +10,7 @@
                 <h5 class="d-flex align-items-baseline mb-0 mt-1">
                     <i
                         class="fa fa-calendar-o text-primary"
-                        title="Años Antiguedad"
+                        title="Años Antigüedad"
                         style="margin-left: 2px"
                     />
                     <p
@@ -19,10 +19,10 @@
                     </p>
                     <field
                         name="antiguedad_anhos"
-                        string="Antiguedad"
+                        string="Antigüedad"
                         widget="integer"
                         readonly="1"
-                        style="margin-left: 10px; color: rgb(153,0,76);"
+                        style="margin-left: 10px;"
                     />
                 </h5>
             </xpath>

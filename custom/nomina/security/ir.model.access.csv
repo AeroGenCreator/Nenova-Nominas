@@ -21,6 +21,7 @@ access_nomina_dias_wizard,access.nomina.dias.wizard,model_nomina_dias_wizard,bas
 access_nomina_vacaciones,access.nomina.vacaciones,model_nomina_vacaciones,base.group_user,1,1,1,1
 access_percepcion_wizard,access.percepcion.wizard,model_percepcion_wizard,base.group_user,1,1,1,1
 access_nomina_main_view,access.nomina.main.view,model_nomina_main_view,base.group_user,1,1,1,1
+access_nomina_historial,access.nomina.historial,model_nomina_historial,base.group_user,1,1,1,1
 access_nomina_jornada,access.nomina.jornada,model_nomina_jornada,base.group_user,1,1,1,1
 access_nomina_wizard,access.nomina.wizard,model_nomina_wizard,base.group_user,1,1,1,1
 access_nomina_dias,access.nomina.dias,model_nomina_dias,base.group_user,1,1,1,1

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <!-- 1. Crear un ficher 'xml' en data & agregarlo al manifest. -->
+    <!-- 2. 'noupdate' Evita que se reinicie el contador al actualizar o reinstalar el modulo. -->
+    <data noupdate="1">
+        <!-- 3. Módelo 'ir.sequence' se registra el id 'seq_nomina_historial' -->
+        <record id="seq_nomina_historial" model="ir.sequence">
+            <!-- 4. Como se muestra este campo en la GUI. -->
+            <field name="name">Secuencia de Historial de Nómina</field>
+            <field name="implementation">standard</field>
+            <field name="code">nomina.historial.sequence</field>
+            <!-- 5. Prefijos letras 'NOM' union de años '/%(year)s/' -->
+            <field name="prefix">NOM/%(year)s/</field>
+            <!-- 6. Agrega 5 digitos al codigo. -->
+            <field name="padding">5</field>
+            <!-- 7. Este contador se vuelve global independiente de las multiempresas. -->
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+
+</odoo>

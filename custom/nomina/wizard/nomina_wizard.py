@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class NominaWizard(models.TransientModel):
@@ -13,7 +13,8 @@ class NominaWizard(models.TransientModel):
 
     # === MODELO CAMPOS ===
 
-    name = fields.Char(string="", compute="", store=True)
+    name = fields.Char(string="Registro", compute="computar_nombre", store=True)
+    empleado_id = fields.Many2one(string="Empleado", comodel_name="hr.employee")
     uma = fields.Many2one(string="UMA", comodel_name="nomina.uma")
     sdi = fields.Float(string="Salario Diario Integrado (SDI)", digits=(16, 4))
     sueldo = fields.Float(string="Sueldo", compute="")
@@ -29,7 +30,14 @@ class NominaWizard(models.TransientModel):
         inverse_name="nomina_id",
     )
     total_dias = fields.Integer(string="Total Días")
+    fecha_emision = fields.Date(
+        string="Fecha de Emisión", default=lambda self: fields.Date.today()
+    )
 
     # === MODELO LÓGICA ===
+
+    @api.depends("empleado_id")
+    def computar_nombre(self):
+        pass
 
     # === MODELO RESTRICCIONES ===

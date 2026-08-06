@@ -14,25 +14,34 @@
         sequence="1"
     />
 
-    <menuitem id="menu_mi_modulo_empleados"
+    <menuitem
+        id="nomina_historial"
+        name="Nóminas"
+        parent="nomina.root_menu"
+        action="nomina_historial_action"
+        sequence="2"
+    />
+
+    <menuitem 
+        id="menu_mi_modulo_empleados"
         name="Empleados"
         parent="nomina.root_menu"
         action="hr.open_view_employee_list_my"
-        sequence="2"/>
+        sequence="3"/>
 
     <menuitem 
         id="nomina.jornada" 
         name="Jornada" 
         action="jornada_action"
         parent="nomina.root_menu"
-        sequence="3"
+        sequence="4"
     />
 
     <menuitem
         id="nomina.vacaciones_menu"
         name="Vacaciones"
         parent="nomina.root_menu"
-        sequence="4"
+        sequence="5"
     />
 
     <menuitem
@@ -63,7 +72,7 @@
         id="nomina.config_percepciones"
         name="Percepciones"
         parent="nomina.root_menu"
-        sequence="4"
+        sequence="6"
     />
 
     <menuitem
@@ -86,7 +95,7 @@
         id="nomina.aguinaldos"
         name="Aguinaldos"
         parent="nomina.root_menu"
-        sequence="5"
+        sequence="7"
     />
 
     <menuitem
@@ -117,7 +126,7 @@
         id="nomina.configuracion"
         name="Configuraciones"
         parent="nomina.root_menu"
-        sequence="6"
+        sequence="8"
     />
 
     <menuitem

@@ -19,4 +19,5 @@ from . import (
     vacaciones_historial,
     uma,
     factor_riesgo_trabajo,
+    nomina_historial,
 )
