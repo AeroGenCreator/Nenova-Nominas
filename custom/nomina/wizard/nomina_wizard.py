@@ -48,10 +48,12 @@ class NominaWizard(models.TransientModel):
     total_dias = fields.Integer(
         string="Total Días",
         compute=lambda self: self.computar_total_dias(),
-        readonly=False
+        readonly=False,
     )
     percepciones_total = fields.Float(
-        string="Perpeciones Monto Total", digits=(16, 4), compute=""
+        string="Perpeciones Monto Total",
+        digits=(16, 4),
+        compute="computar_monto_total_percepciones",
     )
     percepciones_ids = fields.One2many(
         string="Perpeciones",
@@ -128,11 +130,14 @@ class NominaWizard(models.TransientModel):
             pass
         return RIESGO
 
+    @api.depends("percepciones_ids")
+    def computar_monto_total_percepciones(self):
+        self.percepciones_total = False # Construir funcion de calculo(redondeo)
+
     @api.depends("empleado_id", "periodicidad")
     def computar_total_dias(self):
-        """ Automático: Busca asistencias o regresa 0."""
+        """Automático: Busca asistencias o regresa 0."""
         for rec in self:
-
             # Por defecto se asignan 0 dias.
             DIAS = 0
 
@@ -142,7 +147,7 @@ class NominaWizard(models.TransientModel):
                 return
 
             # Se busca 'singleton' periodo. De lo contrario asigna 0.
-            p_domain = [("name","=",rec.periodicidad)]
+            p_domain = [("name", "=", rec.periodicidad)]
             periodo = rec.env["nomina.periodo.pago"].search(p_domain)
             if not periodo:
                 rec.total_dias = DIAS
@@ -156,35 +161,29 @@ class NominaWizard(models.TransientModel):
 
             # Caso cuando periodo ANUAL
             if periodo.dias_imss == 365:
-                # Se restan 11 meses a fecha actual
-                RANGE_START = (
-                    date(THIS_YEAR, THIS_MONTH, 1) -
-                    relativedelta(months=11)
+                # Se restan 12 meses a fecha actual (ANHO)
+                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
+                    months=12
                 )
                 # Mes actual 12, y excluyente el mes proximo "13".
-                RANGE_ENDNG = (
-                    date(THIS_YEAR, THIS_MONTH, 1) +
-                    relativedelta(months=1)
+                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
+                    months=1
                 )
 
             # Caso cuando periodo mayor a MES & modulo de 30 con residuo 0.
             elif periodo.dias_imss > 30 and periodo.dias_imss % 2 == 0:
                 MESES = (periodo.dias_imss // 30) - 1
-                RANGE_START = (
-                    date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
-                        months=MESES
-                    )
+                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
+                    months=MESES
                 )
-                RANGE_ENDNG = (
-                    date(THIS_YEAR, THIS_MONTH, 1) +
-                    relativedelta(months=1)
+                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
+                    months=1
                 )
             # Caso cuando periodo igual a MENSUAL.
             elif periodo.dias_imss == 30:
                 RANGE_START = date(THIS_YEAR, THIS_MONTH, 1)
-                RANGE_ENDNG = (
-                    date(THIS_YEAR, THIS_MONTH, 1) +
-                    relativedelta(months=1)
+                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
+                    months=1
                 )
             # Caso cuando periodo < 30 || periodo > 30 & modulo residuo != 0.
             else:
@@ -197,23 +196,22 @@ class NominaWizard(models.TransientModel):
                         LIM_INFERIOR = periodo.dias_imss + 1
                         LIM_SUPERIOR = 1
                         MESES = 1
-                    RANGE_START = date(
-                        THIS_YEAR, THIS_MONTH, LIM_INFERIOR
-                    )
-                    RANGE_ENDNG = (
-                        date(THIS_YEAR, THIS_MONTH, LIM_SUPERIOR) +
-                        relativedelta(months=MESES)
-                    )
+                    RANGE_START = date(THIS_YEAR, THIS_MONTH, LIM_INFERIOR)
+                    RANGE_ENDNG = date(
+                        THIS_YEAR, THIS_MONTH, LIM_SUPERIOR
+                    ) + relativedelta(months=MESES)
                 # Caso cuando SEMANALES
                 elif periodo.dias_imss == 7:
-                    pass
+                    DOWK = TODAY.weekday()
+                    DIFF = TODAY - relativedelta(days=DOWK)
+                    RANGE_START = date(DIFF.year, DIFF.month, DIFF.day)
+                    RANGE_ENDNG = RANGE_START + relativedelta(days=7)
                 # Caso cuando DIARIOS
                 elif periodo.dias_imss == 1:
                     RANGE_START = date(THIS_YEAR, THIS_MONTH, THIS_DAY)
-                    RANGE_ENDNG = (
-                        date(THIS_YEAR, THIS_MONTH, THIS_DAY) +
-                        relativedelta(days=1)
-                    )
+                    RANGE_ENDNG = date(
+                        THIS_YEAR, THIS_MONTH, THIS_DAY
+                    ) + relativedelta(days=1)
                 # Sin resolucion: asigna 0.
                 else:
                     rec.total_dias = DIAS
