@@ -4,6 +4,10 @@
 
 Software modulo `odoo` desarrollado por `Nentria` para contabilidad.
 
+## Iportante
+
+El modulo `hr.attendance` **NO** puede ser instalado como dependencia en el codigo del modulo `nomina`. Por tanto es fundamental hacer la instalacion a mano desde la `GUI` de Odoo. Esto debido a que `Odoo` community ya no permite usar `hr.attendance` como dependencia en codigo.
+
 ## Modulos
 
 ![images](./assets/img/jornada.png)

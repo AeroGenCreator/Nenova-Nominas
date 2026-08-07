@@ -13,7 +13,7 @@
     "website": "https://github.com/AeroGenCreator",
     "category": "uncategorized",
     "version": "0.1",
-    "depends": ["hr"],
+    "depends": ["hr"], # Importante "hr.attendance" -> Instalar Manual
     "data": [
         "security/ir.model.access.csv",
         "data/nomina.prima.vacacional.factor.csv",

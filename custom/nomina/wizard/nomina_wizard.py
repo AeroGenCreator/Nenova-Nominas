@@ -46,7 +46,9 @@ class NominaWizard(models.TransientModel):
         default=lambda self: self.computar_factor_riesgo_minimo(),
     )
     total_dias = fields.Integer(
-        string="Total Días", default=lambda self: self.computar_total_dias()
+        string="Total Días",
+        compute=lambda self: self.computar_total_dias(),
+        readonly=False
     )
     percepciones_total = fields.Float(
         string="Perpeciones Monto Total", digits=(16, 4), compute=""
@@ -126,57 +128,106 @@ class NominaWizard(models.TransientModel):
             pass
         return RIESGO
 
+    @api.depends("empleado_id", "periodicidad")
     def computar_total_dias(self):
         """ Automático: Busca asistencias o regresa 0."""
-        DIAS = 0
-        if self.periodicidad and self.empleado_id:
-            p_domain = [("name","=",self.periodicidad)]
-            periodo = self.env["nomina.periodo.pago"].search(p_domain)
-            if periodo:
-                TODAY = fields.Date.today()
-                THIS_MONTH = TODAY.month
-                THIS_YEAR = TODAY.year
-                THIS_DAY = TODAY.day
-                if periodo.dias_imss > 30:
-                    MESES = (periodo.dias_imss // 30) - 1
-                    RANGE_START = (
-                        date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
-                            months=MESES
-                        )
+        for rec in self:
+
+            # Por defecto se asignan 0 dias.
+            DIAS = 0
+
+            # Si no esta asignado 'empleado' o 'periodicidad', asigna 0.
+            if not rec.periodicidad or not rec.empleado_id:
+                rec.total_dias = DIAS
+                return
+
+            # Se busca 'singleton' periodo. De lo contrario asigna 0.
+            p_domain = [("name","=",rec.periodicidad)]
+            periodo = rec.env["nomina.periodo.pago"].search(p_domain)
+            if not periodo:
+                rec.total_dias = DIAS
+                return
+
+            # Se determina dia actual(Referencia)
+            TODAY = fields.Date.today()
+            THIS_MONTH = TODAY.month
+            THIS_YEAR = TODAY.year
+            THIS_DAY = TODAY.day
+
+            # Caso cuando periodo ANUAL
+            if periodo.dias_imss == 365:
+                # Se restan 11 meses a fecha actual
+                RANGE_START = (
+                    date(THIS_YEAR, THIS_MONTH, 1) -
+                    relativedelta(months=11)
+                )
+                # Mes actual 12, y excluyente el mes proximo "13".
+                RANGE_ENDNG = (
+                    date(THIS_YEAR, THIS_MONTH, 1) +
+                    relativedelta(months=1)
+                )
+
+            # Caso cuando periodo mayor a MES & modulo de 30 con residuo 0.
+            elif periodo.dias_imss > 30 and periodo.dias_imss % 2 == 0:
+                MESES = (periodo.dias_imss // 30) - 1
+                RANGE_START = (
+                    date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
+                        months=MESES
+                    )
+                )
+                RANGE_ENDNG = (
+                    date(THIS_YEAR, THIS_MONTH, 1) +
+                    relativedelta(months=1)
+                )
+            # Caso cuando periodo igual a MENSUAL.
+            elif periodo.dias_imss == 30:
+                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1)
+                RANGE_ENDNG = (
+                    date(THIS_YEAR, THIS_MONTH, 1) +
+                    relativedelta(months=1)
+                )
+            # Caso cuando periodo < 30 || periodo > 30 & modulo residuo != 0.
+            else:
+                # Caso cuando QUINCENAS.
+                if periodo.dias_imss in (15, 14):
+                    MESES = 0
+                    LIM_INFERIOR = 1
+                    LIM_SUPERIOR = periodo.dias_imss + 1
+                    if THIS_DAY > periodo.dias_imss:
+                        LIM_INFERIOR = periodo.dias_imss + 1
+                        LIM_SUPERIOR = 1
+                        MESES = 1
+                    RANGE_START = date(
+                        THIS_YEAR, THIS_MONTH, LIM_INFERIOR
                     )
                     RANGE_ENDNG = (
-                        date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(months=1)
+                        date(THIS_YEAR, THIS_MONTH, LIM_SUPERIOR) +
+                        relativedelta(months=MESES)
                     )
-                elif periodo.dias_imss == 30:
-                    RANGE_START = date(THIS_YEAR, THIS_MONTH, 1)
+                # Caso cuando SEMANALES
+                elif periodo.dias_imss == 7:
+                    pass
+                # Caso cuando DIARIOS
+                elif periodo.dias_imss == 1:
+                    RANGE_START = date(THIS_YEAR, THIS_MONTH, THIS_DAY)
                     RANGE_ENDNG = (
-                        date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(months=1)
+                        date(THIS_YEAR, THIS_MONTH, THIS_DAY) +
+                        relativedelta(days=1)
                     )
-                elif periodo.dias_imss < 30:
-                    if periodo.dias_imss in (15, 14):
-                        MESES = 0
-                        LIM_INFERIOR = 1
-                        LIM_SUPERIOR = periodo.dias_imss + 1
-                        if THIS_DAY > periodo.dias_imss:
-                            LIM_INFERIOR = periodo.dias_imss + 1
-                            LIM_SUPERIOR = 1
-                            MESES = 1
-                        RANGE_START = date()
-                        RANGE_ENDNG = date()
-                    elif periodo.dias_imss == 7:
-                        pass
-                    elif periodo.dias_imss == 1:
-                        pass
-                    else:
-                        return DIAS
+                # Sin resolucion: asigna 0.
                 else:
-                    return DIAS
-                domain = [
-                    ("employee_id", "=", self.empleado_id),
-                    ("date", ">=", RANGE_START),
-                    ("date", "<", RANGE_ENDNG),
-                ]
-                DIAS = self.env["hr.attendance"].search_count(domain)
-        return DIAS
+                    rec.total_dias = DIAS
+                    return
+
+            # Se realiza el 'query' filtrando segun la periodicidad.
+            domain = [
+                ("employee_id", "=", rec.empleado_id.id),
+                ("date", ">=", RANGE_START),
+                ("date", "<", RANGE_ENDNG),
+            ]
+
+            # Se realiza la cuenta de registros que satisfacen condicion.
+            DIAS = rec.env["hr.attendance"].search_count(domain)
+            rec.total_dias = DIAS
 
     # === MODELO RESTRICCIONES ===

@@ -35,7 +35,7 @@
                 </sheet>
                 <footer>
                     <button
-                        string="Guardar / Validar Nomina"
+                        string="Guardar y Validar Nomina"
                         name=""
                         class="btn-success"
                         type="object"
