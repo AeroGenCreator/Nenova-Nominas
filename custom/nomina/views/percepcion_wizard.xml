@@ -6,12 +6,35 @@
 		<field name="arch" type="xml">
 			<form>
 				<sheet>
+					<header>
+						<field
+							name="fecha_activacion"
+							class="text-info"
+							readonly="1"/>
+					</header>
 					<group>
+						<field name="name" class="py-2 text-primary h2" nolabel="1"/>
+					</group>
+					<group string="Percepción">
 						<group>
-							<field name="empleado_id" class="fw-bold text-primary"/>
+							<field name="nomina_id"/>
+							<field name="empleado_id"/>
+							<field name="percepcion"/>
+							<field name="periodicidad"/>
 						</group>
 						<group>
-							
+							<field name="tipo"/>
+							<field name="monto" widget="custom_monetary_float"/>
+							<field name="monto_diario" widget="custom_monetary_float"/>
+						</group>
+					</group>
+					<group string="Agravantes">
+						<group>
+							<field name="integra_sbc" widget="boolean_toggle"/>
+						</group>
+						<group>
+							<field name="grava_isr" widget="boolean_toggle"/>
+							<field name="grava_isn" widget="boolean_toggle"/>
 						</group>
 					</group>
 				</sheet>

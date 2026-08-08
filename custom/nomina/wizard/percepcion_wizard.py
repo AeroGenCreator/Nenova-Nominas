@@ -10,7 +10,16 @@ class PercepcionWizard(models.TransientModel):
     # === MODELO CAMPOS ===
 
     name = fields.Char(string="Registro", compute="computar_nombre", store=True)
-    nomina_id = fields.Many2one(string="Nómina", comodel_name="nomina.wizard")
+    fecha_activacion = fields.Date(
+        string="Fecha Activación", default=lambda self: fields.Date.today()
+    )
+    nomina_id = fields.Many2one(
+        string="Nómina",
+        comodel_name="nomina.wizard",
+        default=lambda self: self.env["nomina.wizard"].browse(
+            self.env.context.get("active_id", "")
+        ),
+    )
     empleado_id = fields.Many2one(
         string="Empleado", comodel_name="hr.employee", required=True
     )
@@ -22,22 +31,24 @@ class PercepcionWizard(models.TransientModel):
     )
     monto = fields.Float(string="Monto", digits=(16, 4), required=True)
     monto_diario = fields.Float(
-        string="Monto Diario de la Percepcion", digits=(16, 4), compute=""
+        string="Valor Diario", digits=(16, 4), compute=""
     )
     tipo = fields.Selection(
         selection=[
-            ("fijo", "Fijo"),
+            ("fija", "Fija"),
             ("porcentaje.sueldo", "Porcentaje Del Sueldo"),
             ("variable", "Variable"),
         ],
-        default="fijo",
+        default="fija",
     )
-    integra_sbc = fields.Boolean(string="Integra al SBC", default=True)
-    grava_isr = fields.Boolean(string="Aplica ISR", default=False)
-    grava_imss = fields.Boolean(string="Aplica IMSS", default=False)
-    grava_isn = fields.Boolean(string="Aplica ISN", default=False)
-    fecha_activacion = fields.Date(
-        string="Fecha Activación", default=lambda self: fields.Date.today()
+    integra_sbc = fields.Boolean(
+        string="Integra al Salario Base de Cotización (SBC)", default=True
+    )
+    grava_isr = fields.Boolean(
+        string="Impuesto Sobre Renta (ISR)", default=False
+    )
+    grava_isn = fields.Boolean(
+        string="Impuesto Sobre Nómina (ISN)", default=False
     )
 
     # === MODELO LÓGICA ===
@@ -48,11 +59,21 @@ class PercepcionWizard(models.TransientModel):
             NAME = False
             validate = ((rec.empleado_id), (rec.percepcion), (rec.tipo))
             if all(validate):
-                NAME = f"{rec.empleado_id} {rec.percepcion} {rec.tipo}"
+                SELECTION = dict(self._fields["tipo"]._selection)
+                NAME = (
+                    f"{rec.empleado_id.name} "
+                    f"{rec.percepcion.name} - "
+                    "Percepcion "
+                    f"({SELECTION.get(rec.tipo, '')})"
+                )
             rec.name = NAME
 
-    @api.depends("montoo", "periodicidad", "tipo")
+    @api.depends("monto", "periodicidad", "tipo")
     def computar_monto_diario(self):
+        # https://www.sofiasalud.com/blog/prima-de-riesgo-de-trabajo
+        SELECTION = dict(self._fields["tipo"]._selection)
+        for rec in self:
+            pass
         pass
 
     # === MODELO RESTRICCIONES ===

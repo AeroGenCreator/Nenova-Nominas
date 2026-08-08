@@ -8,9 +8,9 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name" class="h1 text-info py-1"/>
+                        <field name="name" class="h1 text-primary py-1"/>
                         <group string="Datos Empleado">
-                            <field name="empleado_id" class="py-1 text-primary"/>
+                            <field name="empleado_id" class="py-1"/>
                             <field name="sueldo" class="text-success"/>
                             <field name="periodicidad"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>

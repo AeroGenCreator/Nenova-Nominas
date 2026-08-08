@@ -30,36 +30,34 @@
             <!-- AGREGA pagina="Nomina" -->
             <xpath expr="//notebook" position="inside">
                 <page string="Nómina">
-                    <sheet>
-                        <group string="Planes">
-                            <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
-                            <field name="plan_vacacional_id"/>
+                    <group string="Planes">
+                        <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
+                        <field name="plan_vacacional_id"/>
+                    </group>
+                    <group>
+                        <group string="Salario">
+                            <field 
+                                name="sueldo_bruto"
+                                widget="custom_monetary_float"
+                            />
+                            <field name="periodo_pago_id"/>
+                            <field name="sueldo_diario" widget="custom_monetary_float"/>
+                            <field name="jornada_id"/>
                         </group>
-                        <group>
-                            <group string="Salario">
-                                <field 
-                                    name="sueldo_bruto"
-                                    widget="custom_monetary_float"
-                                />
-                                <field name="periodo_pago_id"/>
-                                <field name="sueldo_diario" widget="custom_monetary_float"/>
-                                <field name="jornada_id"/>
-                            </group>
-                            <group string="Salario Integrado">
-                                <field name="aguinaldo_plan_id"/>
-                                <field name="prima_vacacional_factor_id"/>
-                                <field name="factor_integracion" widget="custom_monetary_float"/>
-                                <field name="salario_integral" widget="custom_monetary_float"/>
-                                <button
-                                    string="Crear Nómina"
-                                    type="action"
-                                    name="%(nomina_wizard_action)d"
-                                    class="btn-primary"
-                                    icon="fa-file-text-o"
-                                />
-                            </group>
+                        <group string="Salario Integrado">
+                            <field name="aguinaldo_plan_id"/>
+                            <field name="prima_vacacional_factor_id"/>
+                            <field name="factor_integracion" widget="custom_monetary_float"/>
+                            <field name="salario_integral" widget="custom_monetary_float"/>
+                            <button
+                                string="Crear Nómina"
+                                type="action"
+                                name="%(nomina_wizard_action)d"
+                                class="btn-primary"
+                                icon="fa-file-text-o"
+                            />
                         </group>
-                    </sheet>
+                    </group>
                 </page>
             </xpath>
 
