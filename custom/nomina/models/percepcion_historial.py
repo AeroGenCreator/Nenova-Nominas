@@ -17,7 +17,7 @@ class NominaPercepcionHistorial(models.Model):
     periodicidad = fields.Char(string="Periodicidad")
     fecha_creacion = fields.Date(string="Fecha Creación")
     monto = fields.Float(string="Monto", digits=(16, 4))
-    integra_sdi = fields.Boolean(string="Integra al SDI", readonly=True)
+    integra_sbc = fields.Boolean(string="Integra al SBC", readonly=True)
     grava_isr = fields.Boolean(string="Cuenta para el ISR", readonly=False)
     grava_imss = fields.Boolean(string="Cuenta para el IMSS", readonly=False)
     grava_isn = fields.Boolean(string="Cuenta para el ISN", readonly=False)

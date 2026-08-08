@@ -23,7 +23,7 @@ class NominaWizard(models.TransientModel):
             self.env.context.get("active_id", "")
         ),
     )
-    sueldo = fields.Float(string="Sueldo", compute="computar_sueldo")
+    sueldo = fields.Float(string="Sueldo Bruto", compute="computar_sueldo")
     periodicidad = fields.Char(
         string="Periodicidad", compute="computar_periodicidad"
     )
@@ -51,9 +51,15 @@ class NominaWizard(models.TransientModel):
         readonly=False,
     )
     percepciones_total = fields.Float(
-        string="Perpeciones Monto Total",
+        string="Perpeciones Suma Monto Total (Diarios)",
         digits=(16, 4),
         compute="computar_monto_total_percepciones",
+    )
+    salario_base_cotizacion = fields.Float(
+        string="Salario Base de Cotización (SBC)",
+        digits=(16, 4),
+        compute="computar_salario_base_cotizacion",
+        help="Monto (Determina cuotas 'Obrero-Patronal')",
     )
     percepciones_ids = fields.One2many(
         string="Perpeciones",
@@ -132,7 +138,25 @@ class NominaWizard(models.TransientModel):
 
     @api.depends("percepciones_ids")
     def computar_monto_total_percepciones(self):
-        self.percepciones_total = False # Construir funcion de calculo(redondeo)
+        for rec in self:
+            TOTAL = 0
+            if rec.percepciones_ids:
+                cantidades_diarias = [
+                    (
+                        r.monto_diario
+                        for r in rec.percepciones_ids if r.integra_sbc
+                    )
+                ]
+                TOTAL = sum(cantidades_diarias)
+            rec.percepciones_total = TOTAL
+
+    @api.depends("sdi","percepciones_total")
+    def computar_salario_base_cotizacion(self):
+        for rec in self:
+            SBC = 0
+            if rec.sdi:
+                SBC = rec.sdi + rec.percepciones_total
+            rec.salario_base_cotizacion = SBC
 
     @api.depends("empleado_id", "periodicidad")
     def computar_total_dias(self):

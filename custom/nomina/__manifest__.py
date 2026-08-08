@@ -41,6 +41,7 @@
         "views/derecho_vacacional.xml",
         "views/plan_rangos_wizard.xml",
         "views/vacacional_rangos.xml",
+        "views/percepcion_wizard.xml",
         "views/empleados_wizard.xml",
         "views/nomina_historial.xml",
         "views/plan_vacacional.xml",

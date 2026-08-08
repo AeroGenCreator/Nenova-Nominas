@@ -10,19 +10,26 @@
                     <group>
                         <field name="name" class="h1 text-info py-1"/>
                         <group string="Datos Empleado">
-                            <field name="empleado_id" class="py-1"/>
-                            <field name="sueldo"/>
+                            <field name="empleado_id" class="py-1 text-primary"/>
+                            <field name="sueldo" class="text-success"/>
                             <field name="periodicidad"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>
-                            <field name="sdi" widget="custom_monetary_float"/>
-                            <field name="percepciones_total"/>
+                            <field name="sdi" widget="custom_monetary_float" class="text-info"/>
                         </group>
-                        <group string="Cálculo Factores">
-                            <field name="fecha_emision" readonly="1" class="text-warning"/>
+                        <group string="Factores">
+                            <field name="fecha_emision" readonly="1" class="text-primary"/>
                             <field name="uma_id"/>
                             <field name="factor_riesgo_trabajo_id" class="text-danger"/>
                             <field name="total_dias"/>
                         </group>
+                    </group>
+                    <group string="Totales">
+                        <field name="percepciones_total" widget="custom_monetary_float"/>
+                        <field 
+                            name="salario_base_cotizacion"
+                            widget="custom_monetary_float"
+                            class="text-success"
+                        />
                     </group>
                     <notebook>
                         <page string="Percepciones">

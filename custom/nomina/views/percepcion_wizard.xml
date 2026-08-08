@@ -1,0 +1,22 @@
+<odoo>
+
+	<record id="percepcion_wizard_form_view" model="ir.ui.view">
+		<field name="name">percepcion.wizard.form.view</field>
+		<field name="model">percepcion.wizard</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="empleado_id" class="fw-bold text-primary"/>
+						</group>
+						<group>
+							
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+</odoo>
