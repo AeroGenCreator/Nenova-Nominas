@@ -16,6 +16,7 @@ class PercepcionWizard(models.TransientModel):
     nomina_id = fields.Many2one(
         string="Nómina",
         comodel_name="nomina.wizard",
+        readonly=True,
         default=lambda self: self.env["nomina.wizard"].browse(
             self.env.context.get("active_id", "")
         ),
@@ -31,7 +32,10 @@ class PercepcionWizard(models.TransientModel):
     )
     monto = fields.Float(string="Monto", digits=(16, 4), required=True)
     monto_diario = fields.Float(
-        string="Valor Diario", digits=(16, 4), compute=""
+        string="Valor Diario",
+        digits=(16, 4),
+        compute="computar_monto_diario",
+        store=True,
     )
     tipo = fields.Selection(
         selection=[
@@ -70,11 +74,21 @@ class PercepcionWizard(models.TransientModel):
 
     @api.depends("monto", "periodicidad", "tipo")
     def computar_monto_diario(self):
-        # https://www.sofiasalud.com/blog/prima-de-riesgo-de-trabajo
+        DIARIO = 0
         SELECTION = dict(self._fields["tipo"]._selection)
         for rec in self:
-            pass
-        pass
+            validate = ((rec.monto), (rec.periodicidad), (rec.tipo))
+            if all(validate):
+                if SELECTION.get(rec.tipo, "") == "Fija":
+                    try:
+                        DIARIO = fields.Float.round(
+                            (rec.monto / rec.periodicidad.dias_imss),
+                            precision_rounding=4,
+                        )
+                    except ZeroDivisionError:
+                        rec.integra_sbc = False
+                        DIARIO = 0
+            rec.monto_diario = DIARIO
 
     # === MODELO RESTRICCIONES ===
 

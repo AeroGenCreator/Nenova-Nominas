@@ -8,7 +8,7 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name" class="h1 text-primary py-1"/>
+                        <field name="name" class="h1 text-primary pt-2"/>
                         <group string="Datos Empleado">
                             <field name="empleado_id" class="py-1"/>
                             <field name="sueldo" class="text-success"/>
@@ -33,7 +33,31 @@
                     </group>
                     <notebook>
                         <page string="Percepciones">
-                            <field name="percepciones_ids"/>
+                            <field name="percepciones_ids">
+                                <list>
+                                    <field name="name" class="text-info" width="300"/>
+                                    <field name="monto" widget="custom_monetary_float" width="90"/>
+                                    <field name="monto_diario" widget="custom_monetary_float" width="90"/>
+                                    <field
+                                        name="integra_sbc"
+                                        widget="boolean_toggle"
+                                        string="SBC"
+                                        width="50"
+                                    />
+                                    <field
+                                        name="grava_isr"
+                                        widget="boolean_toggle"
+                                        string="ISR"
+                                        width="50"
+                                    />
+                                    <field
+                                        name="grava_isn"
+                                        widget="boolean_toggle"
+                                        string="ISN"
+                                        width="50"
+                                    />
+                                </list>
+                            </field>
                         </page>
                         <page string="Deducciones">
                             

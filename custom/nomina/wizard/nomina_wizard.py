@@ -77,7 +77,7 @@ class NominaWizard(models.TransientModel):
         for rec in self:
             NAME = False
             if rec.empleado_id:
-                NAME = f"Borrador Nómina de {rec.empleado_id.name}"
+                NAME = f"{rec.empleado_id.name} - Nómina"
             rec.name = NAME
 
     @api.depends("empleado_id")
@@ -142,10 +142,8 @@ class NominaWizard(models.TransientModel):
             TOTAL = 0
             if rec.percepciones_ids:
                 cantidades_diarias = [
-                    (
-                        r.monto_diario
-                        for r in rec.percepciones_ids if r.integra_sbc
-                    )
+                    r.monto_diario
+                    for r in rec.percepciones_ids if r.integra_sbc
                 ]
                 TOTAL = sum(cantidades_diarias)
             rec.percepciones_total = TOTAL
