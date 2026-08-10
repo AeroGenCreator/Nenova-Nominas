@@ -67,7 +67,7 @@ class NominaEmployeeExt(models.Model):
         ondelete="restrict"
     )
     factor_integracion = fields.Float(
-        string="Factor Integracion",
+        string="Factor Integración",
         digits=(16, 4),
         compute="computar_factor_integracion",
         store=True

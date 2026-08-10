@@ -47,10 +47,10 @@
                         <group string="Salario Integrado">
                             <field name="aguinaldo_plan_id"/>
                             <field name="prima_vacacional_factor_id"/>
-                            <field name="factor_integracion" widget="custom_monetary_float"/>
+                            <field name="factor_integracion"/>
                             <field name="salario_integral" widget="custom_monetary_float"/>
                             <button
-                                string="Crear Nómina"
+                                string="Nueva Nómina"
                                 type="action"
                                 name="%(nomina_wizard_action)d"
                                 class="btn-primary"

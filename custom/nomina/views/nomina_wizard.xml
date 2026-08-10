@@ -19,6 +19,7 @@
                         <group string="Factores">
                             <field name="fecha_emision" readonly="1" class="text-primary"/>
                             <field name="uma_id"/>
+                            <field name="factor_integracion" class="text-info"/>
                             <field name="factor_riesgo_trabajo_id" class="text-danger"/>
                             <field name="total_dias"/>
                         </group>

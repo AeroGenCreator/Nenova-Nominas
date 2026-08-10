@@ -35,6 +35,12 @@ class NominaWizard(models.TransientModel):
         digits=(16, 4),
         compute="computar_salario_diario_integrado",
     )
+    factor_integracion = fields.Float(
+        string="Factor Integración",
+        digits=(16, 4),
+        compute="computar_factor_integracion",
+        store=True,
+    )
     uma_id = fields.Many2one(
         string="UMA",
         comodel_name="nomina.uma",
@@ -111,6 +117,14 @@ class NominaWizard(models.TransientModel):
             if rec.empleado_id:
                 SDI = rec.empleado_id.salario_integral
             rec.sdi = SDI
+
+    @api.depends("empleado_id")
+    def computar_factor_integracion(self):
+        for rec in self:
+            FACTOR = 0
+            if rec.empleado_id:
+                FACTOR = rec.empleado_id.factor_integracion
+            rec.factor_integracion = FACTOR
 
     def computar_uma_mas_reciente(self):
         UMA = False
