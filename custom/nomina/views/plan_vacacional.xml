@@ -10,14 +10,14 @@
                     <button
                         string="Agregar Rangos (Automático)"
                         type="action"
-                        name="%(nomina.nomina_plan_rangos_wizard_action)d"
+                        name="%(nomina.wizard_vacacional_rangos_action)d"
                         class="btn-success mt-1 mb-1 ms-2 me-2"
                         icon="fa-plus"
                     />
                     <button
                         string="Agregar Empleados (Manual)"
                         type="action"
-                        name="%(nomina.nomina_plan_empleado_wizard_action)d"
+                        name="%(nomina.wizard_plan_vacacional_action)d"
                         class="btn-primary mt-1 mb-1 ms-2 me-2"
                         icon="fa-plus"
                     />

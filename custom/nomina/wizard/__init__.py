@@ -1,10 +1,9 @@
 from . import (
-    dias_wizard,
-    empleados_wizard,
-    plan_rangos_wizard,
-    plan_empleado_wizard,
-    main_view,
-    percepcion_wizard,
-    nomina_wizard,
-    percepcion_wizard,
+    wizard_app,
+    wizard_dias,
+    wizard_empleado,
+    wizard_nomina,
+    wizard_percepcion,
+    wizard_plan_vacacional,
+    wizard_vacacional_rangos,
 )

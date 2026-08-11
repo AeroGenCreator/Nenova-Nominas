@@ -1,9 +1,9 @@
 <odoo>
     
     <!-- VISTA PRINCIPAL (DASHBOARD) -->
-    <record id="nomina_main_view_dashboard" model="ir.ui.view">
-        <field name="name">nomina.main.view.dashboard</field>
-        <field name="model">nomina.main.view</field>
+    <record id="nomina_app_view_dashboard" model="ir.ui.view">
+        <field name="name">nomina.app.dashboard</field>
+        <field name="model">nomina.app</field>
         <field name="arch" type="xml">
             <form string="Bienvenida" create="0" delete="0" edit="0">
                 <sheet>
@@ -38,9 +38,9 @@
     </record>
 
     <!-- ACCIÓN DE VISTA PRINCIPAL -->
-    <record id="nomina_main_view_action" model="ir.actions.act_window">
+    <record id="nomina_app_action" model="ir.actions.act_window">
         <field name="name">¡Bienvenido!</field>
-        <field name="res_model">nomina.main.view</field>
+        <field name="res_model">nomina.app</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
     </record>

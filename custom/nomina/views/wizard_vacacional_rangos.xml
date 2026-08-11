@@ -1,9 +1,9 @@
 <odoo>
     
     <!-- VISTA FORMULARIO DEL WIZARD -->
-    <record id="nomina_plan_rangos_wizard_form_view" model="ir.ui.view">
-        <field name="name">nomina.plan.rangos.wizard.form.view</field>
-        <field name="model">nomina.plan.rangos.wizard</field>
+    <record id="wizard_vacacional_rangos_form_view" model="ir.ui.view">
+        <field name="name">wizard.vacacional.rangos.form.view</field>
+        <field name="model">wizard.vacacional.rangos</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -34,9 +34,9 @@
     </record>
 
     <!-- ACCIÓN DEL WIZARD -->
-    <record id="nomina_plan_rangos_wizard_action" model="ir.actions.act_window">
+    <record id="wizard_vacacional_rangos_action" model="ir.actions.act_window">
         <field name="name">Agregar Rangos (Automático)</field>
-        <field name="res_model">nomina.plan.rangos.wizard</field>
+        <field name="res_model">wizard.vacacional.rangos</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

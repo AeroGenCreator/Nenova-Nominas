@@ -10,7 +10,6 @@ from . import (
     vacacional_categoria,
     plan_rango_rel,
     vacaciones,
-    percepcion_historial,
     aguinaldo_categoria,
     aguinaldo_plan,
     aguinaldo_rangos,

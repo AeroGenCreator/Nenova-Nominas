@@ -1,11 +1,11 @@
 from odoo import fields, models
 
 
-class NominaPlanEmmpleadosWizard(models.TransientModel):
+class WizardPlanVacacional(models.TransientModel):
 
     # === MODELO CONFIG ===
 
-    _name = "nomina.plan.empleado.wizard"
+    _name = "wizard.plan.vacacional"
     _description = (
         "Permite seleccionar manualmente que empleado existe "
         "en el plan vacacional que disparó este evento."

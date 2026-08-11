@@ -1,8 +1,8 @@
 <odoo>
     
-    <record id="nomina_plan_empleado_wizard_form_view" model="ir.ui.view">
-        <field name="name">nomina.plan.empleado.wizard.form.view</field>
-        <field name="model">nomina.plan.empleado.wizard</field>
+    <record id="wizard_plan_vacacional_form_view" model="ir.ui.view">
+        <field name="name">wizard.plan.vacacional.form.view</field>
+        <field name="model">wizard.plan.vacacional</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -32,9 +32,9 @@
         </field>
     </record>
 
-    <record id="nomina_plan_empleado_wizard_action" model="ir.actions.act_window">
+    <record id="wizard_plan_vacacional_action" model="ir.actions.act_window">
         <field name="name">Relación Plan-Empleado</field>
-        <field name="res_model">nomina.plan.empleado.wizard</field>
+        <field name="res_model">wizard.plan.vacacional</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

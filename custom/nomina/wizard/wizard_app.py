@@ -19,8 +19,8 @@ class PossibleRight:
         return asdict(self)
 
 
-class NominaMainView(models.TransientModel):
-    _name = "nomina.main.view"
+class WizardApp(models.TransientModel):
+    _name = "nomina.app"
     _description = (
         "Este modelo permite renderizar una main "
         "view estilo dashboard para el modulo nómina."

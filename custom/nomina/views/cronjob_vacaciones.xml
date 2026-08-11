@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="ir_cron_action_refrescar_derecho_vacacional" model="ir.cron">
             <field name="name">Ejecución Diaria de action_refrescar_derecho_vacacional</field>
-            <field name="model_id" ref="model_nomina_main_view"/>
+            <field name="model_id" ref="model_nomina_app"/>
             <field name="state">code</field>
             <field name="code">model.action_refrescar_derecho_vacacional()</field>
             <field name="user_id" ref="base.user_root"/>

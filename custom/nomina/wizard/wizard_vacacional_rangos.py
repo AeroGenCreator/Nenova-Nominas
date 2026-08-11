@@ -1,10 +1,10 @@
 from odoo import fields, models
 
 
-class PlanRangosWizard(models.TransientModel):
+class WizardVacacionalRangos(models.TransientModel):
     # === MODELO CONFIG ===
 
-    _name = "nomina.plan.rangos.wizard"
+    _name = "wizard.vacacional.rangos"
     _description = (
         "Permite seleccionar una categoria de rango vacacional. "
         "Por este medio filtrar y relacionar al modelo padre que disparó "

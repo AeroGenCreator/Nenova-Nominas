@@ -11,7 +11,7 @@
     <menuitem
         id="nomina.main_view"
         name="¡Bienvenido!"
-        action="nomina_main_view_action"
+        action="nomina_app_action"
         parent="nomina.root_menu"
         sequence="1"
     />
@@ -96,18 +96,34 @@
     />
 
     <menuitem
-        id="nomina.config_percepciones"
-        name="Percepciones"
-        parent="nomina.root_menu"
+        id="nomina.plan_vacacional"
+        name="Plan Vacacional"
+        action="plan_vacacional_action"
+        parent="nomina.vacaciones_menu"
+        sequence="4"
+    />
+
+    <menuitem
+        id="nomina.vacacional_rangos"
+        name="Vacacional Rangos"
+        parent="nomina.vacaciones_menu"
+        action="nomina_vacacional_rangos_action"
+        sequence="5"
+    />
+
+    <menuitem
+        id="nomina.vacacional_categoria"
+        name="Vacacional Categoría"
+        parent="nomina.vacaciones_menu"
+        action="nomina_vacacional_categoria_action"
         sequence="6"
     />
 
     <menuitem
-        id="nomina.percepcion_historial"
-        name="Percepción Historial"
-        action="percepcion_historial_action"
-        parent="nomina.config_percepciones"
-        sequence="1"
+        id="nomina.config_percepciones"
+        name="Percepciones"
+        parent="nomina.root_menu"
+        sequence="6"
     />
 
     <menuitem
@@ -146,30 +162,6 @@
         name="Configuraciones"
         parent="nomina.root_menu"
         sequence="8"
-    />
-
-    <menuitem
-        id="nomina.plan_vacacional"
-        name="Plan Vacacional"
-        action="plan_vacacional_action"
-        parent="nomina.configuracion"
-        sequence="1"
-    />
-
-    <menuitem
-        id="nomina.vacacional_rangos"
-        name="Vacacional Rangos"
-        parent="nomina.configuracion"
-        action="nomina_vacacional_rangos_action"
-        sequence="2"
-    />
-
-    <menuitem
-        id="nomina.vacacional_categoria"
-        name="Vacacional Categoría"
-        parent="nomina.configuracion"
-        action="nomina_vacacional_categoria_action"
-        sequence="2"
     />
 
     <menuitem
