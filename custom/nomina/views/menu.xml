@@ -1,11 +1,13 @@
 <odoo>
     
+    <!-- MODULO -->
     <menuitem
         id="nomina.root_menu"
         name="Nómina"
         web_icon="nomina,static/description/icon.png"
     />
 
+    <!-- MAIN VIEW -->
     <menuitem
         id="nomina.main_view"
         name="¡Bienvenido!"
@@ -14,14 +16,39 @@
         sequence="1"
     />
 
+    <!-- SUB MENU NOMINA -->
     <menuitem
-        id="nomina_historial"
+        id="nomina_submenu"
         name="Nóminas"
         parent="nomina.root_menu"
-        action="nomina_historial_action"
         sequence="2"
     />
 
+    <menuitem
+        id="nomina_nomina"
+        name="Nóminas"
+        parent="nomina_submenu"
+        action="nomina_action"
+        sequence="1"
+    />
+
+    <menuitem
+        id="nomina_concepto"
+        name="Conceptos"
+        parent="nomina_submenu"
+        action="nomina_concepto_action"
+        sequence="2"
+    />
+
+    <menuitem
+        id="nomina_percepcion"
+        name="Percepción"
+        parent="nomina_submenu"
+        action="nomina_percepcion_action"
+        sequence="3"
+    />
+
+    <!-- VISTA EMPLEADOS -->
     <menuitem 
         id="menu_mi_modulo_empleados"
         name="Empleados"
@@ -76,19 +103,11 @@
     />
 
     <menuitem
-        id="nomina.percepciones"
-        name="Percepciones"
-        action="percepcion_action"
-        parent="nomina.config_percepciones"
-        sequence="1"
-    />
-
-    <menuitem
         id="nomina.percepcion_historial"
         name="Percepción Historial"
         action="percepcion_historial_action"
         parent="nomina.config_percepciones"
-        sequence="2"
+        sequence="1"
     />
 
     <menuitem

@@ -10,7 +10,6 @@ from . import (
     vacacional_categoria,
     plan_rango_rel,
     vacaciones,
-    percepciones,
     percepcion_historial,
     aguinaldo_categoria,
     aguinaldo_plan,
@@ -19,5 +18,7 @@ from . import (
     vacaciones_historial,
     uma,
     factor_riesgo_trabajo,
-    nomina_historial,
+    nomina,
+    nomina_concepto,
+    nomina_percepcion,
 )

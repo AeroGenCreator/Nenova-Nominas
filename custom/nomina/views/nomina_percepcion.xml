@@ -1,0 +1,70 @@
+<odoo>
+	
+	<!-- FORM VIEW -->
+	<record id="nomina_percepcion_form_view" model="ir.ui.view">
+		<field name="name">nomina.percepcion.form.views</field>
+		<field name="model">nomina.percepcion</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group string="Configuración Básica">
+							<field name="name" class="h1"/>
+							<field name="nomina_id"/>
+							<field name="concepto_id"/>
+							<field name="empleado_id"/>
+							<field name="cantidad" widget="float"/>
+							<field name="importe" widget="custom_monetary_float"/>
+						</group>
+						<group string="Campos Calculados">
+							<field name="active" widget="boolean_toggle"/>
+							<field name="importe_gravado" widget="custom_monetary_float"/>
+							<field name="importe_exento" widget="custom_monetary_float"/>
+							<field name="total" widget="custom_monetary_float"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- LIST VIEW -->
+	<record id="nomina_percepcion_list_view" model="ir.ui.view">
+		<field name="name">nomina.percepcion.list.views</field>
+		<field name="model">nomina.percepcion</field>
+		<field name="arch" type="xml">
+			<list>
+				<field name="name" width="80"/>
+				<field name="cantidad" width="80"/>
+				<field name="importe" widget="custom_monetary_float" width="80"/>
+				<field name="importe_gravado" widget="custom_monetary_float" width="80"/>
+				<field name="importe_exento" widget="custom_monetary_float" width="80"/>
+				<field name="total" widget="custom_monetary_float" width="80"/>
+			</list>
+		</field>
+	</record>
+
+	<!-- SEARCH VIEW -->
+	<record id="nomina_percepcion_search_view" model="ir.ui.view">
+		<field name="name">nomina.percepcion.search.views</field>
+		<field name="model">nomina.percepcion</field>
+		<field name="arch" type="xml">
+			<search>
+				<filter
+					string="Archivados"
+					name="archived"
+					domain="[('active','!=',True)]"
+				/>
+			</search>
+		</field>
+	</record>
+
+	<!-- ACCION -->
+	<record id="nomina_percepcion_action" model="ir.actions.act_window">
+	    <field name="name">Percepción</field>
+	    <field name="res_model">nomina.percepcion</field>
+	    <field name="view_mode">list,form</field>
+	    <field name="search_view_id" ref="nomina_percepcion_search_view"/>
+	</record>
+
+</odoo>

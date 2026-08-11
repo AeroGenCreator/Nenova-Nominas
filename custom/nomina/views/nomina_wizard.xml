@@ -60,9 +60,6 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Deducciones">
-                            
-                        </page>
                     </notebook>
                 </sheet>
                 <footer>

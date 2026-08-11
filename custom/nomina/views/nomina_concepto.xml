@@ -1,0 +1,66 @@
+<odoo>
+	
+	<!-- FORM VIEW -->
+	<record id="nomina_concepto_form_view" model="ir.ui.view">
+		<field name="name">nomina.concepto.form.view</field>
+		<field name="model">nomina.concepto</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group string="Concepto">
+						<group>
+							<field name="name"/>
+							<field name="codigo"/>
+							<field name="tipo"/>
+						</group>
+						<group>
+							<field name="grava_isr" widget="boolean_toggle"/>
+							<field name="integra_imss" widget="boolean_toggle"/>
+							<field name="active" widget="boolean_toggle"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- LIST VIEW -->
+	<record id="nomina_concepto_list_view" model="ir.ui.view">
+		<field name="name">nomina.concepto.list.view</field>
+		<field name="model">nomina.concepto</field>
+		<field name="arch" type="xml">
+			<list>
+				<field name="name" width="100"/>
+				<field name="codigo" width="100"/>
+				<field name="tipo" width="100"/>
+				<field name="grava_isr" width="100"/>
+				<field name="integra_imss" width="100"/>
+				<field name="active" width="100"/>
+			</list>
+		</field>
+	</record>
+
+	<!-- SEARCH VIEW -->
+	<record id="nomina_concepto_search_view" model="ir.ui.view">
+		<field name="name">nomina.concepto.search.view</field>
+		<field name="model">nomina.concepto</field>
+		<field name="arch" type="xml">
+			<search>
+				<filter
+					string="Archivados"
+					name="archived"
+					domain="[('active','!=',True)]"
+				/>
+			</search>
+		</field>
+	</record>
+
+	<!-- Nomina Conceptos Accion -->
+	<record id="nomina_concepto_action" model="ir.actions.act_window">
+		<field name="name">Conceptos</field>
+		<field name="res_model">nomina.concepto</field>
+		<field name="view_mode">list,form</field>
+		<field name="search_view_id" ref="nomina_concepto_search_view"/>
+	</record>
+
+</odoo>

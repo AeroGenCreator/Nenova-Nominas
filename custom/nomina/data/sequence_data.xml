@@ -9,7 +9,7 @@
             <!-- 4. Como se muestra este campo en la GUI. -->
             <field name="name">Secuencia de Historial de Nómina</field>
             <field name="implementation">standard</field>
-            <field name="code">nomina.historial.sequence</field>
+            <field name="code">nomina.nomina.sequence</field>
             <!-- 5. Prefijos letras 'NOM' union de años '/%(year)s/' -->
             <field name="prefix">NOM/%(year)s/</field>
             <!-- 6. Agrega 5 digitos al codigo. -->

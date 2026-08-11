@@ -25,7 +25,7 @@ class PercepcionWizard(models.TransientModel):
         string="Empleado", comodel_name="hr.employee", required=True
     )
     percepcion = fields.Many2one(
-        string="Percepción", required=True, comodel_name="nomina.percepciones"
+        string="Percepción", required=True, comodel_name="nomina.percepcion"
     )
     periodicidad = fields.Many2one(
         string="Periodicidad", comodel_name="nomina.periodo.pago", required=True

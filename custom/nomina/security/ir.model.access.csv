@@ -16,13 +16,14 @@ access_nomina_dia_hora_linea,access.nomina.dia.hora.linea,model_nomina_dia_hora_
 access_nomina_aguinaldo_plan,access.nomina.aguinaldo.plan,model_nomina_aguinaldo_plan,base.group_user,1,1,1,1
 access_nomina_riesgo_trabajo,access.nomina.riesgo.trabajo,model_nomina_riesgo_trabajo,base.group_user,1,1,1,1
 access_nomina_periodo_pago,access.nomina.periodo.pago,model_nomina_periodo_pago,base.group_user,1,1,1,1
-access_nomina_percepciones,access.nomina.percepciones,model_nomina_percepciones,base.group_user,1,1,1,1
 access_nomina_dias_wizard,access.nomina.dias.wizard,model_nomina_dias_wizard,base.group_user,1,1,1,1
 access_nomina_vacaciones,access.nomina.vacaciones,model_nomina_vacaciones,base.group_user,1,1,1,1
 access_percepcion_wizard,access.percepcion.wizard,model_percepcion_wizard,base.group_user,1,1,1,1
 access_nomina_main_view,access.nomina.main.view,model_nomina_main_view,base.group_user,1,1,1,1
-access_nomina_historial,access.nomina.historial,model_nomina_historial,base.group_user,1,1,1,1
+access_nomina_nomina,access.nomina.nomina,model_nomina_nomina,base.group_user,1,1,1,1
 access_nomina_jornada,access.nomina.jornada,model_nomina_jornada,base.group_user,1,1,1,1
 access_nomina_wizard,access.nomina.wizard,model_nomina_wizard,base.group_user,1,1,1,1
 access_nomina_dias,access.nomina.dias,model_nomina_dias,base.group_user,1,1,1,1
 access_nomina_uma,acess.nomina.uma,model_nomina_uma,base.group_user,1,1,1,1
+access_nomina_concepto,access.nomina.concepto,model_nomina_concepto,base.group_user,1,1,1,1
+access_nomina_percepcion,access.nomina.percepcion,model_nomina_percepcion,base.group_user,1,1,1,1
