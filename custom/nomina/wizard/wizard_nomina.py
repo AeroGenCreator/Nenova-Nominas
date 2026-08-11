@@ -1,7 +1,19 @@
-from datetime import date
+from datetime import timedelta
 
-from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+
+DATE_ERROR = (
+    "Invalido rango de fechas. "
+    "La fecha de inicio no puede ser mayor a la fecha de fin."
+)
+RANGO_ERROR = (
+    "El rango de fechas no coincide con la cantidad de días registrados "
+    "sobre la percepción de sueldo. Asegurarse de que "
+    "(fecha inicio - fecha fin) coincidan con la cantidad de días "
+    "de la percepción sueldo. "
+    "Esta advertencia solo existe para el concepto de 'sueldos'."
+)
 
 
 class NominaWizard(models.TransientModel):
@@ -15,7 +27,12 @@ class NominaWizard(models.TransientModel):
 
     # === MODELO CAMPOS ===
 
-    name = fields.Char(string="Registro", compute="computar_nombre", store=True)
+    name = fields.Char(string="Registro", compute="_compute_nombre", store=True)
+    fecha_emision = fields.Date(
+        string="Fecha de Emisión", default=lambda self: fields.Date.today()
+    )
+    fecha_inicio = fields.Date(string="Fecha Inicio", required=True)
+    fecha_fin = fields.Date(string="Fecha Fin", required=True)
     empleado_id = fields.Many2one(
         string="Empleado",
         comodel_name="hr.employee",
@@ -23,63 +40,44 @@ class NominaWizard(models.TransientModel):
             self.env.context.get("active_id", "")
         ),
     )
-    sueldo = fields.Float(string="Sueldo Bruto", compute="computar_sueldo")
+    sueldo = fields.Float(
+        string="Sueldo Bruto", compute="_compute_sueldo", store=True
+    )
     periodicidad = fields.Char(
-        string="Periodicidad", compute="computar_periodicidad"
+        string="Periodicidad", compute="_compute_periodo_pago", store=True
     )
     sueldo_diario = fields.Float(
-        string="Sueldo Diario", compute="computar_sueldo_diario"
+        string="Sueldo Diario", compute="_compute_sueldo_diario", store=True
     )
     sdi = fields.Float(
         string="Salario Diario Integrado (SDI)",
         digits=(16, 4),
-        compute="computar_salario_diario_integrado",
+        compute="_compute_sdi",
+        store=True,
     )
     factor_integracion = fields.Float(
         string="Factor Integración",
         digits=(16, 4),
-        compute="computar_factor_integracion",
+        compute="_compute_factor_integracion",
         store=True,
     )
-    uma_id = fields.Many2one(
-        string="UMA",
-        comodel_name="nomina.uma",
-        default=lambda self: self.computar_uma_mas_reciente(),
-    )
-    factor_riesgo_trabajo_id = fields.Many2one(
-        string="Factor Riesgo de Trabajo",
-        comodel_name="nomina.riesgo.trabajo",
-        default=lambda self: self.computar_factor_riesgo_minimo(),
-    )
-    total_dias = fields.Integer(
-        string="Total Días",
-        compute=lambda self: self.computar_total_dias(),
+    rango_seleccionado = fields.Integer(
+        string="Rango Seleccionado",
+        compute="_compute_rango_seleccionado",
         readonly=False,
+        store=True,
+        default=0,
     )
-    percepciones_total = fields.Float(
-        string="Perpeciones Suma Monto Total (Diarios)",
-        digits=(16, 4),
-        compute="computar_monto_total_percepciones",
-    )
-    salario_base_cotizacion = fields.Float(
-        string="Salario Base de Cotización (SBC)",
-        digits=(16, 4),
-        compute="computar_salario_base_cotizacion",
-        help="Monto (Determina cuotas 'Obrero-Patronal')",
-    )
-    percepciones_ids = fields.One2many(
-        string="Perpeciones",
+    percepcion_ids = fields.One2many(
+        string="Percepción",
         comodel_name="percepcion.wizard",
         inverse_name="nomina_id",
-    )
-    fecha_emision = fields.Date(
-        string="Fecha de Emisión", default=lambda self: fields.Date.today()
     )
 
     # === MODELO LÓGICA ===
 
     @api.depends("empleado_id")
-    def computar_nombre(self):
+    def _compute_nombre(self):
         for rec in self:
             NAME = False
             if rec.empleado_id:
@@ -87,7 +85,7 @@ class NominaWizard(models.TransientModel):
             rec.name = NAME
 
     @api.depends("empleado_id")
-    def computar_sueldo(self):
+    def _compute_sueldo(self):
         for rec in self:
             SUELDO = False
             if rec.empleado_id:
@@ -95,7 +93,7 @@ class NominaWizard(models.TransientModel):
             rec.sueldo = SUELDO
 
     @api.depends("empleado_id")
-    def computar_periodicidad(self):
+    def _compute_periodo_pago(self):
         for rec in self:
             PERIODO = False
             if rec.empleado_id.periodo_pago_id:
@@ -103,7 +101,7 @@ class NominaWizard(models.TransientModel):
             rec.periodicidad = PERIODO
 
     @api.depends("empleado_id")
-    def computar_sueldo_diario(self):
+    def _compute_sueldo_diario(self):
         for rec in self:
             SUELDO_DIARIO = False
             if rec.empleado_id:
@@ -111,7 +109,7 @@ class NominaWizard(models.TransientModel):
             rec.sueldo_diario = SUELDO_DIARIO
 
     @api.depends("empleado_id")
-    def computar_salario_diario_integrado(self):
+    def _compute_sdi(self):
         for rec in self:
             SDI = False
             if rec.empleado_id:
@@ -119,149 +117,53 @@ class NominaWizard(models.TransientModel):
             rec.sdi = SDI
 
     @api.depends("empleado_id")
-    def computar_factor_integracion(self):
+    def _compute_factor_integracion(self):
         for rec in self:
             FACTOR = 0
             if rec.empleado_id:
                 FACTOR = rec.empleado_id.factor_integracion
             rec.factor_integracion = FACTOR
 
-    def computar_uma_mas_reciente(self):
-        UMA = False
-        try:
-            umas = self.env["nomina.uma"].search([])
-            newest_uma = sorted(
-                umas, key=lambda r: r.fecha_activacion, reverse=True
-            )
-            if newest_uma:
-                UMA = newest_uma[0]
-        except Exception:
-            pass
-        return UMA
-
-    def computar_factor_riesgo_minimo(self):
-        RIESGO = False
-        try:
-            riesgos = self.env["nomina.riesgo.trabajo"].search([])
-            minimo = sorted(riesgos, key=lambda r: r.factor, reverse=False)
-            if minimo:
-                RIESGO = minimo[0]
-        except Exception:
-            pass
-        return RIESGO
-
-    @api.depends("percepciones_ids")
-    def computar_monto_total_percepciones(self):
+    @api.depends("fecha_inicio", "fecha_fin")
+    def _compute_rango_seleccionado(self):
         for rec in self:
             TOTAL = 0
-            if rec.percepciones_ids:
-                cantidades_diarias = [
-                    r.monto_diario
-                    for r in rec.percepciones_ids if r.integra_sbc
-                ]
-                TOTAL = sum(cantidades_diarias)
-            rec.percepciones_total = TOTAL
-
-    @api.depends("sdi","percepciones_total")
-    def computar_salario_base_cotizacion(self):
-        for rec in self:
-            SBC = 0
-            if rec.sdi:
-                SBC = rec.sdi + rec.percepciones_total
-            rec.salario_base_cotizacion = SBC
-
-    @api.depends("empleado_id", "periodicidad")
-    def computar_total_dias(self):
-        """Automático: Busca asistencias o regresa 0."""
-        for rec in self:
-            # Por defecto se asignan 0 dias.
-            DIAS = 0
-
-            # Si no esta asignado 'empleado' o 'periodicidad', asigna 0.
-            if not rec.periodicidad or not rec.empleado_id:
-                rec.total_dias = DIAS
-                return
-
-            # Se busca 'singleton' periodo. De lo contrario asigna 0.
-            p_domain = [("name", "=", rec.periodicidad)]
-            periodo = rec.env["nomina.periodo.pago"].search(p_domain)
-            if not periodo:
-                rec.total_dias = DIAS
-                return
-
-            # Se determina dia actual(Referencia)
-            TODAY = fields.Date.today()
-            THIS_MONTH = TODAY.month
-            THIS_YEAR = TODAY.year
-            THIS_DAY = TODAY.day
-
-            # Caso cuando periodo ANUAL
-            if periodo.dias_imss == 365:
-                # Se restan 12 meses a fecha actual (ANHO)
-                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
-                    months=12
-                )
-                # Mes actual 12, y excluyente el mes proximo "13".
-                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
-                    months=1
-                )
-
-            # Caso cuando periodo mayor a MES & modulo de 30 con residuo 0.
-            elif periodo.dias_imss > 30 and periodo.dias_imss % 2 == 0:
-                MESES = (periodo.dias_imss // 30) - 1
-                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1) - relativedelta(
-                    months=MESES
-                )
-                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
-                    months=1
-                )
-            # Caso cuando periodo igual a MENSUAL.
-            elif periodo.dias_imss == 30:
-                RANGE_START = date(THIS_YEAR, THIS_MONTH, 1)
-                RANGE_ENDNG = date(THIS_YEAR, THIS_MONTH, 1) + relativedelta(
-                    months=1
-                )
-            # Caso cuando periodo < 30 || periodo > 30 & modulo residuo != 0.
-            else:
-                # Caso cuando QUINCENAS.
-                if periodo.dias_imss in (15, 14):
-                    MESES = 0
-                    LIM_INFERIOR = 1
-                    LIM_SUPERIOR = periodo.dias_imss + 1
-                    if THIS_DAY > periodo.dias_imss:
-                        LIM_INFERIOR = periodo.dias_imss + 1
-                        LIM_SUPERIOR = 1
-                        MESES = 1
-                    RANGE_START = date(THIS_YEAR, THIS_MONTH, LIM_INFERIOR)
-                    RANGE_ENDNG = date(
-                        THIS_YEAR, THIS_MONTH, LIM_SUPERIOR
-                    ) + relativedelta(months=MESES)
-                # Caso cuando SEMANALES
-                elif periodo.dias_imss == 7:
-                    DOWK = TODAY.weekday()
-                    DIFF = TODAY - relativedelta(days=DOWK)
-                    RANGE_START = date(DIFF.year, DIFF.month, DIFF.day)
-                    RANGE_ENDNG = RANGE_START + relativedelta(days=7)
-                # Caso cuando DIARIOS
-                elif periodo.dias_imss == 1:
-                    RANGE_START = date(THIS_YEAR, THIS_MONTH, THIS_DAY)
-                    RANGE_ENDNG = date(
-                        THIS_YEAR, THIS_MONTH, THIS_DAY
-                    ) + relativedelta(days=1)
-                # Sin resolucion: asigna 0.
-                else:
-                    rec.total_dias = DIAS
-                    return
-
-            # Se realiza el 'query' filtrando segun la periodicidad.
-            domain = [
-                ("employee_id", "=", rec.empleado_id.id),
-                ("date", ">=", RANGE_START),
-                ("date", "<", RANGE_ENDNG),
-            ]
-
-            # Se realiza la cuenta de registros que satisfacen condicion.
-            DIAS = rec.env["hr.attendance"].search_count(domain)
-            rec.total_dias = DIAS
+            if rec.fecha_inicio and rec.fecha_fin:
+                INCLUYENTE = rec.fecha_fin + timedelta(days=1)
+                DIFF = INCLUYENTE - rec.fecha_inicio
+                TOTAL = DIFF.days
+            rec.rango_seleccionado = TOTAL
 
     # === MODELO RESTRICCIONES ===
+
+    @api.constrains("fecha_inicio", "fecha_fin")
+    def _validar_rango_fechas_(self):
+        for rec in self:
+            if rec.fecha_inicio and rec.fecha_fin:
+                if rec.fecha_inicio > rec.fecha_fin:
+                    raise ValidationError(DATE_ERROR)
+
+    @api.constrains(
+        "rango_seleccionado",
+        "percepcion_ids.cantidad",
+        "percepcion_ids.concepto_id.codigo",
+    )
+    def _validar_rango_dias_(self):
+        """
+        Valida que la cantidad de la percepcion sueldo coincida con el
+        rango seleccionado en el wizard de nomina.
+        """
+        for rec in self:
+            if rec.rango_seleccionado and rec.percepcion_ids:
+                sueldo = rec.percepcion_ids.filtered(
+                    lambda r: r.concepto_id.codigo == "SUELDO"
+                )
+                if sueldo:
+                    if sueldo.cantidad != rec.rango_seleccionado:
+                        raise ValidationError(RANGO_ERROR)
+
+    # === MODELO ACCIONES ===
+
+    def action_construir_nomina(self):
+        for rec in self:
+            pass

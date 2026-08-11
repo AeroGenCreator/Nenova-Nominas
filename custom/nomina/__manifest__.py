@@ -16,6 +16,7 @@
     "depends": ["hr"], # Importante "hr.attendance" -> Instalar Manual
     "data": [
         "security/ir.model.access.csv",
+        "data/nomina.concepto.csv",
         "data/nomina.prima.vacacional.factor.csv",
         "data/nomina.riesgo.trabajo.csv",
         "data/nomina.aguinaldo.categoria.csv",

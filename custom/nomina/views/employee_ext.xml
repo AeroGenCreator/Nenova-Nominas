@@ -33,6 +33,7 @@
                     <group string="Planes">
                         <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
                         <field name="plan_vacacional_id"/>
+                        <field name="aguinaldo_plan_id"/>
                     </group>
                     <group>
                         <group string="Salario">
@@ -45,7 +46,6 @@
                             <field name="jornada_id"/>
                         </group>
                         <group string="Salario Integrado">
-                            <field name="aguinaldo_plan_id"/>
                             <field name="prima_vacacional_factor_id"/>
                             <field name="factor_integracion"/>
                             <field name="salario_integral" widget="custom_monetary_float"/>

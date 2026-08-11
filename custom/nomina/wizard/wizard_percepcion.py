@@ -9,90 +9,117 @@ class PercepcionWizard(models.TransientModel):
 
     # === MODELO CAMPOS ===
 
-    name = fields.Char(string="Registro", compute="computar_nombre", store=True)
-    fecha_activacion = fields.Date(
-        string="Fecha Activación", default=lambda self: fields.Date.today()
+    name = fields.Char(
+        string="Percepción",
+        compute="_compute_nombre",
+        store=True,
+        readonly=True,
     )
     nomina_id = fields.Many2one(
         string="Nómina",
         comodel_name="nomina.wizard",
+        required=False,
         readonly=True,
-        default=lambda self: self.env["nomina.wizard"].browse(
+        ondelete="restrict",
+        default=lambda self: self.env.browse(
             self.env.context.get("active_id", "")
         ),
     )
+    concepto_id = fields.Many2one(
+        string="Concepto",
+        comodel_name="nomina.concepto",
+        required=True,
+        ondelete="restrict",
+    )
     empleado_id = fields.Many2one(
-        string="Empleado", comodel_name="hr.employee", required=True
+        string="Empleado",
+        comodel_name="hr.employee",
+        related="nomina_id.empleado_id",
+        store=True,
+        ondelete="restrict",
     )
-    percepcion = fields.Many2one(
-        string="Percepción", required=True, comodel_name="nomina.percepcion"
-    )
-    periodicidad = fields.Many2one(
-        string="Periodicidad", comodel_name="nomina.periodo.pago", required=True
-    )
-    monto = fields.Float(string="Monto", digits=(16, 4), required=True)
-    monto_diario = fields.Float(
-        string="Valor Diario",
+    cantidad = fields.Float(
+        string="Cantidad",
+        compute="_compute_cantidad",
         digits=(16, 4),
-        compute="computar_monto_diario",
+        required=True,
+        readonly=False,
+        help="Unidades del concepto por ser evaluadas para el importe",
         store=True,
     )
-    tipo = fields.Selection(
-        selection=[
-            ("fija", "Fija"),
-            ("porcentaje.sueldo", "Porcentaje Del Sueldo"),
-            ("variable", "Variable"),
-        ],
-        default="fija",
+    importe = fields.Float(
+        string="Importe",
+        compute="_compute_importe",
+        digits=(16, 4),
+        required=True,
+        readonly=False,
+        help="Valor unitario de esta percepcion",
+        store=True,
     )
-    integra_sbc = fields.Boolean(
-        string="Integra al Salario Base de Cotización (SBC)", default=True
-    )
-    grava_isr = fields.Boolean(
-        string="Impuesto Sobre Renta (ISR)", default=False
-    )
-    grava_isn = fields.Boolean(
-        string="Impuesto Sobre Nómina (ISN)", default=False
+    total = fields.Float(
+        string="Total",
+        digits=(16, 4),
+        compute="_compute_total",
+        store=True,
+        readonly=True,
     )
 
     # === MODELO LÓGICA ===
 
-    @api.depends("empleado_id", "percepcion", "tipo")
-    def computar_nombre(self):
+    @api.depends("concepto_id", "empleado_id")
+    def _compute_nombre(self):
         for rec in self:
             NAME = False
-            validate = ((rec.empleado_id), (rec.percepcion), (rec.tipo))
-            if all(validate):
-                SELECTION = dict(self._fields["tipo"]._selection)
-                NAME = (
-                    f"{rec.empleado_id.name} "
-                    f"{rec.percepcion.name} - "
-                    "Percepcion "
-                    f"({SELECTION.get(rec.tipo, '')})"
-                )
+            if rec.concepto_id and rec.empleado_id:
+                NAME = f"{rec.concepto_id.name} {rec.empleado_id.name}"
             rec.name = NAME
 
-    @api.depends("monto", "periodicidad", "tipo")
-    def computar_monto_diario(self):
-        DIARIO = 0
-        SELECTION = dict(self._fields["tipo"]._selection)
+    @api.depends("nomina_id","concepto_id")
+    def _compute_cantidad(self):
+        """
+        Si la percepcion es sueldo,
+        se agregan los dias del rando seleccionado desde la nomina wizard
+        """
         for rec in self:
-            validate = ((rec.monto), (rec.periodicidad), (rec.tipo))
-            if all(validate):
-                if SELECTION.get(rec.tipo, "") == "Fija":
-                    try:
-                        DIARIO = fields.Float.round(
-                            (rec.monto / rec.periodicidad.dias_imss),
-                            precision_rounding=4,
-                        )
-                    except ZeroDivisionError:
-                        rec.integra_sbc = False
-                        DIARIO = 0
-            rec.monto_diario = DIARIO
+            if rec.concepto_id:
+                if rec.concepto_id.codigo == "SUELDO":
+                    if rec.nomina_id.rango_seleccionado:
+                        CANTIDAD = rec.nomina_id.rango_seleccionado
+                        rec.cantidad = CANTIDAD
+                    else:
+                        rec.cantidad = 1.0
+                else:
+                    if rec.cantidad:
+                        return
+                    if not rec.cantidad:
+                        rec.cantidad = 1.0
+
+    @api.depends("empleado_id", "concepto_id")
+    def _compute_importe(self):
+        for rec in self:
+            if rec.concepto_id:
+                if rec.concepto_id.codigo == "SUELDO":
+                    if rec.empleado_id.sueldo_diario:
+                        IMPORTE = rec.empleado_id.sueldo_diario
+                        rec.importe = IMPORTE
+                    else:
+                        rec.importe = 0
+                else:
+                    if rec.importe:
+                        return
+                    if not rec.importe:
+                        rec.importe = 0
+
+    @api.depends("cantidad", "importe")
+    def _compute_total(self):
+        for rec in self:
+            rec.total = fields.Float.round(
+                rec.cantidad * rec.importe,
+                precision_rounding=0.0001,
+            )
 
     # === MODELO RESTRICCIONES ===
 
     _unicos_ = models.Constraint(
-        "UNIQUE(empleado_id, percepcion, tipo)",
-        "Esta percepción ya existe en la lista.",
+        "UNIQUE(name, nomina_id)", "Esta percepción ya existe en la nómina."
     )

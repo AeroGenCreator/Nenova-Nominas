@@ -17,8 +17,9 @@ class NominaPercepcion(models.Model):
 
     name = fields.Char(
         string="Percepción",
-        compute="_compute_name",
-        store=True,
+        compute="_compute_nombre",
+        readonly=True,
+        store=True
     )
     nomina_id = fields.Many2one(
         string="Nómina",
@@ -82,15 +83,15 @@ class NominaPercepcion(models.Model):
 
     # === MODELO LÓGICA ===
 
-    @api.depends("nomina_id", "concepto_id")
-    def _compute_name(self):
+    @api.depends("nomina_id.name", "concepto_id.name", "empleado_id.name")
+    def _compute_nombre(self):
         for rec in self:
             NAME = False
-            if rec.nomina_id and rec.concepto_id:
+            if rec.nomina_id and rec.concepto_id and rec.empleado_id:
                 NAME = (
                     f"{rec.nomina_id.name} "
                     f"{rec.concepto_id.name} "
-                    f"{rec.nomina_id.empleado_id.name}"
+                    f"{rec.empleado_id.name}"
                 )
             rec.name = NAME
 

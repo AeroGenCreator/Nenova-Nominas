@@ -6,66 +6,42 @@
         <field name="model">nomina.wizard</field>
         <field name="arch" type="xml">
             <form>
+                <div class="container h1 text-primary">
+                    <div class="row">
+                        <div class="col">
+                            <field name="name" class="py-2 text-center"/>
+                        </div>
+                    </div>
+                </div>
                 <sheet>
+                    <p class="text-info">Definir el periodo (fecha inicio - fecha fin) para determinar numero de dias considerdados para esta nomina. (Ambos rangos son incluyentes).</p>
                     <group>
-                        <field name="name" class="h1 text-primary pt-2"/>
                         <group string="Datos Empleado">
                             <field name="empleado_id" class="py-1"/>
                             <field name="sueldo" class="text-success"/>
                             <field name="periodicidad"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>
+                            <field name="factor_integracion" class="text-info"/>
                             <field name="sdi" widget="custom_monetary_float" class="text-info"/>
                         </group>
-                        <group string="Factores">
+                        <group string="Configuración">
                             <field name="fecha_emision" readonly="1" class="text-primary"/>
-                            <field name="uma_id"/>
-                            <field name="factor_integracion" class="text-info"/>
-                            <field name="factor_riesgo_trabajo_id" class="text-danger"/>
-                            <field name="total_dias"/>
+                            <field name="fecha_inicio" class="text-success"/>
+                            <field name="fecha_fin" class="text-success"/>
+                            <field name="rango_seleccionado"/>
                         </group>
                     </group>
-                    <group string="Totales">
-                        <field name="percepciones_total" widget="custom_monetary_float"/>
-                        <field 
-                            name="salario_base_cotizacion"
-                            widget="custom_monetary_float"
-                            class="text-success"
-                        />
-                    </group>
+                    <p class="text-warning">El sueldo debe ser agregado como una percepcion (fila) en la siguiente tabla.</p>
                     <notebook>
-                        <page string="Percepciones">
-                            <field name="percepciones_ids">
-                                <list>
-                                    <field name="name" class="text-info" width="300"/>
-                                    <field name="monto" widget="custom_monetary_float" width="90"/>
-                                    <field name="monto_diario" widget="custom_monetary_float" width="90"/>
-                                    <field
-                                        name="integra_sbc"
-                                        widget="boolean_toggle"
-                                        string="SBC"
-                                        width="50"
-                                    />
-                                    <field
-                                        name="grava_isr"
-                                        widget="boolean_toggle"
-                                        string="ISR"
-                                        width="50"
-                                    />
-                                    <field
-                                        name="grava_isn"
-                                        widget="boolean_toggle"
-                                        string="ISN"
-                                        width="50"
-                                    />
-                                </list>
-                            </field>
+                        <page string="Percepciones" class="fw-bold">
+                            <field name="percepcion_ids"/>
                         </page>
                     </notebook>
                 </sheet>
                 <footer>
                     <button
-                        string="Guardar y Validar Nomina"
-                        name=""
+                        string="Guardar - Validar Nómina"
+                        name="action_construir_nomina"
                         class="btn-success"
                         type="object"
                     />
