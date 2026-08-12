@@ -15,8 +15,8 @@
 						</group>
 						<group string="Cantidades">
 							<field name="cantidad"/>
-							<field name="importe"/>
-							<field name="total"/>
+							<field name="importe" widget="custom_monetary_float"/>
+							<field name="total" widget="custom_monetary_float"/>
 						</group>
 					</group>
 				</sheet>

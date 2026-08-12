@@ -24,29 +24,6 @@ class NominaEmployeeExt(models.Model):
         compute="computar_anhos_antiguedad",
         store=True
     )
-    sueldo_bruto = fields.Float(
-        string="Sueldo Bruto",
-        digits=(12, 4)
-    )
-    periodo_pago_id = fields.Many2one(
-        string="Periodicidad de Pago (Contrato)",
-        help=MSG_CAT,
-        comodel_name="nomina.periodo.pago",
-    )
-    sueldo_diario = fields.Float(
-        string="Sueldo Diario (Bruto)",
-        compute="computar_sueldo_diario_bruto",
-        digits=(12, 4),
-        readonly=True,
-        store=True
-    )
-    salario_integral = fields.Float(
-        string="Salario Diario Integrado (SDI)",
-        help=MSG_SDI,
-        compute="computar_salario_diario_integrado",
-        digits=(12, 4),
-        store=True
-    )
     jornada_id = fields.Many2one(
         string="Jornada", comodel_name="nomina.jornada", ondelete="restrict"
     )
@@ -56,20 +33,38 @@ class NominaEmployeeExt(models.Model):
         comodel_name="nomina.plan.vacacional",
         ondelete="set null"
     )
-    prima_vacacional_factor_id = fields.Many2one(
-        string="Factor (Prima Vacacional)",
-        comodel_name="nomina.prima.vacacional.factor",
-        ondelete="restrict"
-    )
     aguinaldo_plan_id = fields.Many2one(
         string="Aguinaldo Plan",
         comodel_name="nomina.aguinaldo.plan",
         ondelete="restrict"
     )
+    prima_vacacional_factor_id = fields.Many2one(
+        string="Factor (Prima Vacacional)",
+        comodel_name="nomina.prima.vacacional.factor",
+        ondelete="restrict"
+    )
+    periodo_pago_id = fields.Many2one(
+        string="Periodicidad de Pago (Contrato)",
+        help=MSG_CAT,
+        comodel_name="nomina.periodo.pago",
+    )
+    sueldo_diario = fields.Float(
+        string="Sueldo Diario (Bruto)",
+        digits=(12, 2),
+        readonly=False,
+        default=0,
+    )
     factor_integracion = fields.Float(
         string="Factor Integración",
-        digits=(16, 4),
+        digits=(16, 8),
         compute="computar_factor_integracion",
+        store=True
+    )
+    salario_integral = fields.Float(
+        string="Salario Diario Integrado (SDI)",
+        help=MSG_SDI,
+        compute="computar_salario_diario_integrado",
+        digits=(12, 4),
         store=True
     )
 
@@ -85,19 +80,6 @@ class NominaEmployeeExt(models.Model):
                 ANHO_CONTRATACION = rec.fecha_contratacion.year
                 ANHOS = ANHO_ACTUAL - ANHO_CONTRATACION
             rec.antiguedad_anhos = ANHOS
-
-    @api.depends("sueldo_bruto", "periodo_pago_id")
-    def computar_sueldo_diario_bruto(self):
-        """
-        Unicamente muestra el sueldo bruto diario del empleado
-        Su función es principalmente de referencia.
-        """
-        for rec in self:
-            BRUTO_DIARIO = False
-            validate = ((rec.sueldo_bruto), (rec.periodo_pago_id))
-            if all(validate):
-                BRUTO_DIARIO = rec.sueldo_bruto / rec.periodo_pago_id.dias
-            rec.sueldo_diario = BRUTO_DIARIO
 
     @api.depends(
         "antiguedad_anhos",
@@ -152,13 +134,17 @@ class NominaEmployeeExt(models.Model):
                         key=lambda r: r.limite_superior,
                         reverse=True
                     )
-                FACTOR = (
-                            365 + record_aguinaldo.dias +
-                        (
+                FACTOR = fields.Float.round(
+                            (
+                                365 + record_aguinaldo.dias +
+                                (
                             dias_vacaciones *
                             rec.prima_vacacional_factor_id.factor
-                        )
-                    ) / 365
+                            )
+                        ) / 365
+                        , precision_rounding=0.00000001
+                    )
+
             rec.factor_integracion = FACTOR
 
     @api.depends("sueldo_diario", "factor_integracion")
@@ -168,3 +154,5 @@ class NominaEmployeeExt(models.Model):
             if rec.sueldo_diario and rec.factor_integracion:
                 AMOUNT = rec.sueldo_diario * rec.factor_integracion
             rec.salario_integral = AMOUNT
+
+    # === MODELO RESTRICCIONES ===

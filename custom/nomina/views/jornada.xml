@@ -60,7 +60,7 @@
                                     <field name="name" width="200"/>
                                     <field name="work_email" width="200"/>
                                     <field name="antiguedad_anhos" width="80"/>
-                                    <field name="sueldo_bruto" width="200"/>
+                                    <field name="sueldo_diario" width="200"/>
                                     <field name="periodo_pago_id" width="200"/>
                                 </list>
                             </field>

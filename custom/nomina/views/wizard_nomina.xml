@@ -18,10 +18,10 @@
                     <group>
                         <group string="Datos Empleado">
                             <field name="empleado_id" class="py-1"/>
-                            <field name="sueldo" class="text-success"/>
                             <field name="periodicidad"/>
+                            <field name="sueldo" widget="custom_monetary_float"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>
-                            <field name="factor_integracion" class="text-info"/>
+                            <field name="factor_integracion"/>
                             <field name="sdi" widget="custom_monetary_float" class="text-info"/>
                         </group>
                         <group string="Configuración">
@@ -34,7 +34,14 @@
                     <p class="text-warning">El sueldo debe ser agregado como una percepcion (fila) en la siguiente tabla.</p>
                     <notebook>
                         <page string="Percepciones" class="fw-bold">
-                            <field name="percepcion_ids"/>
+                            <field name="percepcion_ids">
+                                <list>
+                                    <field name="concepto_id" class="text-success" width="80"/>
+                                    <field name="cantidad" width="80"/>
+                                    <field name="importe" widget="custom_monetary_float" width="80"/>
+                                    <field name="total" widget="custom_monetary_float" width="80"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

@@ -41,7 +41,10 @@ class NominaWizard(models.TransientModel):
         ),
     )
     sueldo = fields.Float(
-        string="Sueldo Bruto", compute="_compute_sueldo", store=True
+        string="Sueldo Bruto",
+        compute="_compute_sueldo",
+        store=True,
+        digits=(16, 2),
     )
     periodicidad = fields.Char(
         string="Periodicidad", compute="_compute_periodo_pago", store=True
@@ -57,7 +60,7 @@ class NominaWizard(models.TransientModel):
     )
     factor_integracion = fields.Float(
         string="Factor Integración",
-        digits=(16, 4),
+        digits=(16, 8),
         compute="_compute_factor_integracion",
         store=True,
     )
@@ -84,12 +87,15 @@ class NominaWizard(models.TransientModel):
                 NAME = f"{rec.empleado_id.name} - Nómina"
             rec.name = NAME
 
-    @api.depends("empleado_id")
+    @api.depends("empleado_id.sueldo_diario", "rango_seleccionado")
     def _compute_sueldo(self):
         for rec in self:
-            SUELDO = False
-            if rec.empleado_id:
-                SUELDO = rec.empleado_id.sueldo_bruto
+            SUELDO = 0
+            if rec.empleado_id and rec.rango_seleccionado:
+                SUELDO = fields.Float.round(
+                    rec.empleado_id.sueldo_diario * rec.rango_seleccionado,
+                    precision_rounding=0.01
+                )
             rec.sueldo = SUELDO
 
     @api.depends("empleado_id")
@@ -116,7 +122,7 @@ class NominaWizard(models.TransientModel):
                 SDI = rec.empleado_id.salario_integral
             rec.sdi = SDI
 
-    @api.depends("empleado_id")
+    @api.depends("empleado_id.factor_integracion")
     def _compute_factor_integracion(self):
         for rec in self:
             FACTOR = 0

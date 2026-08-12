@@ -34,28 +34,24 @@
                         <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
                         <field name="plan_vacacional_id"/>
                         <field name="aguinaldo_plan_id"/>
+                        <button
+                            string="Generar Nómina"
+                            type="action"
+                            name="%(nomina_wizard_action)d"
+                            class="btn-success"
+                            icon="fa-btc"
+                        />
                     </group>
                     <group>
                         <group string="Salario">
-                            <field 
-                                name="sueldo_bruto"
-                                widget="custom_monetary_float"
-                            />
                             <field name="periodo_pago_id"/>
-                            <field name="sueldo_diario" widget="custom_monetary_float"/>
+                            <field name="sueldo_diario" widget="monetary"/>
                             <field name="jornada_id"/>
                         </group>
                         <group string="Salario Integrado">
                             <field name="prima_vacacional_factor_id"/>
                             <field name="factor_integracion"/>
-                            <field name="salario_integral" widget="custom_monetary_float"/>
-                            <button
-                                string="Nueva Nómina"
-                                type="action"
-                                name="%(nomina_wizard_action)d"
-                                class="btn-primary"
-                                icon="fa-file-text-o"
-                            />
+                            <field name="salario_integral" widget="monetary"/>
                         </group>
                     </group>
                 </page>

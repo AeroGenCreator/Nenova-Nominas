@@ -30,7 +30,7 @@ class CustomMonetaryFloat extends FloatField {
             const value = this.props.record.data[this.props.name] || 0;
 
             const formattedFloat = formatFloat(value, {
-                    digits: this.props.digits || [16, 4],
+                    digits: this.props.digits || [16, 2],
                     thousandsSep: ",",
                     decimalPoint: ".",
             });
