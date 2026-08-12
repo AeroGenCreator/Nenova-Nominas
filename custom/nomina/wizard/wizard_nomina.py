@@ -168,8 +168,55 @@ class NominaWizard(models.TransientModel):
                     if sueldo.cantidad != rec.rango_seleccionado:
                         raise ValidationError(RANGO_ERROR)
 
+    @api.constrains("percepcion_ids")
+    def _validar_percepciones_vacias_(self):
+        for rec in self:
+            if not rec.percepcion_ids:
+                raise ValidationError(
+                    "No se han agregados percepciones "
+                    "Es necesario agregar como minimo el 'sueldo'."
+                )
+
     # === MODELO ACCIONES ===
 
+    # Claude
     def action_construir_nomina(self):
         for rec in self:
-            pass
+            # Crea el registro nomina con folio
+            nomina = self.env["nomina.nomina"].create({
+                "empleado_id": rec.empleado_id.id,
+                "fecha_inicio": rec.fecha_inicio,
+                "fecha_fin": rec.fecha_fin,
+            })
+
+            for linea in rec.percepcion_ids:
+                total = linea.total
+                # grava_isr decide split gravado/exento
+                if linea.concepto_id.grava_isr:
+                    gravado = total
+                    exento = 0.0
+                else:
+                    gravado = 0.0
+                    exento = total
+
+                self.env["nomina.percepcion"].create({
+                    "nomina_id": nomina.id,
+                    "concepto_id": linea.concepto_id.id,
+                    "cantidad": linea.cantidad,
+                    "importe": linea.importe,
+                    "importe_gravado": gravado,
+                    "importe_exento": exento,
+                })
+
+            # Calcula ISR e IMSS al cerrar wizard
+            nomina._calcular_isr()
+            nomina._calcular_imss_obrero()
+
+            # Abre la nomina generada al usuario
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "nomina.nomina",
+                "res_id": nomina.id,
+                "view_mode": "form",
+                "target": "current",
+            }

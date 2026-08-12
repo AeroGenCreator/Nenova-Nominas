@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_calcular_isr" string="Calcular ISR" type="object" class="btn-primary"/>
+                    <button name="action_calcular_imss" string="Calcular IMSS" type="object" class="btn-primary"/>
                     <field name="estado" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet>
@@ -26,8 +28,25 @@
                     </group>
                     <notebook>
                         <page string="Percepciones">
+                            <field name="percepcion_ids">
+                                <list>
+                                    <field name="concepto_id"/>
+                                    <field name="cantidad"/>
+                                    <field name="importe"/>
+                                    <field name="importe_gravado"/>
+                                    <field name="importe_exento"/>
+                                    <field name="total"/>
+                                </list>
+                            </field>
                         </page>
                         <page string="Deducciones">
+                            <field name="deduccion_ids">
+                                <list>
+                                    <field name="tipo"/>
+                                    <field name="concepto"/>
+                                    <field name="importe"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

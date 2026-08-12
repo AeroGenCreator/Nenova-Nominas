@@ -26,3 +26,6 @@ access_nomina_dias,access.nomina.dias,model_nomina_dias,base.group_user,1,1,1,1
 access_nomina_uma,acess.nomina.uma,model_nomina_uma,base.group_user,1,1,1,1
 access_nomina_concepto,access.nomina.concepto,model_nomina_concepto,base.group_user,1,1,1,1
 access_nomina_percepcion,access.nomina.percepcion,model_nomina_percepcion,base.group_user,1,1,1,1
+access_nomina_deduccion,access.nomina.deduccion,model_nomina_deduccion,base.group_user,1,1,1,1
+access_nomina_tabla_isr,access.nomina.tabla.isr,model_nomina_tabla_isr,base.group_user,1,1,1,1
+access_nomina_tabla_subsidio,access.nomina.tabla.subsidio,model_nomina_tabla_subsidio,base.group_user,1,1,1,1

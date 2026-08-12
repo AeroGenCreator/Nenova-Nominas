@@ -29,6 +29,8 @@
         "data/sequence_data.xml",
         "data/nomina.dias.csv",
         "data/nomina.uma.csv",
+        "data/nomina.tabla.isr.csv",
+        "data/nomina.tabla.subsidio.csv",
         "views/wizard_vacacional_rangos.xml",
         "views/wizard_plan_vacacional.xml",
         "views/wizard_percepcion.xml",

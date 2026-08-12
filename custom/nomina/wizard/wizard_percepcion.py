@@ -20,7 +20,7 @@ class PercepcionWizard(models.TransientModel):
         comodel_name="nomina.wizard",
         required=False,
         readonly=True,
-        ondelete="restrict",
+        ondelete="cascade",
         default=lambda self: self.env.browse(
             self.env.context.get("active_id", "")
         ),
