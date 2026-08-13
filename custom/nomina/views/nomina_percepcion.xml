@@ -7,11 +7,16 @@
 		<field name="arch" type="xml">
 			<form>
 				<sheet>
+					<p class="alert alert-warning" role="alert" invisible="concepto_codigo != 'HORAS_EXTRA'">
+						⚠️ El gravado/exento de esta percepción usa una fórmula fiscal (LFT art. 66-68 + LISR art. 93 fracc. I) que
+						<strong>debe ser validada por un contador antes de confiar en la cifra</strong>.
+					</p>
 					<group>
 						<group string="Configuración Básica">
 							<field name="name" class="h1"/>
 							<field name="nomina_id"/>
 							<field name="concepto_id"/>
+							<field name="concepto_codigo" invisible="1"/>
 							<field name="empleado_id"/>
 							<field name="cantidad" widget="float"/>
 							<field name="importe" widget="custom_monetary_float"/>

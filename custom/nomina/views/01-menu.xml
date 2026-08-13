@@ -220,4 +220,12 @@
         sequence="1"
     />
 
+    <menuitem
+        id="nomina.hora_extra_menu"
+        name="Horas Extra"
+        action="nomina_hora_extra_action"
+        parent="nomina.asistencia_menu"
+        sequence="2"
+    />
+
 </odoo>

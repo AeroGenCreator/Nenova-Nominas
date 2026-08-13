@@ -30,3 +30,4 @@ access_nomina_deduccion,access.nomina.deduccion,model_nomina_deduccion,base.grou
 access_nomina_tabla_isr,access.nomina.tabla.isr,model_nomina_tabla_isr,base.group_user,1,1,1,1
 access_nomina_tabla_subsidio,access.nomina.tabla.subsidio,model_nomina_tabla_subsidio,base.group_user,1,1,1,1
 access_nomina_incidencia,access.nomina.incidencia,model_nomina_incidencia,base.group_user,1,1,1,1
+access_nomina_hora_extra,access.nomina.hora.extra,model_nomina_hora_extra,base.group_user,1,1,1,1

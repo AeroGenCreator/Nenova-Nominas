@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 DATE_ERROR = (
     "Invalido rango de fechas. "
@@ -69,12 +69,27 @@ class NominaWizard(models.TransientModel):
         compute="_compute_rango_seleccionado",
         readonly=False,
         store=True,
-        default=0,
     )
     percepcion_ids = fields.One2many(
         string="Percepción",
         comodel_name="percepcion.wizard",
         inverse_name="nomina_id",
+    )
+    # Claude
+    modo_asistencia = fields.Selection(
+        string="Modo Asistencia",
+        selection=[
+            ("manual", "Manual"),
+            ("automatico", "Automático"),
+        ],
+        default="manual",
+        required=True,
+        help=(
+            "Automático: genera faltas, retardos y horas extra a partir "
+            "de las asistencias e incidencias ya registradas del "
+            "empleado en el rango. Manual: no se consulta nada — solo "
+            "se procesan las percepciones capturadas a mano arriba."
+        ),
     )
 
     # === MODELO LÓGICA ===
@@ -208,7 +223,12 @@ class NominaWizard(models.TransientModel):
                     "importe_exento": exento,
                 })
 
-            # Calcula ISR e IMSS al cerrar wizard
+            # Claude
+            if rec.modo_asistencia == "automatico":
+                rec._generar_lineas_automaticas(nomina)
+
+            # Calcula ISR e IMSS al cerrar wizard (despues de las lineas
+            # automaticas: horas extra afecta la base gravada del ISR)
             nomina._calcular_isr()
             nomina._calcular_imss_obrero()
 
@@ -220,3 +240,75 @@ class NominaWizard(models.TransientModel):
                 "view_mode": "form",
                 "target": "current",
             }
+
+    # Claude
+    def _generar_lineas_automaticas(self, nomina):
+        """Modo automático (Fase 10): genera deducciones de falta/retardo
+        y la percepción de horas extra a partir de hr.attendance /
+        nomina.incidencia / nomina.hora.extra del rango, en vez de que RH
+        las capture a mano. Reutiliza attendance_ids/incidencia_ids/
+        hora_extra_ids (Fase 7) de la propia nómina recién creada, para
+        no duplicar el dominio de búsqueda — lo que se ve en la pestaña
+        "Días" es exactamente lo que alimentó este cálculo."""
+        self.ensure_one()
+        sueldo_diario = self.empleado_id.sueldo_diario
+
+        # Retardos: una línea de deducción por evento, importe fijo.
+        for attendance in nomina.attendance_ids.filtered("es_retardo"):
+            self.env["nomina.deduccion"].create({
+                "nomina_id": nomina.id,
+                "tipo": "retardo",
+                "concepto": f"Retardo {attendance.check_in}",
+                "importe": sueldo_diario / 3,
+            })
+
+        # Faltas no justificadas: una sola línea con el total de días.
+        # (falta_justificada ya se paga sola vía la asistencia fantasma
+        # de la Fase 5 y no participa aquí).
+        faltas = nomina.incidencia_ids.filtered(lambda i: i.tipo == "falta")
+        dias_falta = sum(faltas.mapped("dias"))
+        if dias_falta:
+            self.env["nomina.deduccion"].create({
+                "nomina_id": nomina.id,
+                "tipo": "falta",
+                "concepto": f"Falta ({dias_falta} día(s))",
+                "importe": sueldo_diario * dias_falta,
+            })
+
+        # Horas extra autorizadas: una percepción con el reparto
+        # gravado/exento de la Fase 9 (fórmula pendiente de validación
+        # contable — ver aviso en la vista del concepto/percepción).
+        horas_extra = nomina.hora_extra_ids
+        if horas_extra:
+            uma_rec = self.env["nomina.uma"].search(
+                [("fecha_activacion", "<=", nomina.fecha_fin)],
+                order="fecha_activacion desc",
+                limit=1,
+            )
+            if not uma_rec:
+                raise UserError(
+                    f"No se encontró UMA vigente al {nomina.fecha_fin}. "
+                    "Registre el valor de la UMA en el catálogo."
+                )
+            concepto_he = self.env["nomina.concepto"].search(
+                [("codigo", "=", "HORAS_EXTRA")], limit=1
+            )
+            if not concepto_he:
+                raise UserError(
+                    "No existe el concepto 'HORAS_EXTRA' en el catálogo "
+                    "de conceptos. Verifique data/nomina.concepto.csv."
+                )
+            total, gravado, exento = self.env[
+                "nomina.percepcion"
+            ]._calcular_gravado_exento_horas_extra(
+                horas_extra, sueldo_diario, uma_rec.uma
+            )
+            if total:
+                self.env["nomina.percepcion"].create({
+                    "nomina_id": nomina.id,
+                    "concepto_id": concepto_he.id,
+                    "cantidad": 1,
+                    "importe": total,
+                    "importe_gravado": gravado,
+                    "importe_exento": exento,
+                })

@@ -48,6 +48,43 @@
                                 </list>
                             </field>
                         </page>
+                        <page string="Días">
+                            <group string="Asistencias">
+                                <field name="attendance_ids" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="check_in"/>
+                                        <field name="check_out"/>
+                                        <field name="horas_programadas" widget="float_time"/>
+                                        <field name="worked_hours" widget="float_time"/>
+                                        <field name="tipo_dia"/>
+                                        <field name="es_retardo"/>
+                                        <field name="retardo_minutos"/>
+                                        <field name="auto_checkout"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group string="Incidencias">
+                                <field name="incidencia_ids" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="fecha"/>
+                                        <field name="tipo"/>
+                                        <field name="dias"/>
+                                        <field name="justificacion"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group string="Horas Extra">
+                                <field name="hora_extra_ids" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="fecha"/>
+                                        <field name="hora_inicio"/>
+                                        <field name="hora_fin"/>
+                                        <field name="horas" widget="float_time"/>
+                                        <field name="estado"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

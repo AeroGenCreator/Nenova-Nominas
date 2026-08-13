@@ -7,6 +7,10 @@
 		<field name="arch" type="xml">
 			<form>
 				<sheet>
+					<p class="alert alert-warning" role="alert" invisible="codigo != 'HORAS_EXTRA'">
+						⚠️ Este concepto usa una fórmula de gravado/exento (LFT art. 66-68 + LISR art. 93 fracc. I) que
+						<strong>debe ser validada por un contador antes de darse de alta en producción</strong>.
+					</p>
 					<group string="Concepto">
 						<group>
 							<field name="name"/>

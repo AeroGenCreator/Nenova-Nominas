@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -62,8 +64,76 @@ class NominaHistorial(models.Model):
         store=True,
         digits=(16, 4),
     )
+    # Claude
+    # Pestaña "Días": lectura visual de asistencias/incidencias/horas extra
+    # del rango de la nómina, sin inverse_name porque no se escribe a
+    # través de ellos (patrón de One2many computado de solo lectura, usado
+    # en varios módulos core de Odoo). El motor de nómina consulta
+    # hr.attendance/nomina.incidencia/nomina.hora.extra directamente, no a
+    # través de estos campos.
+    attendance_ids = fields.One2many(
+        string="Asistencias",
+        comodel_name="hr.attendance",
+        compute="_compute_attendance_ids",
+    )
+    incidencia_ids = fields.One2many(
+        string="Incidencias",
+        comodel_name="nomina.incidencia",
+        compute="_compute_incidencia_ids",
+    )
+    hora_extra_ids = fields.One2many(
+        string="Horas Extra",
+        comodel_name="nomina.hora.extra",
+        compute="_compute_hora_extra_ids",
+    )
 
     # === MODELO LÓGICA ===
+
+    # Claude
+    @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
+    def _compute_attendance_ids(self):
+        for rec in self:
+            attendances = self.env["hr.attendance"]
+            if rec.empleado_id and rec.fecha_inicio and rec.fecha_fin:
+                # +1 dia en el limite superior: un checkout puede caer
+                # despues de medianoche del ultimo dia del rango.
+                inicio = fields.Datetime.to_datetime(rec.fecha_inicio)
+                fin = fields.Datetime.to_datetime(rec.fecha_fin) + timedelta(
+                    days=1
+                )
+                attendances = attendances.search([
+                    ("employee_id", "=", rec.empleado_id.id),
+                    ("check_in", ">=", inicio),
+                    ("check_in", "<", fin),
+                ])
+            rec.attendance_ids = attendances
+
+    # Claude
+    @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
+    def _compute_incidencia_ids(self):
+        for rec in self:
+            incidencias = self.env["nomina.incidencia"]
+            if rec.empleado_id and rec.fecha_inicio and rec.fecha_fin:
+                incidencias = incidencias.search([
+                    ("empleado_id", "=", rec.empleado_id.id),
+                    ("fecha", ">=", rec.fecha_inicio),
+                    ("fecha", "<=", rec.fecha_fin),
+                ])
+            rec.incidencia_ids = incidencias
+
+    # Claude
+    @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
+    def _compute_hora_extra_ids(self):
+        for rec in self:
+            horas_extra = self.env["nomina.hora.extra"]
+            if rec.empleado_id and rec.fecha_inicio and rec.fecha_fin:
+                horas_extra = horas_extra.search([
+                    ("empleado_id", "=", rec.empleado_id.id),
+                    ("fecha", ">=", rec.fecha_inicio),
+                    ("fecha", "<=", rec.fecha_fin),
+                    ("estado", "=", "autorizada"),
+                ])
+            rec.hora_extra_ids = horas_extra
 
     @api.model_create_multi
     def create(self, vals_list):

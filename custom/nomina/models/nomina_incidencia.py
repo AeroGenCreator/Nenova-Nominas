@@ -1,4 +1,6 @@
 # Fichero Claude
+import pytz
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -69,6 +71,67 @@ class NominaIncidencia(models.Model):
                 dicc = dict(rec._fields["tipo"].selection)
                 NAME = f"{rec.empleado_id.name} - {dicc.get(rec.tipo)} - {rec.fecha}"
             rec.name = NAME
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_asistencia_fantasma()
+        return records
+
+    def write(self, vals):
+        # Solo re-sincronizar si cambia algo que afecte la asistencia
+        # fantasma: si deja/entra a 'falta_justificada', o si cambia la
+        # fecha/empleado/estatus de una que ya lo es.
+        CAMPOS_RELEVANTES = {"tipo", "fecha", "empleado_id", "active"}
+        necesita_sync = bool(CAMPOS_RELEVANTES & set(vals))
+        res = super().write(vals)
+        if necesita_sync:
+            self._sync_asistencia_fantasma()
+        return res
+
+    def _sync_asistencia_fantasma(self):
+        """Mantiene sincronizado el 'hr.attendance' fantasma con el estado
+        actual de la incidencia (ver Fase 5 del plan): se recrea si
+        cambian tipo/fecha/empleado, se elimina si deja de ser
+        'falta_justificada' o se archiva. La eliminación del registro de
+        incidencia ya cascadea sola vía 'ondelete=cascade' en
+        'hr.attendance.origen_incidencia_id' (FK a nivel de BD)."""
+        Attendance = self.env["hr.attendance"]
+        for rec in self:
+            Attendance.search(
+                [("origen_incidencia_id", "=", rec.id)]
+            ).unlink()
+
+            if rec.tipo != "falta_justificada" or not rec.active:
+                continue
+
+            jornada = rec.empleado_id.jornada_id
+            if not jornada:
+                continue
+
+            linea = jornada.dia_ids.filtered(
+                lambda l: l.dia_id.sequencia == rec.fecha.weekday()
+            )[:1]
+            if not linea or linea.estatus != "laboral":
+                continue
+
+            tz = pytz.timezone(rec.empleado_id.tz or "UTC")
+            check_in_local = Attendance._hora_decimal_a_datetime_local(
+                rec.fecha, linea.hora_inicio, tz
+            )
+            check_out_local = Attendance._hora_decimal_a_datetime_local(
+                rec.fecha, linea.hora_termino, tz
+            )
+            Attendance.create({
+                "employee_id": rec.empleado_id.id,
+                "check_in": check_in_local.astimezone(pytz.utc).replace(
+                    tzinfo=None
+                ),
+                "check_out": check_out_local.astimezone(pytz.utc).replace(
+                    tzinfo=None
+                ),
+                "origen_incidencia_id": rec.id,
+            })
 
     # === MODELO RESTRICCIONES ===
 

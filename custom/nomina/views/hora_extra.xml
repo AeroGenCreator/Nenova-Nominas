@@ -1,0 +1,80 @@
+<!-- Fichero Claude -->
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_hora_extra_form_view" model="ir.ui.view">
+        <field name="name">nomina.hora.extra.form.view</field>
+        <field name="model">nomina.hora.extra</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,autorizada"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="empleado_id"/>
+                            <field name="fecha"/>
+                            <field name="hora_inicio"/>
+                            <field name="hora_fin"/>
+                            <field name="horas" widget="float_time" readonly="1"/>
+                        </group>
+                        <group>
+                            <field
+                                name="attendance_id"
+                                domain="[('employee_id', '=', empleado_id)]"
+                            />
+                        </group>
+                    </group>
+                    <group string="Justificación">
+                        <field name="justificacion" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="nomina_hora_extra_list_view" model="ir.ui.view">
+        <field name="name">nomina.hora.extra.list.view</field>
+        <field name="model">nomina.hora.extra</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-success="estado == 'autorizada'"
+                decoration-muted="estado == 'borrador'"
+            >
+                <field name="empleado_id"/>
+                <field name="fecha"/>
+                <field name="hora_inicio"/>
+                <field name="hora_fin"/>
+                <field name="horas" widget="float_time"/>
+                <field name="estado"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH -->
+    <record id="nomina_hora_extra_search_view" model="ir.ui.view">
+        <field name="name">nomina.hora.extra.search.view</field>
+        <field name="model">nomina.hora.extra</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="empleado_id"/>
+                <field name="fecha"/>
+                <filter string="Borrador" name="filtro_borrador" domain="[('estado','=','borrador')]"/>
+                <filter string="Autorizada" name="filtro_autorizada" domain="[('estado','=','autorizada')]"/>
+                <filter string="Empleado" name="agrupar_empleado" context="{'group_by': 'empleado_id'}"/>
+                <filter string="Estado" name="agrupar_estado" context="{'group_by': 'estado'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="nomina_hora_extra_action" model="ir.actions.act_window">
+        <field name="name">Horas Extra</field>
+        <field name="res_model">nomina.hora.extra</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_hora_extra_search_view"/>
+    </record>
+
+</odoo>

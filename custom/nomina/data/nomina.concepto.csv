@@ -1,2 +1,5 @@
 id,name,codigo,tipo,grava_isr,integra_imss,active
 con_01,Sueldo,SUELDO,percepcion,1,1
+con_02,Horas Extra,HORAS_EXTRA,percepcion,1,1
+con_03,Falta,FALTA,deduccion,0,0
+con_04,Retardo,RETARDO,deduccion,0,0

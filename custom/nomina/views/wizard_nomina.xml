@@ -29,8 +29,13 @@
                             <field name="fecha_inicio" class="text-success"/>
                             <field name="fecha_fin" class="text-success"/>
                             <field name="rango_seleccionado"/>
+                            <field name="modo_asistencia" widget="radio"/>
                         </group>
                     </group>
+                    <p class="alert alert-info" role="alert" invisible="modo_asistencia != 'automatico'">
+                        Modo Automático: al guardar se generarán deducciones de falta/retardo y la percepción de horas extra
+                        a partir de las asistencias e incidencias ya registradas del empleado en este rango de fechas.
+                    </p>
                     <p class="text-warning">El sueldo debe ser agregado como una percepcion (fila) en la siguiente tabla.</p>
                     <notebook>
                         <page string="Percepciones" class="fw-bold">

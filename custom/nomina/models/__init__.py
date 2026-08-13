@@ -1,5 +1,6 @@
 from . import (
     employee_ext,
+    attendance_ext,
     periodo_pago,
     jornada,
     dias,
@@ -24,4 +25,5 @@ from . import (
     nomina_tabla_isr,
     nomina_tabla_subsidio,
     nomina_incidencia,
+    hora_extra,
 )

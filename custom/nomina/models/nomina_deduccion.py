@@ -24,11 +24,14 @@ class NominaDeduccion(models.Model):
         ondelete="cascade",
         readonly=True,
     )
+    # Claude
     tipo = fields.Selection(
         string="Tipo",
         selection=[
             ("isr", "ISR"),
             ("imss_obrero", "IMSS Obrero"),
+            ("falta", "Falta"),
+            ("retardo", "Retardo"),
             ("otra", "Otra"),
         ],
         required=True,
