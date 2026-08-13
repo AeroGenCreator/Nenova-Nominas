@@ -204,4 +204,20 @@
         sequence="7"
     />
 
+    <!-- Submenú Asistencia: incidencias (faltas) y, en fases posteriores, horas extra -->
+    <menuitem
+        id="nomina.asistencia_menu"
+        name="Asistencia"
+        parent="nomina.root_menu"
+        sequence="9"
+    />
+
+    <menuitem
+        id="nomina.incidencia_menu"
+        name="Incidencias (Faltas)"
+        action="nomina_incidencia_action"
+        parent="nomina.asistencia_menu"
+        sequence="1"
+    />
+
 </odoo>

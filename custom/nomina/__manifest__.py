@@ -50,6 +50,7 @@
         "views/vacacional_rangos.xml",
         "views/nomina_percepcion.xml",
         "views/nomina_concepto.xml",
+        "views/nomina_incidencia.xml",
         "views/plan_vacacional.xml",
         "views/dia_hora_linea.xml",
         "views/employee_ext.xml",

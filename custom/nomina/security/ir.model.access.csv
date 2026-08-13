@@ -29,3 +29,4 @@ access_nomina_percepcion,access.nomina.percepcion,model_nomina_percepcion,base.g
 access_nomina_deduccion,access.nomina.deduccion,model_nomina_deduccion,base.group_user,1,1,1,1
 access_nomina_tabla_isr,access.nomina.tabla.isr,model_nomina_tabla_isr,base.group_user,1,1,1,1
 access_nomina_tabla_subsidio,access.nomina.tabla.subsidio,model_nomina_tabla_subsidio,base.group_user,1,1,1,1
+access_nomina_incidencia,access.nomina.incidencia,model_nomina_incidencia,base.group_user,1,1,1,1

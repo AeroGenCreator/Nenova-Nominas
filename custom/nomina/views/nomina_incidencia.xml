@@ -1,0 +1,78 @@
+<!-- Fichero Claude -->
+<odoo>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="nomina_incidencia_form_view" model="ir.ui.view">
+        <field name="name">nomina.incidencia.form.view</field>
+        <field name="model">nomina.incidencia</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="empleado_id"/>
+                            <field name="fecha"/>
+                            <field name="tipo"/>
+                            <field name="dias"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Justificación">
+                        <field name="justificacion" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="nomina_incidencia_list_view" model="ir.ui.view">
+        <field name="name">nomina.incidencia.list.view</field>
+        <field name="model">nomina.incidencia</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="tipo == 'falta'"
+                decoration-info="tipo == 'falta_justificada'"
+                decoration-muted="tipo in ('permiso_sin_goce', 'permiso_con_goce', 'incapacidad')"
+            >
+                <field name="empleado_id"/>
+                <field name="fecha"/>
+                <field name="tipo"/>
+                <field name="dias"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA SEARCH -->
+    <record id="nomina_incidencia_search_view" model="ir.ui.view">
+        <field name="name">nomina.incidencia.search.view</field>
+        <field name="model">nomina.incidencia</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="empleado_id"/>
+                <field name="tipo"/>
+                <filter string="Falta" name="filtro_falta" domain="[('tipo','=','falta')]"/>
+                <filter string="Falta Justificada" name="filtro_falta_justificada" domain="[('tipo','=','falta_justificada')]"/>
+                <filter
+                    string="Archivados"
+                    name="incidencia_archivados"
+                    domain="[('active', '!=', True)]"
+                />
+                <filter string="Empleado" name="agrupar_empleado" context="{'group_by': 'empleado_id'}"/>
+                <filter string="Tipo" name="agrupar_tipo" context="{'group_by': 'tipo'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN -->
+    <record id="nomina_incidencia_action" model="ir.actions.act_window">
+        <field name="name">Incidencias</field>
+        <field name="res_model">nomina.incidencia</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="nomina_incidencia_search_view"/>
+    </record>
+
+</odoo>

@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class NominaJornada(models.Model):
@@ -43,6 +44,18 @@ class NominaJornada(models.Model):
         readonly=True
     )
     descanso = fields.Float(string="Tiempo (Descanso Diario)")
+    # Claude
+    # La tolerancia vive en la jornada (no en el empleado) para simplificar:
+    # si un empleado necesita un horario muy específico, se le crea una
+    # jornada dedicada en vez de agregar un override individual.
+    tolerancia_entrada = fields.Integer(
+        string="Tolerancia Entrada (min)",
+        default=0,
+        help=(
+            "Minutos de gracia después de la hora de inicio antes de "
+            "contar un registro de asistencia como retardo."
+        ),
+    )
     horas_totales = fields.Float(
         string="Horas Totales (Esta Jornada)",
         compute="computar_total_horas",
@@ -99,3 +112,12 @@ class NominaJornada(models.Model):
     # === MODELO RESTRICCIONES ===
 
     # El modelo 'nomina.dias' restringe días repetidos para el modelo actual.
+
+    @api.constrains("tolerancia_entrada")
+    def tolerancia_maxima(self):
+        for rec in self:
+            if rec.tolerancia_entrada:
+                if rec.tolerancia_entrada > 60:
+                    raise ValidationError(
+                        "La tolerancia maxima no debe superar los 60 minutos."
+                    )

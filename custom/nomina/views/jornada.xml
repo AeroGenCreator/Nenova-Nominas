@@ -36,6 +36,7 @@
                         <group string="Configuración">
                             <field name="horas_totales" widget="float_time"/>
                             <field name="descanso" widget="float_time"/>
+                            <field name="tolerancia_entrada"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                     </group>

@@ -23,4 +23,5 @@ from . import (
     nomina_deduccion,
     nomina_tabla_isr,
     nomina_tabla_subsidio,
+    nomina_incidencia,
 )
