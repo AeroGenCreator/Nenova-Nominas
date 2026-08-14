@@ -2,7 +2,6 @@
 from datetime import datetime, time, timedelta
 
 import pytz
-
 from odoo import api, fields, models
 
 
@@ -26,18 +25,28 @@ class NominaAttendanceExt(models.Model):
         string="Horas Programadas",
         compute="_compute_horas_programadas",
         digits=(5, 2),
-        help="Horas programadas en la jornada del empleado para el día del check_in.",
+        help="Horas programadas en jornada del empleado para día del check_in.",
+    )
+    tiempo_descanso = fields.Float(
+        string="Tiempo Descanso",
+        compute="_compute_descanso_",
     )
     retardo_minutos = fields.Integer(
         string="Minutos de Retardo",
         compute="_compute_retardo_minutos",
-        help="Minutos tarde más allá de la tolerancia de la jornada. Solo informativo/auditoría.",
+        help=(
+            "Minutos tarde más allá de la tolerancia de la jornada. "
+            "Solo informativo/auditoría."
+        ),
     )
     es_retardo = fields.Boolean(
         string="Es Retardo",
         compute="_compute_es_retardo",
         store=True,
-        help="Dispara la deducción fija de retardo (sueldo_diario / 3) en el motor de nómina.",
+        help=(
+            "Dispara la deducción fija de retardo (sueldo_diario / 3) "
+            "en el motor de nómina."
+        ),
     )
     tipo_dia = fields.Selection(
         string="Tipo de Día",
@@ -48,13 +57,14 @@ class NominaAttendanceExt(models.Model):
         compute="_compute_tipo_dia",
     )
     auto_checkout = fields.Boolean(
-        string="Checkout Automático",
+        string="Aplicadó Checkout Automático",
         default=False,
         help=(
             "El check_out fue generado por el cron de fin de jornada, no "
             "capturado por el empleado. Permite a RH identificarlo y "
             "corregirlo si el empleado justifica una salida distinta."
         ),
+        readonly=True,
     )
     origen_incidencia_id = fields.Many2one(
         string="Incidencia de Origen",
@@ -69,17 +79,36 @@ class NominaAttendanceExt(models.Model):
 
     # === MODELO LÓGICA ===
 
-    def _hora_local(self):
-        """(weekday, hora_decimal) del check_in en la tz del empleado.
+    # === FUNCIONES REUTILIZABLES ===
 
-        check_in se guarda en UTC naive; sin esta conversión el retardo se
-        calcularía contra la hora equivocada para empleados fuera de UTC.
+    def _hora_local(self):
+        """
+        Retorna: (Dia de la semana), (Hora en formato decimal)
         """
         self.ensure_one()
+        # Se busca la zona horaria del empleado.
         tz = pytz.timezone(self.employee_id.tz or "UTC")
+        # Se hace la conversión
         check_in_local = pytz.utc.localize(self.check_in).astimezone(tz)
+        # Se parsea la hora a formato decimal.
         hora_decimal = check_in_local.hour + check_in_local.minute / 60.0
         return check_in_local.weekday(), hora_decimal
+
+    def _obtener_linea_dia(self):
+        """
+        Retorna: Singleton(Linea día de Jornada - Según el día del check in).
+        Vacio: Sí no hay joranada.
+        """
+        self.ensure_one()
+        jornada = self.employee_id.jornada_id
+        if not (self.check_in and jornada):
+            return self.env["nomina.dia.hora.linea"]
+        # Funcion (Dia de la semana númerico & Hora en formato decimal)
+        weekday, _ = self._hora_local()
+        # Se retorna el singleton que coincide con el dia del "check in"
+        return jornada.dia_ids.filtered(
+            lambda linea: linea.dia_id.sequencia == weekday
+        )[:1]
 
     def _hora_decimal_a_datetime_local(self, fecha, hora_decimal, tz):
         """Convierte (fecha, hora en decimal, tz) a un datetime local
@@ -95,19 +124,7 @@ class NominaAttendanceExt(models.Model):
         fecha_final = fecha + timedelta(days=int(dias_extra))
         return tz.localize(datetime.combine(fecha_final, time(hora_h, hora_m)))
 
-    def _obtener_linea_dia(self):
-        """Línea de 'nomina.dia.hora.linea' de la jornada del empleado que
-        corresponde al día de la semana del check_in (0=Lunes..6=Domingo,
-        igual que 'sequencia' en nomina.dias). Vacío si no hay jornada o no
-        hay línea para ese día."""
-        self.ensure_one()
-        jornada = self.employee_id.jornada_id
-        if not (self.check_in and jornada):
-            return self.env["nomina.dia.hora.linea"]
-        weekday, _ = self._hora_local()
-        return jornada.dia_ids.filtered(
-            lambda linea: linea.dia_id.sequencia == weekday
-        )[:1]
+    # === CAMPOS COMPUTADOS ===
 
     @api.depends(
         "check_in",
@@ -124,6 +141,14 @@ class NominaAttendanceExt(models.Model):
                 HORAS = linea.hora_termino - linea.hora_inicio
             rec.horas_programadas = HORAS
 
+    @api.depends("employee_id.jornada_id")
+    def _compute_descanso_(self):
+        for rec in self:
+            DESCANSO = 0
+            if rec.employee_id.jornada_id:
+                DESCANSO = rec.employee_id.jornada_id.descanso
+            rec.tiempo_descanso = DESCANSO
+
     @api.depends(
         "check_in",
         "employee_id.tz",
@@ -135,26 +160,30 @@ class NominaAttendanceExt(models.Model):
     )
     def _compute_retardo_minutos(self):
         for rec in self:
+            # Por defecto el retordo se cuenta a aprtir de los cero minutos.
             MINUTOS = 0
-            # Una asistencia fantasma (falta_justificada) nunca es retardo.
+            # Si EXISTE origen_incidencia_id (falta justificada), sin retardo.
             if not rec.origen_incidencia_id:
                 linea = rec._obtener_linea_dia()
                 if linea and linea.estatus == "laboral":
                     _, hora_local = rec._hora_local()
                     jornada = rec.employee_id.jornada_id
+                    # Tolerancia: Viene en minutos (ej. 15).
+                    # Se divide entre 60 para convertirla a horas decimales
                     entrada_permitida = (
                         linea.hora_inicio + jornada.tolerancia_entrada / 60.0
                     )
+                    # La diferencia se obtiene en horas decimales.
                     diferencia = hora_local - entrada_permitida
                     if diferencia > 0:
+                        # Se multiplica por 60 para reconvertir:
+                        # Las horas de diferencia a minutos.
                         MINUTOS = round(diferencia * 60)
             rec.retardo_minutos = MINUTOS
 
-    # Compute separado de '_compute_retardo_minutos': Odoo desaconseja mezclar
-    # campos store=True y store=False en un mismo método compute (genera un
-    # UserWarning de 'compute_sudo'/'store' inconsistentes al cargar el módulo).
     @api.depends("retardo_minutos")
     def _compute_es_retardo(self):
+        """Registro marcadó como 'Retardo' sí excede tiempo de tolerancia."""
         for rec in self:
             rec.es_retardo = rec.retardo_minutos > 0
 
@@ -175,27 +204,40 @@ class NominaAttendanceExt(models.Model):
                 )
             rec.tipo_dia = TIPO
 
-    # === CRON ===
+    # === CRONJOB ===
 
     def _cron_auto_checkout(self):
-        """Cierra automáticamente las asistencias sin check_out cuya
-        jornada ya terminó. Alcance v1: solo turnos diurnos
-        (hora_inicio < hora_termino) — turnos nocturnos quedan pendientes
-        para una fase posterior (ver plan)."""
+        """
+        Cierra automáticamente las asistencias sin check_out cuya jornada ya
+        terminó. Alcance v1: solo turnos diurnos (hora_inicio < hora_termino)
+
+        turnos nocturnos quedan pendientes para una fase posterior (ver plan).
+        """
+        # Recordsets (Horas sin check out)
         abiertas = self.env["hr.attendance"].search([("check_out", "=", False)])
+        # Hora actual.
         ahora_utc = pytz.utc.localize(fields.Datetime.now())
         for att in abiertas:
+            # Si no hay jornada, no se aplica 'check out' automático.
             jornada = att.employee_id.jornada_id
             if not jornada:
                 continue
+            # Singleton Jornada - Datos del dia actual.
+            # Solo jornadas que cubran lapsos de 24hrs. NO turnos nocturnos.
             linea = att._obtener_linea_dia()
             if not linea or linea.hora_inicio > linea.hora_termino:
                 continue
+            # TZ del empleado.
             tz = pytz.timezone(att.employee_id.tz or "UTC")
+            # El check in adquiere zona horaria.
             check_in_local = pytz.utc.localize(att.check_in).astimezone(tz)
+            # Retorna: la hora en que el empleado debe registrar su salida.
             checkout_local = att._hora_decimal_a_datetime_local(
                 check_in_local.date(), linea.hora_termino, tz
             )
+            # Si existe diferencia entre hora actual y hora salida.
+            # Se asigna hora de salida sin TZ.
+            # S marca el bool True para autocheck.
             if ahora_utc > checkout_local:
                 att.write({
                     "check_out": checkout_local.astimezone(pytz.utc).replace(

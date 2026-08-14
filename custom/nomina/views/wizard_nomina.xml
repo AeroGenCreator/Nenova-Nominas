@@ -21,7 +21,7 @@
                             <field name="periodicidad"/>
                             <field name="sueldo" widget="custom_monetary_float"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>
-                            <field name="factor_integracion"/>
+                            <field name="factor_integracion" widget="char"/>
                             <field name="sdi" widget="custom_monetary_float" class="text-info"/>
                         </group>
                         <group string="Configuración">
@@ -29,7 +29,7 @@
                             <field name="fecha_inicio" class="text-success"/>
                             <field name="fecha_fin" class="text-success"/>
                             <field name="rango_seleccionado"/>
-                            <field name="modo_asistencia" widget="radio"/>
+                            <field name="modo_asistencia" widget="statusbar" options="{'clickable': 1}"/>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" invisible="modo_asistencia != 'automatico'">

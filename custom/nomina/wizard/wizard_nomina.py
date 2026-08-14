@@ -75,7 +75,6 @@ class NominaWizard(models.TransientModel):
         comodel_name="percepcion.wizard",
         inverse_name="nomina_id",
     )
-    # Claude
     modo_asistencia = fields.Selection(
         string="Modo Asistencia",
         selection=[

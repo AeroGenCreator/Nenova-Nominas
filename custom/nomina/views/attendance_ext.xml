@@ -8,12 +8,13 @@
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet/group[1]" position="after">
-                <group string="Nómina">
+                <group string="Nómina" class="bg-light px-2 pb-2">
                     <field name="horas_programadas" widget="float_time"/>
+                    <field name="tiempo_descanso" widget="float_time"/>
                     <field name="tipo_dia"/>
                     <field name="retardo_minutos"/>
-                    <field name="es_retardo"/>
-                    <field name="auto_checkout"/>
+                    <field name="es_retardo" widget="boolean_toggle"/>
+                    <field name="auto_checkout" widget="boolean_toggle"/>
                     <field name="origen_incidencia_id" readonly="1"/>
                 </group>
             </xpath>
