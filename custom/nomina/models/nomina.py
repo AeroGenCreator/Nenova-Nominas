@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 
 
 class NominaHistorial(models.Model):
-
     # === MODELO CONFIG ===
 
     _name = "nomina.nomina"
@@ -18,6 +17,11 @@ class NominaHistorial(models.Model):
         required=True,
         readonly=True,
         default=lambda self: "Borrador",
+    )
+    fecha_emision = fields.Date(
+        string="Fecha Emisión",
+        default=lambda self: fields.Date.today(),
+        readonly=True,
     )
     empleado_id = fields.Many2one(
         string="Empleado", comodel_name="hr.employee", required=True
@@ -101,11 +105,13 @@ class NominaHistorial(models.Model):
                 fin = fields.Datetime.to_datetime(rec.fecha_fin) + timedelta(
                     days=1
                 )
-                attendances = attendances.search([
-                    ("employee_id", "=", rec.empleado_id.id),
-                    ("check_in", ">=", inicio),
-                    ("check_in", "<", fin),
-                ])
+                attendances = attendances.search(
+                    [
+                        ("employee_id", "=", rec.empleado_id.id),
+                        ("check_in", ">=", inicio),
+                        ("check_in", "<", fin),
+                    ]
+                )
             rec.attendance_ids = attendances
 
     # Claude
@@ -114,11 +120,13 @@ class NominaHistorial(models.Model):
         for rec in self:
             incidencias = self.env["nomina.incidencia"]
             if rec.empleado_id and rec.fecha_inicio and rec.fecha_fin:
-                incidencias = incidencias.search([
-                    ("empleado_id", "=", rec.empleado_id.id),
-                    ("fecha", ">=", rec.fecha_inicio),
-                    ("fecha", "<=", rec.fecha_fin),
-                ])
+                incidencias = incidencias.search(
+                    [
+                        ("empleado_id", "=", rec.empleado_id.id),
+                        ("fecha", ">=", rec.fecha_inicio),
+                        ("fecha", "<=", rec.fecha_fin),
+                    ]
+                )
             rec.incidencia_ids = incidencias
 
     # Claude
@@ -127,12 +135,14 @@ class NominaHistorial(models.Model):
         for rec in self:
             horas_extra = self.env["nomina.hora.extra"]
             if rec.empleado_id and rec.fecha_inicio and rec.fecha_fin:
-                horas_extra = horas_extra.search([
-                    ("empleado_id", "=", rec.empleado_id.id),
-                    ("fecha", ">=", rec.fecha_inicio),
-                    ("fecha", "<=", rec.fecha_fin),
-                    ("estado", "=", "autorizada"),
-                ])
+                horas_extra = horas_extra.search(
+                    [
+                        ("empleado_id", "=", rec.empleado_id.id),
+                        ("fecha", ">=", rec.fecha_inicio),
+                        ("fecha", "<=", rec.fecha_fin),
+                        ("estado", "=", "autorizada"),
+                    ]
+                )
             rec.hora_extra_ids = horas_extra
 
     @api.model_create_multi
@@ -141,9 +151,9 @@ class NominaHistorial(models.Model):
             borrador = vals.get("name", "Borrador")
             if borrador == "Borrador":
                 vals["name"] = (
-                    self.env["ir.sequence"].next_by_code(
-                        "nomina.nomina.sequence"
-                    )
+                    self.env["ir.sequence"]
+                    .with_context(company_id=False)
+                    .next_by_code("nomina.nomina.sequence")
                     or "Borrador"
                 )
         return super().create(vals_list)
@@ -174,12 +184,14 @@ class NominaHistorial(models.Model):
             rec.deduccion_ids.filtered(lambda d: d.tipo == "isr").unlink()
             if not base_periodo:
                 # Todo exento: registra $0 para auditoría
-                self.env["nomina.deduccion"].create({
-                    "nomina_id": rec.id,
-                    "tipo": "isr",
-                    "concepto": "ISR",
-                    "importe": 0.0,
-                })
+                self.env["nomina.deduccion"].create(
+                    {
+                        "nomina_id": rec.id,
+                        "tipo": "isr",
+                        "concepto": "ISR",
+                        "importe": 0.0,
+                    }
+                )
                 continue
 
             dias_per = rec.empleado_id.periodo_pago_id.dias or 30.4
@@ -188,13 +200,17 @@ class NominaHistorial(models.Model):
             anho = rec.fecha_fin.year
 
             # Busca renglón por año y rango de base
-            tabla = self.env["nomina.tabla.isr"].search([
-                ("anho", "=", anho),
-                ("limite_inferior", "<=", base_mensual),
-                "|",
-                ("limite_superior", ">=", base_mensual),
-                ("limite_superior", "=", 0),
-            ], order="limite_inferior desc", limit=1)
+            tabla = self.env["nomina.tabla.isr"].search(
+                [
+                    ("anho", "=", anho),
+                    ("limite_inferior", "<=", base_mensual),
+                    "|",
+                    ("limite_superior", ">=", base_mensual),
+                    ("limite_superior", "=", 0),
+                ],
+                order="limite_inferior desc",
+                limit=1,
+            )
 
             if not tabla:
                 raise UserError(
@@ -208,13 +224,17 @@ class NominaHistorial(models.Model):
             )
 
             # Busca subsidio del mismo año y rango
-            subsidio_rec = self.env["nomina.tabla.subsidio"].search([
-                ("anho", "=", anho),
-                ("limite_inferior", "<=", base_mensual),
-                "|",
-                ("limite_superior", ">=", base_mensual),
-                ("limite_superior", "=", 0),
-            ], order="limite_inferior desc", limit=1)
+            subsidio_rec = self.env["nomina.tabla.subsidio"].search(
+                [
+                    ("anho", "=", anho),
+                    ("limite_inferior", "<=", base_mensual),
+                    "|",
+                    ("limite_superior", ">=", base_mensual),
+                    ("limite_superior", "=", 0),
+                ],
+                order="limite_inferior desc",
+                limit=1,
+            )
 
             subsidio_mensual = subsidio_rec.subsidio if subsidio_rec else 0.0
             # ISR neto no puede ser negativo
@@ -222,12 +242,14 @@ class NominaHistorial(models.Model):
             # Convierte resultado al periodo real
             isr_periodo = round(isr_neto_mensual * (dias_per / 30.4), 4)
 
-            self.env["nomina.deduccion"].create({
-                "nomina_id": rec.id,
-                "tipo": "isr",
-                "concepto": "ISR",
-                "importe": isr_periodo,
-            })
+            self.env["nomina.deduccion"].create(
+                {
+                    "nomina_id": rec.id,
+                    "tipo": "isr",
+                    "concepto": "ISR",
+                    "importe": isr_periodo,
+                }
+            )
 
     # Claude
     def action_calcular_isr(self):
@@ -272,10 +294,7 @@ class NominaHistorial(models.Model):
             cuota_ceav = sdi_mensual * 0.01125
 
             imss_mensual = (
-                cuota_em_excedente
-                + cuota_em_dinero
-                + cuota_iv
-                + cuota_ceav
+                cuota_em_excedente + cuota_em_dinero + cuota_iv + cuota_ceav
             )
 
             # Ajusta al periodo con dias_imss (base 30 LSS)
@@ -286,12 +305,14 @@ class NominaHistorial(models.Model):
             rec.deduccion_ids.filtered(
                 lambda d: d.tipo == "imss_obrero"
             ).unlink()
-            self.env["nomina.deduccion"].create({
-                "nomina_id": rec.id,
-                "tipo": "imss_obrero",
-                "concepto": "Cuota Obrera IMSS",
-                "importe": imss_periodo,
-            })
+            self.env["nomina.deduccion"].create(
+                {
+                    "nomina_id": rec.id,
+                    "tipo": "imss_obrero",
+                    "concepto": "Cuota Obrera IMSS",
+                    "importe": imss_periodo,
+                }
+            )
 
     # Claude
     def action_calcular_imss(self):

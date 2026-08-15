@@ -13,8 +13,11 @@
                         </div>
                     </div>
                 </div>
+                <header>
+                    <field name="modo_asistencia" widget="statusbar" options="{'clickable': 1}"/>
+                </header>
                 <sheet>
-                    <p class="text-info">Definir el periodo (fecha inicio - fecha fin) para determinar numero de dias considerdados para esta nomina. (Ambos rangos son incluyentes).</p>
+                    <p class="alert alert-info" role="alert">Definir el período (fecha inicio - fecha fin) para determinar numero de días a considerar para esta nómina. (Ambos rangos son incluyentes).</p>
                     <group>
                         <group string="Datos Empleado">
                             <field name="empleado_id" class="py-1"/>
@@ -25,18 +28,16 @@
                             <field name="sdi" widget="custom_monetary_float" class="text-info"/>
                         </group>
                         <group string="Configuración">
-                            <field name="fecha_emision" readonly="1" class="text-primary"/>
                             <field name="fecha_inicio" class="text-success"/>
                             <field name="fecha_fin" class="text-success"/>
                             <field name="rango_seleccionado"/>
-                            <field name="modo_asistencia" widget="statusbar" options="{'clickable': 1}"/>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" invisible="modo_asistencia != 'automatico'">
                         Modo Automático: al guardar se generarán deducciones de falta/retardo y la percepción de horas extra
                         a partir de las asistencias e incidencias ya registradas del empleado en este rango de fechas.
                     </p>
-                    <p class="text-warning">El sueldo debe ser agregado como una percepcion (fila) en la siguiente tabla.</p>
+                    <p class="alert alert-warning" role="alert" invisible="percepcion_ids">El sueldo debe ser agregado como una percepcion en la siguiente tabla.</p>
                     <notebook>
                         <page string="Percepciones" class="fw-bold">
                             <field name="percepcion_ids">

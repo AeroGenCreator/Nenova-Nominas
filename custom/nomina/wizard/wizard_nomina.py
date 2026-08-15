@@ -28,9 +28,6 @@ class NominaWizard(models.TransientModel):
     # === MODELO CAMPOS ===
 
     name = fields.Char(string="Registro", compute="_compute_nombre", store=True)
-    fecha_emision = fields.Date(
-        string="Fecha de Emisión", default=lambda self: fields.Date.today()
-    )
     fecha_inicio = fields.Date(string="Fecha Inicio", required=True)
     fecha_fin = fields.Date(string="Fecha Fin", required=True)
     empleado_id = fields.Many2one(
@@ -101,15 +98,16 @@ class NominaWizard(models.TransientModel):
                 NAME = f"{rec.empleado_id.name} - Nómina"
             rec.name = NAME
 
-    @api.depends("empleado_id.sueldo_diario", "rango_seleccionado")
+    @api.depends("percepcion_ids")
     def _compute_sueldo(self):
         for rec in self:
             SUELDO = 0
-            if rec.empleado_id and rec.rango_seleccionado:
-                SUELDO = fields.Float.round(
-                    rec.empleado_id.sueldo_diario * rec.rango_seleccionado,
-                    precision_rounding=0.01
-                )
+            if rec.percepcion_ids:
+                singleton = rec.percepcion_ids.filtered(
+                    lambda r: r.concepto_id.codigo == "SUELDO"
+                )[:1]
+                if singleton.total:
+                    SUELDO = singleton.mapped("total")[0]
             rec.sueldo = SUELDO
 
     @api.depends("empleado_id")
@@ -163,25 +161,6 @@ class NominaWizard(models.TransientModel):
                 if rec.fecha_inicio > rec.fecha_fin:
                     raise ValidationError(DATE_ERROR)
 
-    @api.constrains(
-        "rango_seleccionado",
-        "percepcion_ids.cantidad",
-        "percepcion_ids.concepto_id.codigo",
-    )
-    def _validar_rango_dias_(self):
-        """
-        Valida que la cantidad de la percepcion sueldo coincida con el
-        rango seleccionado en el wizard de nomina.
-        """
-        for rec in self:
-            if rec.rango_seleccionado and rec.percepcion_ids:
-                sueldo = rec.percepcion_ids.filtered(
-                    lambda r: r.concepto_id.codigo == "SUELDO"
-                )
-                if sueldo:
-                    if sueldo.cantidad != rec.rango_seleccionado:
-                        raise ValidationError(RANGO_ERROR)
-
     @api.constrains("percepcion_ids")
     def _validar_percepciones_vacias_(self):
         for rec in self:
@@ -190,6 +169,19 @@ class NominaWizard(models.TransientModel):
                     "No se han agregados percepciones "
                     "Es necesario agregar como minimo el 'sueldo'."
                 )
+
+    @api.constrains("percepcion_ids")
+    def _validar_sueldo_obligatorio_(self):
+        for rec in self:
+            if rec.percepcion_ids:
+                singleton = rec.percepcion_ids.filtered(
+                    lambda r: r.concepto_id.codigo == "SUELDO"
+                )
+                if not singleton:
+                    raise ValidationError(
+                        "Agregar la percepcion sueldo "
+                        "incluso si el total suma a cero."
+                    )
 
     # === MODELO ACCIONES ===
 
