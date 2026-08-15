@@ -30,17 +30,18 @@
             <!-- AGREGA pagina="Nomina" -->
             <xpath expr="//notebook" position="inside">
                 <page string="Nómina">
+                    <button
+                        string="Generar Nómina"
+                        type="action"
+                        name="%(nomina_wizard_action)d"
+                        class="btn-success"
+                        icon="fa-btc"
+                        invisible="not factor_integracion"
+                    />
                     <group string="Planes">
                         <field name="fecha_contratacion" string="Fecha de Contración Oficial"/>
                         <field name="plan_vacacional_id"/>
                         <field name="aguinaldo_plan_id"/>
-                        <button
-                            string="Generar Nómina"
-                            type="action"
-                            name="%(nomina_wizard_action)d"
-                            class="btn-success"
-                            icon="fa-btc"
-                        />
                     </group>
                     <group>
                         <group string="Salario">

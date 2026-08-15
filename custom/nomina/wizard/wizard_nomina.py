@@ -64,7 +64,7 @@ class NominaWizard(models.TransientModel):
     rango_seleccionado = fields.Integer(
         string="Rango Seleccionado",
         compute="_compute_rango_seleccionado",
-        readonly=False,
+        readonly=True,
         store=True,
     )
     percepcion_ids = fields.One2many(
@@ -185,16 +185,19 @@ class NominaWizard(models.TransientModel):
 
     # === MODELO ACCIONES ===
 
-    # Claude
     def action_construir_nomina(self):
         for rec in self:
             # Crea el registro nomina con folio
-            nomina = self.env["nomina.nomina"].create({
-                "empleado_id": rec.empleado_id.id,
-                "fecha_inicio": rec.fecha_inicio,
-                "fecha_fin": rec.fecha_fin,
-            })
+            nomina = self.env["nomina.nomina"].create(
+                {
+                    "empleado_id": rec.empleado_id.id,
+                    "fecha_inicio": rec.fecha_inicio,
+                    "fecha_fin": rec.fecha_fin,
+                }
+            )
 
+            # Se generan las percepciones de manera permanente
+            # Se relacionan a la nomina recien creada.
             for linea in rec.percepcion_ids:
                 total = linea.total
                 # grava_isr decide split gravado/exento
@@ -205,16 +208,19 @@ class NominaWizard(models.TransientModel):
                     gravado = 0.0
                     exento = total
 
-                self.env["nomina.percepcion"].create({
-                    "nomina_id": nomina.id,
-                    "concepto_id": linea.concepto_id.id,
-                    "cantidad": linea.cantidad,
-                    "importe": linea.importe,
-                    "importe_gravado": gravado,
-                    "importe_exento": exento,
-                })
+                self.env["nomina.percepcion"].create(
+                    {
+                        "nomina_id": nomina.id,
+                        "concepto_id": linea.concepto_id.id,
+                        "cantidad": linea.cantidad,
+                        "importe": linea.importe,
+                        "importe_gravado": gravado,
+                        "importe_exento": exento,
+                    }
+                )
 
-            # Claude
+            # Sí asistencia automatica: Se explora la base de datos.
+            # Se genera la relacion con la nomina.
             if rec.modo_asistencia == "automatico":
                 rec._generar_lineas_automaticas(nomina)
 
@@ -222,6 +228,7 @@ class NominaWizard(models.TransientModel):
             # automaticas: horas extra afecta la base gravada del ISR)
             nomina._calcular_isr()
             nomina._calcular_imss_obrero()
+            nomina.write({"estado": "calculado"})
 
             # Abre la nomina generada al usuario
             return {
@@ -234,37 +241,63 @@ class NominaWizard(models.TransientModel):
 
     # Claude
     def _generar_lineas_automaticas(self, nomina):
-        """Modo automático (Fase 10): genera deducciones de falta/retardo
-        y la percepción de horas extra a partir de hr.attendance /
-        nomina.incidencia / nomina.hora.extra del rango, en vez de que RH
-        las capture a mano. Reutiliza attendance_ids/incidencia_ids/
-        hora_extra_ids (Fase 7) de la propia nómina recién creada, para
-        no duplicar el dominio de búsqueda — lo que se ve en la pestaña
-        "Días" es exactamente lo que alimentó este cálculo."""
+        """
+        Las siguientes lineas son:
+        1. Deducciones por 'retardo' e 'incidencia'.
+        2. Percepcion por horas extras.
+
+        Este metodo se ejecuta antes de:
+        1. Calculo de ISR
+        2. Calculo de IMSS
+
+        EL dominio 'query' a los registros de 'asistencias' y 'horas extras'
+        fueron computados justo en el momento cuando se creo la nomina actual.
+
+        Revisar: 'nomina.nomina' campos computados y logica.
+        """
         self.ensure_one()
         sueldo_diario = self.empleado_id.sueldo_diario
 
         # Retardos: una línea de deducción por evento, importe fijo.
         for attendance in nomina.attendance_ids.filtered("es_retardo"):
-            self.env["nomina.deduccion"].create({
-                "nomina_id": nomina.id,
-                "tipo": "retardo",
-                "concepto": f"Retardo {attendance.check_in}",
-                "importe": sueldo_diario / 3,
-            })
+            self.env["nomina.deduccion"].create(
+                {
+                    "nomina_id": nomina.id,
+                    "tipo": "retardo",
+                    "concepto": f"Retardo {attendance.check_in}",
+                    "importe": fields.Float.round(
+                        sueldo_diario / 3, precision_rounding=0.0001
+                    ),
+                }
+            )
 
-        # Faltas no justificadas: una sola línea con el total de días.
-        # (falta_justificada ya se paga sola vía la asistencia fantasma
-        # de la Fase 5 y no participa aquí).
-        faltas = nomina.incidencia_ids.filtered(lambda i: i.tipo == "falta")
+        # (falta_justificada ya se paga sola vía asistencia fantasma).
+
+        # Faltas no justificadas: UNA sola línea con el total de días.
+        faltas = nomina.incidencia_ids.filtered(lambda r: r.tipo == "falta")
         dias_falta = sum(faltas.mapped("dias"))
         if dias_falta:
-            self.env["nomina.deduccion"].create({
-                "nomina_id": nomina.id,
-                "tipo": "falta",
-                "concepto": f"Falta ({dias_falta} día(s))",
-                "importe": sueldo_diario * dias_falta,
-            })
+            self.env["nomina.deduccion"].create(
+                {
+                    "nomina_id": nomina.id,
+                    "tipo": "falta",
+                    "concepto": f"Falta ({dias_falta} día(s))",
+                    "importe": sueldo_diario * dias_falta,
+                }
+            )
+
+        # Se sobreescribe la cantidad manual de asistencias por cantidad real.
+        asistencias = len(nomina.attendance_ids)
+        if asistencias:
+            singleton = nomina.percepcion_ids.filtered(
+                lambda r: r.concepto_id.codigo == "SUELDO"
+            )[:1]
+            singleton.write(
+                {
+                    "cantidad": asistencias,
+                    "importe_gravado": asistencias * singleton.importe,
+                }
+            )
 
         # Horas extra autorizadas: una percepción con el reparto
         # gravado/exento de la Fase 9 (fórmula pendiente de validación
@@ -295,11 +328,13 @@ class NominaWizard(models.TransientModel):
                 horas_extra, sueldo_diario, uma_rec.uma
             )
             if total:
-                self.env["nomina.percepcion"].create({
-                    "nomina_id": nomina.id,
-                    "concepto_id": concepto_he.id,
-                    "cantidad": 1,
-                    "importe": total,
-                    "importe_gravado": gravado,
-                    "importe_exento": exento,
-                })
+                self.env["nomina.percepcion"].create(
+                    {
+                        "nomina_id": nomina.id,
+                        "concepto_id": concepto_he.id,
+                        "cantidad": 1,
+                        "importe": total,
+                        "importe_gravado": gravado,
+                        "importe_exento": exento,
+                    }
+                )

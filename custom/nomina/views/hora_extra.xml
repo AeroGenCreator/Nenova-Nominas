@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="estado" widget="statusbar" statusbar_visible="borrador,autorizada"/>
+                    <field name="estado" widget="statusbar" options="{'clickable': 1}"/>
                 </header>
                 <sheet>
                     <group>

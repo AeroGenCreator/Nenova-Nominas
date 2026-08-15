@@ -69,7 +69,9 @@ class NominaHoraExtra(models.Model):
         for rec in self:
             NAME = False
             if rec.empleado_id and rec.fecha:
-                NAME = f"{rec.empleado_id.name} - {rec.fecha} - {rec.horas:.2f}h"
+                NAME = (
+                    f"{rec.empleado_id.name} - {rec.fecha} - {rec.horas:.2f}h"
+                )
             rec.name = NAME
 
     @api.depends("hora_inicio", "hora_fin")
@@ -101,9 +103,9 @@ class NominaHoraExtra(models.Model):
     @api.constrains("fecha", "hora_inicio")
     def _validar_fecha_coincide(self):
         for rec in self:
-            if (
-                rec.fecha
-                and rec.hora_inicio
-                and rec.fecha != rec.hora_inicio.date()
-            ):
-                raise ValidationError(MSG_FECHA)
+            if rec.fecha and rec.hora_inicio:
+                hora_inicio_local = fields.Datetime.context_timestamp(
+                    rec, rec.hora_inicio
+                )
+                if rec.fecha != hora_inicio_local.date():
+                    raise ValidationError(MSG_FECHA)

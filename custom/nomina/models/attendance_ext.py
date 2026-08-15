@@ -57,7 +57,7 @@ class NominaAttendanceExt(models.Model):
         compute="_compute_tipo_dia",
     )
     auto_checkout = fields.Boolean(
-        string="Aplicadó Checkout Automático",
+        string="Checkout Automático",
         default=False,
         help=(
             "El check_out fue generado por el cron de fin de jornada, no "
