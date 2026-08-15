@@ -74,7 +74,7 @@ class PercepcionWizard(models.TransientModel):
                 NAME = f"{rec.concepto_id.name} {rec.empleado_id.name}"
             rec.name = NAME
 
-    @api.depends("nomina_id","concepto_id")
+    @api.depends("nomina_id", "concepto_id", "nomina_id.modo_asistencia")
     def _compute_cantidad(self):
         """
         Si la percepcion es sueldo,
@@ -83,16 +83,19 @@ class PercepcionWizard(models.TransientModel):
         for rec in self:
             if rec.concepto_id:
                 if rec.concepto_id.codigo == "SUELDO":
-                    if rec.nomina_id.rango_seleccionado:
-                        CANTIDAD = rec.nomina_id.rango_seleccionado
+                    if (
+                        rec.nomina_id.total_dias and
+                        rec.nomina_id.modo_asistencia == "manual"
+                    ):
+                        CANTIDAD = rec.nomina_id.total_dias
                         rec.cantidad = CANTIDAD
                     else:
-                        rec.cantidad = 1.0
+                        rec.cantidad = 0
                 else:
                     if rec.cantidad:
                         return
                     if not rec.cantidad:
-                        rec.cantidad = 1.0
+                        rec.cantidad = 0
 
     @api.depends("empleado_id", "concepto_id")
     def _compute_importe(self):

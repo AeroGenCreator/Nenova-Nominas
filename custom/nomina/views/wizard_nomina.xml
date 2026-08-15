@@ -22,7 +22,6 @@
                         <group string="Datos Empleado">
                             <field name="empleado_id" class="py-1"/>
                             <field name="periodicidad"/>
-                            <field name="sueldo" widget="custom_monetary_float"/>
                             <field name="sueldo_diario" widget="custom_monetary_float"/>
                             <field name="factor_integracion" widget="char"/>
                             <field name="sdi" widget="custom_monetary_float" class="text-info"/>
@@ -30,16 +29,15 @@
                         <group string="Configuración">
                             <field name="fecha_inicio" class="text-success"/>
                             <field name="fecha_fin" class="text-success"/>
-                            <field name="rango_seleccionado"/>
+                            <field name="total_dias"/>
                         </group>
                     </group>
                     <p class="alert alert-info" role="alert" invisible="modo_asistencia != 'automatico'">
                         Modo Automático: al guardar se generarán deducciones de falta/retardo y la percepción de horas extra
                         a partir de las asistencias e incidencias ya registradas del empleado en este rango de fechas.
                     </p>
-                    <p class="alert alert-warning" role="alert" invisible="percepcion_ids">El sueldo debe ser agregado como una percepcion en la siguiente tabla.</p>
                     <notebook>
-                        <page string="Percepciones" class="fw-bold">
+                        <page string="Percepciones / Deducciones (Manual)" class="fw-bold">
                             <field name="percepcion_ids">
                                 <list>
                                     <field name="concepto_id" class="text-success" width="80"/>

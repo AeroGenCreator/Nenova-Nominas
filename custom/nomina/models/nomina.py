@@ -68,13 +68,6 @@ class NominaHistorial(models.Model):
         store=True,
         digits=(16, 4),
     )
-    # Claude
-    # Pestaña "Días": lectura visual de asistencias/incidencias/horas extra
-    # del rango de la nómina, sin inverse_name porque no se escribe a
-    # través de ellos (patrón de One2many computado de solo lectura, usado
-    # en varios módulos core de Odoo). El motor de nómina consulta
-    # hr.attendance/nomina.incidencia/nomina.hora.extra directamente, no a
-    # través de estos campos.
     attendance_ids = fields.One2many(
         string="Asistencias",
         comodel_name="hr.attendance",
@@ -93,7 +86,9 @@ class NominaHistorial(models.Model):
 
     # === MODELO LÓGICA ===
 
-    # Claude
+    # Los siguientes compute son One2many.
+    # Relaciona de manera visual Asistencias, Faltas, Horas Extras.
+
     @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
     def _compute_attendance_ids(self):
         for rec in self:
@@ -114,7 +109,6 @@ class NominaHistorial(models.Model):
                 )
             rec.attendance_ids = attendances
 
-    # Claude
     @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
     def _compute_incidencia_ids(self):
         for rec in self:
@@ -129,7 +123,6 @@ class NominaHistorial(models.Model):
                 )
             rec.incidencia_ids = incidencias
 
-    # Claude
     @api.depends("empleado_id", "fecha_inicio", "fecha_fin")
     def _compute_hora_extra_ids(self):
         for rec in self:
@@ -145,6 +138,25 @@ class NominaHistorial(models.Model):
                 )
             rec.hora_extra_ids = horas_extra
 
+    # === COMPUTA TOTALES (PERCEPCIONES) (DEDUCCIONES) (NETO)
+
+    @api.depends("percepcion_ids.total")
+    def _compute_total_percepciones(self):
+        for rec in self:
+            rec.total_percepciones = sum(rec.percepcion_ids.mapped("total"))
+
+    @api.depends("deduccion_ids.importe")
+    def _compute_total_deducciones(self):
+        for rec in self:
+            rec.total_deducciones = sum(rec.deduccion_ids.mapped("importe"))
+
+    @api.depends("total_percepciones", "total_deducciones")
+    def _compute_neto(self):
+        for rec in self:
+            rec.neto = rec.total_percepciones - rec.total_deducciones
+
+    # === AL CREAR - FOLIO ===
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -157,24 +169,6 @@ class NominaHistorial(models.Model):
                     or "Borrador"
                 )
         return super().create(vals_list)
-
-    # Claude
-    @api.depends("percepcion_ids.total")
-    def _compute_total_percepciones(self):
-        for rec in self:
-            rec.total_percepciones = sum(rec.percepcion_ids.mapped("total"))
-
-    # Claude
-    @api.depends("deduccion_ids.importe")
-    def _compute_total_deducciones(self):
-        for rec in self:
-            rec.total_deducciones = sum(rec.deduccion_ids.mapped("importe"))
-
-    # Claude
-    @api.depends("total_percepciones", "total_deducciones")
-    def _compute_neto(self):
-        for rec in self:
-            rec.neto = rec.total_percepciones - rec.total_deducciones
 
     # Claude
     def _calcular_isr(self):
